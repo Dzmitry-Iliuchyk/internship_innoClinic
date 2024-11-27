@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Authorization.Domain\Authorization.Domain.csproj" />
+    <ProjectReference Include="..\Authorization.Application\Authorization.Application.csproj" />
   </ItemGroup>
 
 </Project>
