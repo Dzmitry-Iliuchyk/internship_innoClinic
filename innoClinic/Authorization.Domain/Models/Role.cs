@@ -1,6 +1,7 @@
-﻿namespace Authorrization.Api.Models {
-    public class Role {
-        public int Id { get; set; }
+﻿using Shared.Abstractions.Entities;
+
+namespace Authorrization.Api.Models {
+    public class Role : Entity<int> {
         public string Name { get; set; }
     }
 }

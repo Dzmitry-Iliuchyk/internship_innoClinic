@@ -8,8 +8,14 @@ namespace Authorization.DataAccess.DbConfigurations {
         public void Configure( EntityTypeBuilder<User> builder ) {
             builder.ToTable( TABLE_NAME );
             builder.HasKey( user => user.Id );
-            builder.Property( user => user.Email ).HasMaxLength( 140 ).IsRequired( required: true );
-            builder.Property( user => user.PasswordHash ).IsRequired( required: true );
+            builder.Property( user => user.Email )
+                .IsUnicode(unicode: true)
+                .HasMaxLength( 140 )
+                .IsRequired( required: true );
+            builder.HasIndex( u => u.Email )
+                .IsUnique(unique: true);
+            builder.Property( user => user.PasswordHash )
+                .IsRequired( required: true );
             builder.HasMany( user => user.Roles )
                 .WithMany()
                 .UsingEntity<UserRole>(

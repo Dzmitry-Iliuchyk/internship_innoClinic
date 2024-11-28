@@ -1,54 +1,56 @@
-﻿using Authorization.Domain.Repositories;
+﻿using Authorization.Application.Abstractions.Repositories;
 using Authorrization.Api.Models;
 using Microsoft.EntityFrameworkCore;
+using Shared.Abstractions.Entities;
+using Shared.Abstractions.Repository;
 
 namespace Authorization.DataAccess.Repositories {
-    public class UserRepository: IUserRepository {
-        private readonly AuthDbContext _authDbContext;
-        private readonly DbSet<User> _users;
-        public UserRepository(AuthDbContext context) {
-            _authDbContext = context;
-            _users = context.Set<User>();
+    public sealed class UserRepository: BaseRepository<User>, IUserRepository {
+
+        public UserRepository( AuthDbContext context ) : base( context ) {
         }
 
-        public async Task Create( User user ) {
-            if (await _users.AnyAsync(u=>u.Id== user.Id)) {
-                throw new Exception();//todo
-            }
-            await _users.AddAsync( user );
-            await _authDbContext.SaveChangesAsync();
+        public async Task<bool> AnyAsync( string email ) {
+            return await entities.AnyAsync( u => u.Email == email );
         }
 
-        public async Task Delete( User user ) {
-            _users.Remove( user );
-            await _authDbContext.SaveChangesAsync();
+        public async Task<bool> AnyAsync( Guid userId ) {
+            return await entities.AnyAsync( u => u.Id == userId );
         }
 
-        public async Task<User> Get( Guid userId ) {
-            return await _users
+        public async Task<User?> GetAsync( Guid userId ) {
+            return await entities
                 .AsNoTracking()
-                .FirstAsync( x => x.Id == userId );
+                .FirstOrDefaultAsync( u => u.Id == userId );
         }
 
-        public async Task<IEnumerable<User>> GetAll() {
-            return await _users
+        public async Task<User?> GetAsync( string email ) {
+            return await entities
                 .AsNoTracking()
-                .ToArrayAsync();
+                .FirstOrDefaultAsync( u => u.Email == email );
         }
 
-        public async Task<IEnumerable<Role>> GetRoles( Guid userId ) {
-            return (await _users
+        public async Task<IEnumerable<Role>?> GetRolesAsync( Guid userId ) {
+            return await entities
                 .AsNoTracking()
-                .Include(u=>u.Roles)
-                .FirstAsync( x => x.Id == userId ))?.Roles??[];
+                .Include( u => u.Roles )
+                .Where(u=>u.Id == userId)
+                .Select(u=>u.Roles)
+                .FirstOrDefaultAsync();
         }
 
-        public async Task Update( User updatedUser ) {
-            if (!_users.Any(x=>x.Id == updatedUser.Id)) {
-                throw new Exception();//todo
-            }
-            _authDbContext.Update( updatedUser );
-            await _authDbContext.SaveChangesAsync();
+        public async Task<User?> GetUserWithRolesAsync( string email ) {
+            return await entities
+                .AsNoTracking()
+                .Include( u => u.Roles )
+                .FirstOrDefaultAsync( x => x.Email == email );
+        }
+
+        public async Task<User?> GetUserWithRolesAsync( Guid userId ) {
+            return await entities
+                .AsNoTracking()
+                .Include( u => u.Roles )
+                .FirstOrDefaultAsync( x => x.Id == userId );
         }
     }
 }
