@@ -2,8 +2,10 @@ using Authorization.Application;
 using Authorization.Application.Implementations;
 using Authorization.DataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 
 var builder = WebApplication.CreateBuilder( args );
@@ -43,6 +45,7 @@ builder.Services.AddSwaggerGen( c => {
         Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer"
     } );
+    
     c.AddSecurityRequirement( new OpenApiSecurityRequirement {
         {
             new OpenApiSecurityScheme {
@@ -55,6 +58,8 @@ builder.Services.AddSwaggerGen( c => {
             new string[] {}
         }
     } );
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    c.IncludeXmlComments( Path.Combine( AppContext.BaseDirectory, xmlFilename ) );
 } );
 var app = builder.Build();
 

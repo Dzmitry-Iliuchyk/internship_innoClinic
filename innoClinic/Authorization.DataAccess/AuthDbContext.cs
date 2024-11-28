@@ -44,6 +44,7 @@ namespace Authorization.DataAccess {
             }
             userRoles.Add( new() { UserId = users[ 0 ].Id, RoleId = 1 } );
             userRoles.Add( new() { UserId = users[ 3 ].Id, RoleId = 3 } );
+            userRoles.Add( new() { UserId = users[ 3 ].Id, RoleId = 4 } );
 
             UserRoles.AddRange( userRoles );
             SaveChanges();

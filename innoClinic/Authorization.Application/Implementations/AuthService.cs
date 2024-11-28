@@ -4,6 +4,7 @@ using Authorization.Application.Dtos;
 using Authorization.Application.Exceptions;
 using Authorization.Domain.Models.Enums;
 using Authorrization.Api.Models;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 
 namespace Authorization.Application.Implementations {
@@ -12,24 +13,30 @@ namespace Authorization.Application.Implementations {
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly IPasswordHasher<User> _hasher;
         private readonly ITokenService _token;
+        private readonly IValidator<User> _userValidator;
+        private readonly IValidator<SignUpModel> _signUpValidator;
         public AuthService(
             IUserRoleRepository userRoleRepository,
             IUserRepository userRepository,
             IPasswordHasher<User> hasher,
-            ITokenService tokenService) {
+            ITokenService tokenService,
+            IValidator<User> userValidator,
+            IValidator<SignUpModel> signUpValidator ) {
 
             _userRoleRepository = userRoleRepository;
             _userRepository = userRepository;
             _hasher = hasher;
             _token = tokenService;
+            _userValidator = userValidator;
+            _signUpValidator = signUpValidator;
         }
 
         public async Task AddRoleToUserAsync( Guid userId, int roleId ) {
-            if (userId == Guid.Empty || roleId == 0) {
-                throw new ArgumentException( nameof( userId ) );
+            if (!await _userRepository.AnyAsync(userId)) {
+                throw new UserNotFoundException( userId );
             }
             if (!await _userRoleRepository.AnyAsync(userId, roleId )) {
-                throw new ArgumentException( nameof( userId ) );
+                throw new UserRoleAlredyExistException( userId , roleId );
             }
             await _userRoleRepository.CreateAsync( new UserRole() {
                 UserId = userId,
@@ -38,8 +45,8 @@ namespace Authorization.Application.Implementations {
         }
 
         public async Task RemoveRoleFromUserAsync( Guid userId, int roleId ) {
-            if (userId == Guid.Empty || roleId == 0) {
-                throw new ArgumentNullException( nameof( userId ) );
+            if (!await _userRepository.AnyAsync( userId )) {
+                throw new UserNotFoundException( userId );
             }
             await _userRoleRepository.DeleteAsync( new UserRole() {
                 UserId = userId,
@@ -61,6 +68,7 @@ namespace Authorization.Application.Implementations {
         }
 
         public async Task SignUpAsync( SignUpModel signUpModel ) {
+            await _signUpValidator.ValidateAndThrowAsync(signUpModel);
             var userToCrate = new User() {
                 Id = Guid.NewGuid(),
                 Email = signUpModel.Email,

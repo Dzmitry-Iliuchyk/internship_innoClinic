@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Authorrization.Api.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,14 @@ namespace Authorization.Application.Exceptions {
         }
         public UserAlredyExistException( string email ) 
             : base( $"The user with the email {email} already exists") { 
+        }
+    }
+    public class UserRoleAlredyExistException: BadRequestException {
+        public UserRoleAlredyExistException( Guid userId, int roleId ) 
+            : base( $"The role with the identifier {roleId} already assigned to the user with identifier {userId}") { 
+        }
+        public UserRoleAlredyExistException( string email , int roleId )
+            : base( $"The role with the identifier {roleId} already assigned to the user with email {email}" ) { 
         }
     }
     public class WrongPasswordException: BadRequestException {
