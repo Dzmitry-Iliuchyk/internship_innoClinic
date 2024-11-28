@@ -13,6 +13,7 @@ namespace Shared.Abstractions.Repository {
         public async Task CreateAsync( TEntity entity ) {
             await entities.AddAsync( entity );
             await dbContext.SaveChangesAsync();
+            
         }
         public async Task DeleteAsync( TEntity entity ) {
             entities.Remove( entity );

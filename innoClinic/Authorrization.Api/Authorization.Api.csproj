@@ -7,7 +7,9 @@
     <UserSecretsId>1e7b8fd5-f162-47b5-831d-113911a5d3ab</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
-
+	<PropertyGroup>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
@@ -21,10 +23,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Authorization.DataAccess\Authorization.DataAccess.csproj" />
     <ProjectReference Include="..\Authorization.Domain\Authorization.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Middleware\" />
   </ItemGroup>
 
 </Project>
