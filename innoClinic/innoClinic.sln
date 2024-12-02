@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Abstractions", "inno
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Offices.Api", "Offices.Api\Offices.Api.csproj", "{149F3437-FF47-40B8-A5FB-F43828BDCD25}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Offices", "Offices", "{4B04C7F1-E16E-437D-AA0C-B3CB7BFBB552}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,5 +56,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{149F3437-FF47-40B8-A5FB-F43828BDCD25} = {4B04C7F1-E16E-437D-AA0C-B3CB7BFBB552}
 	EndGlobalSection
 EndGlobal
