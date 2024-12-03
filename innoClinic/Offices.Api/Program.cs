@@ -2,6 +2,7 @@
 using Offices.DataAccess.DIConfiguration;
 using Offices.Application.DIConfiguration;
 using Serilog;
+using Offices.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder( args );
 var config = builder.Configuration;
@@ -31,7 +32,7 @@ if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

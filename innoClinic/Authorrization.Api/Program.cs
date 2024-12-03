@@ -1,3 +1,4 @@
+using Authorization.Api.Middleware;
 using Authorization.Application;
 using Authorization.Application.Implementations;
 using Authorization.DataAccess;
