@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authorization.Application",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Abstractions", "innoClinic.Abstractions\Shared.Abstractions.csproj", "{47C225B1-7681-48C8-8A83-9E25C1DB291E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authorization", "Authorization", "{92DF5F1C-3265-489A-AB33-7DABED1CFD52}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +50,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DD4EECCB-24FA-408B-B219-A244BD45E92A} = {92DF5F1C-3265-489A-AB33-7DABED1CFD52}
+		{87463690-AB42-44A3-97B4-AE0142B8DE20} = {92DF5F1C-3265-489A-AB33-7DABED1CFD52}
+		{DB685B78-872F-443F-85C8-C04CE293608F} = {92DF5F1C-3265-489A-AB33-7DABED1CFD52}
+		{EF45AF89-E73B-4376-AB83-48C9E6FD3278} = {92DF5F1C-3265-489A-AB33-7DABED1CFD52}
 	EndGlobalSection
 EndGlobal
