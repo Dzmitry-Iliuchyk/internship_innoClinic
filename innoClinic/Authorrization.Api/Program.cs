@@ -1,3 +1,4 @@
+using Authorization.Api.Middleware;
 using Authorization.Application;
 using Authorization.Application.Implementations;
 using Authorization.DataAccess;
@@ -30,6 +31,7 @@ builder.Services.AddAuthentication( options => {
         IssuerSigningKey = credentials
     };
 } );
+builder.Services.AddScoped<ExceptionHandlingMiddleware>();
 builder.Services.AddAuthorization();
 builder.Services.ConfigureAuthDataAccess( cfg.GetConnectionString( "Auth" ) );
 builder.Services.ConfigureAuthApplicationDependncies();
@@ -68,7 +70,7 @@ if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
