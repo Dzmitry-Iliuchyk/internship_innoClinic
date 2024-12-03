@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using Offices.Application.Dtos;
+using Offices.Application.Exceptions;
 using Offices.Application.Interfaces.Repositories;
 using Offices.Application.Interfaces.Services;
 using Offices.Domain.Models;
@@ -38,7 +39,7 @@ namespace Offices.Application.Implementations.Services {
         public async Task<OfficeDto> GetAsync( string id ) {
             var office = await _repository.GetAsync( id );
             if (office == null) {
-                throw new Exception();
+                throw new OfficeNotFoundException(id);
             }
 
             return _mapper.Map<OfficeDto>( office );
@@ -52,7 +53,7 @@ namespace Offices.Application.Implementations.Services {
 
         public async Task UpdateAsync( string id, UpdateOfficeDto officeDto ) {
             if (await _repository.AnyAsync(id)) {
-                throw new Exception();
+                throw new OfficeNotFoundException( id );
             }
             var office = _mapper.Map<Office>( officeDto );
             office.Id = id;
