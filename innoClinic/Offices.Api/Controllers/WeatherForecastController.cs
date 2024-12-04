@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Offices.Api.Controllers {
     [ApiController]
+    [Authorize]
     [Route( "[controller]" )]
     public class WeatherForecastController: ControllerBase {
         private static readonly string[] Summaries = new[]
@@ -15,7 +17,7 @@ namespace Offices.Api.Controllers {
             _logger = logger;
         }
 
-        [HttpGet( Name = "GetWeatherForecast" )]
+        [HttpGet( Name = "GetWeatherForecastAuthorized" )]
         public IEnumerable<WeatherForecast> Get() {
             return Enumerable.Range( 1, 5 ).Select( index => new WeatherForecast {
                 Date = DateOnly.FromDateTime( DateTime.Now.AddDays( index ) ),
