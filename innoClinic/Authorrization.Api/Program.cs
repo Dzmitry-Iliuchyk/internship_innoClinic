@@ -14,7 +14,8 @@ var cfg = builder.Configuration;
 var jwtOptions = cfg.GetRequiredSection( nameof( JwtOptions ) );
 builder.Services.Configure<JwtOptions>( jwtOptions );
 // Add services to the container.
-var credentials = TokenService.GetSecurityKey( "U:\\innowise\\internship_innoClinic\\innoClinic\\Authorization.Application\\public_key.pem" );
+
+var credentials = TokenService.GetSecurityKey( Path.Combine( Directory.GetParent(Directory.GetCurrentDirectory()).FullName, "Authorization.Application\\public_key.pem" ) );
 
 builder.Services.AddAuthentication( options => {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
