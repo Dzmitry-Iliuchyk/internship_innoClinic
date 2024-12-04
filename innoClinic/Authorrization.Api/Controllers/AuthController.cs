@@ -116,6 +116,10 @@ namespace Authorization.Api.Controllers {
             var user = await _auth.GetUserWithRoles( userId );
             return Results.Ok(user);
         }
+        [HttpGet("[action]")]
+        public async Task<IResult> ThrowException() {
+            throw new NotImplementedException();
+        }
 
     }
 }
