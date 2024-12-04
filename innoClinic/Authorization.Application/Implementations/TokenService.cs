@@ -20,7 +20,7 @@ namespace Authorization.Application.Implementations {
         }
 
         public string GenerateToken( User user ) {
-            RsaSecurityKey securityKey = GetSecurityKey( "U:\\innowise\\internship_innoClinic\\innoClinic\\Authorization.Application\\private_key.pem" );
+            RsaSecurityKey securityKey = GetSecurityKey( Path.Combine(Directory.GetParent( Directory.GetCurrentDirectory() ).FullName, "Authorization.Application\\private_key.pem" ) );
             var credentials = new SigningCredentials( securityKey, SecurityAlgorithms.RsaSha256 );
             var claims = new List<Claim>() {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),

@@ -35,7 +35,7 @@ namespace Authorization.Application.Implementations {
             if (!await _userRepository.AnyAsync(userId)) {
                 throw new UserNotFoundException( userId );
             }
-            if (!await _userRoleRepository.AnyAsync(userId, roleId )) {
+            if (await _userRoleRepository.AnyAsync(userId, roleId )) {
                 throw new UserRoleAlredyExistException( userId , roleId );
             }
             await _userRoleRepository.CreateAsync( new UserRole() {
