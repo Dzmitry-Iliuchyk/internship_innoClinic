@@ -1,7 +1,12 @@
+using Profiles.Application;
+using Profiles.DataAccess;
+
 var builder = WebApplication.CreateBuilder( args );
-
+var config = builder.Configuration;
 // Add services to the container.
-
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddDataAccess(config);
+builder.Services.AddApplicationLayer();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -20,5 +25,10 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
+using (var serviceScope = app.Services.CreateScope()) {
+    var context = serviceScope.ServiceProvider.GetService<ProfilesDbContext>();
+    if (!context.Accounts.Any()) {
+        context.EnsureSeedData();
+    }
+}
 app.Run();

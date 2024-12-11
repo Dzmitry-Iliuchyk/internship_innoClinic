@@ -10,24 +10,24 @@ namespace Shared.Abstractions.Repository {
             dbContext = context;
             entities = context.Set<TEntity>();
         }
-        public async Task CreateAsync( TEntity entity ) {
+        public virtual async Task CreateAsync( TEntity entity ) {
             await entities.AddAsync( entity );
             await dbContext.SaveChangesAsync();
             
         }
-        public async Task DeleteAsync( TEntity entity ) {
+        public virtual async Task DeleteAsync( TEntity entity ) {
             entities.Remove( entity );
             await dbContext.SaveChangesAsync();
         }
-        public async Task UpdateAsync( TEntity updatedEntity ) {
+        public virtual async Task UpdateAsync( TEntity updatedEntity ) {
             entities.Update( updatedEntity );
             await dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<TEntity>?> GetAllAsync() {
+        public virtual async Task<IList<TEntity>?> GetAllAsync() {
             return await entities
              .AsNoTracking()
-             .ToArrayAsync();
+             .ToListAsync();
         }
     }
 }
