@@ -1,5 +1,7 @@
 ﻿using MediatR;
+using Profiles.Application.Common.Exceptions;
 using Profiles.Application.Interfaces.Repositories;
+using Profiles.Domain;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -22,6 +24,9 @@ namespace Profiles.Application.Receptionists.Commands.Delete {
             var doc = await _repoRead.GetAsync( request.receptionistId );
             if (doc != null)
                 await _repository.DeleteAsync( doc );
+            else 
+                throw new ReceptionistNotFoundException( request.receptionistId.ToString() );
+            
         }
     }
 }

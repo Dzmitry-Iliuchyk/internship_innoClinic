@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using MediatR;
+using Profiles.Application.Common.Exceptions;
 using Profiles.Application.Interfaces.Repositories;
 using System.ComponentModel.DataAnnotations;
 
@@ -14,6 +15,9 @@ namespace Profiles.Application.Doctors.Queries.Get {
 
         public async Task<DoctorDto> Handle( GetDoctorQuery request, CancellationToken cancellationToken = default ) {
             var doc = await _read.GetAsync( request.id );
+            if (doc == null) {
+                throw new DoctorNotFoundException( request.id.ToString() );
+            }
             return doc.Adapt<DoctorDto>();
         }
     }

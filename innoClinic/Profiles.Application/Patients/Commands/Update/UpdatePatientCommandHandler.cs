@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using MediatR;
+using Profiles.Application.Common.Exceptions;
 using Profiles.Application.Interfaces.Repositories;
 using Profiles.Domain;
 using System;
@@ -30,6 +31,9 @@ namespace Profiles.Application.Patients.Commands.Update {
 
         public async Task Handle( UpdatePatientCommand request, CancellationToken cancellationToken = default ) {
             var patient = await _repoRead.GetAsync( request.id);
+            if (patient == null) {
+                throw new PatientNotFoundException( request.id.ToString() );
+            }
             var updatedPatient = (request, patient).Adapt<Patient>();
             await _repository.UpdateAsync( updatedPatient );
         }

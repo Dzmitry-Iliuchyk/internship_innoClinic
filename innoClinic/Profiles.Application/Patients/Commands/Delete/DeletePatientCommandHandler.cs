@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Profiles.Application.Common.Exceptions;
 using Profiles.Application.Interfaces.Repositories;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,8 @@ namespace Profiles.Application.Patients.Commands.Delete {
             var doc = await _repoRead.GetAsync( request.patientId );
             if (doc != null)
                 await _repository.DeleteAsync( doc );
+            else
+                throw new PatientNotFoundException( request.patientId.ToString() );
         }
     }
 }

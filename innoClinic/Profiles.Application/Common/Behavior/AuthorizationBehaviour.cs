@@ -1,12 +1,7 @@
 ﻿using MediatR;
-using Microsoft.AspNet.Identity;
+using Profiles.Application.Common.Exceptions;
 using Profiles.Application.Common.Security;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Profiles.Application.Common.Behavior {
     public class AuthorizationBehaviour<TRequest, TResponse>: IPipelineBehavior<TRequest, TResponse> where TRequest : notnull {
@@ -22,7 +17,7 @@ namespace Profiles.Application.Common.Behavior {
             if (authorizeAttributes.Any()) {
                 // Must be authenticated user
                 if (!_identityService.IsAuthenticated()) {
-                    throw new UnauthorizedAccessException();
+                    throw new UnauthorizedAccessException("Current user does not authorized");
                 }
 
                 // Role-based authorization
@@ -51,9 +46,5 @@ namespace Profiles.Application.Common.Behavior {
             //User is authorized / authorization not required
             return await next();
         }
-    }
-
-    public class ForbiddenAccessException: Exception {
-        public ForbiddenAccessException() : base() { }
     }
 }

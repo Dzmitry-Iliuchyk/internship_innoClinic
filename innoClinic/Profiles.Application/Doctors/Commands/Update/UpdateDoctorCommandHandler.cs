@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using MediatR;
+using Profiles.Application.Common.Exceptions;
 using Profiles.Application.Interfaces.Repositories;
 using Profiles.Domain;
 using System.ComponentModel.DataAnnotations;
@@ -30,7 +31,7 @@ namespace Profiles.Application.Doctors.Commands.Update {
         public async Task Handle( UpdateDoctorCommand request, CancellationToken cancellationToken = default ) {
             var doc = await _readRepo.GetAsync( request.doctorId );
             if (doc == null) {
-                throw new Exception();
+                throw new DoctorNotFoundException( request.doctorId.ToString() );
             }
             await _repository.UpdateAsync( (request, doc).Adapt<Doctor>() );
         }

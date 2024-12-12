@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using MediatR;
+using Profiles.Application.Common.Exceptions;
 using Profiles.Application.Interfaces.Repositories;
 using Profiles.Domain;
 using System;
@@ -29,6 +30,8 @@ namespace Profiles.Application.Receptionists.Commands.Update {
         }
         public async Task Handle( UpdateReceptionistCommand request, CancellationToken cancellationToken = default ) {
             var receptionist = await _repoRead.GetAsync( request.id );
+            if ( receptionist == null)
+                throw new ReceptionistNotFoundException( request.id.ToString() );
             var updatedReceptionist = (request, receptionist).Adapt<Receptionist>();
             await _repository.UpdateAsync( updatedReceptionist );
         }

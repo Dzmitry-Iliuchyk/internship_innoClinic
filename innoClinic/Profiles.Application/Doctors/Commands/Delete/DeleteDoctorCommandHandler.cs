@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Profiles.Application.Common.Exceptions;
 using Profiles.Application.Interfaces.Repositories;
 using Profiles.Domain;
 using System;
@@ -21,7 +22,10 @@ namespace Profiles.Application.Doctors.Commands.Delete {
 
         public async Task Handle( DeleteDoctorCommand request, CancellationToken cancellationToken = default ) {
             var doc = await _readRepo.GetAsync(request.doctorId);
-            if ( doc != null ) await _repository.DeleteAsync( doc );
+            if (doc != null) {
+                await _repository.DeleteAsync( doc );
+            } else
+                throw new DoctorNotFoundException(request.doctorId.ToString());
         }
     }
 }
