@@ -25,7 +25,7 @@ namespace Profiles.DataAccess.RepositoriesDapper {
                            a.PhotoUrl,
                            a.MiddleName
                     FROM Accounts a 
-                    JOIN Receptionist r ON a.Id = r.Id 
+                    JOIN Receptionists r ON a.Id = r.Id 
                     WHERE r.Id = @receptionistId
                         ";
             var param = new DynamicParameters();
@@ -52,7 +52,7 @@ namespace Profiles.DataAccess.RepositoriesDapper {
                            a.PhotoUrl,
                            a.MiddleName
                     FROM Accounts a 
-                    JOIN Receptionist r ON a.Id = r.Id 
+                    JOIN Receptionists r ON a.Id = r.Id 
                         ";
 
             using (var connection = _context.CreateConnection()) {

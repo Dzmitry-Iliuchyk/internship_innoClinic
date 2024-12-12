@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,17 +15,21 @@ namespace Profiles.Application.Common.Behavior {
             _logger = logger;
         }
 
-        public async Task<TResponse> Handle( TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken ) {
+        public async Task<TResponse> Handle( TRequest request,
+                                             RequestHandlerDelegate<TResponse> next,
+                                             CancellationToken cancellationToken ) {
             var requestName = typeof( TRequest ).Name;
-            _logger.LogInformation( "Starting request: {RequestName} at {DateTime}", requestName, DateTime.UtcNow );
+            _logger.LogInformation( "Starting request: {RequestName} ", requestName);
 
             try {
+                var startTimeStamp = Stopwatch.GetTimestamp();
                 var response = await next();
-                _logger.LogInformation( "Completed request: {RequestName} at {DateTime}", requestName, DateTime.UtcNow );
+                _logger.LogInformation( "Completed request: {RequestName} and elapsed time is: {time} ",
+                    requestName, Stopwatch.GetElapsedTime( startTimeStamp ) );
                 return response;
             }
             catch (Exception ex) {
-                _logger.LogError( ex, "Request {RequestName} failed at {DateTime}", requestName, DateTime.UtcNow );
+                _logger.LogError( ex, "Request {RequestName} failed", requestName );
                 throw;
             }
         }

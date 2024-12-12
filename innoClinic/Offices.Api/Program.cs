@@ -88,7 +88,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.Use( async ( cont, next ) => await next( cont ) );
 app.Run();
 static RsaSecurityKey GetKey(string pathToKey) {
     byte[] key = File.ReadAllBytes( pathToKey );
