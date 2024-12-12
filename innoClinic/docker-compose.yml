@@ -1,17 +1,11 @@
-version: '3.8'
-
 services:
-  webapi:
-    image: profilesapi
+  profiles.api:
+    image: ${DOCKER_REGISTRY-}profilesapi
     build:
       context: .
       dockerfile: ProfilesApi/Dockerfile
-    ports:
-      - "8080:8080"
-      - "8081:8081"
     depends_on:
       - db
-
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:

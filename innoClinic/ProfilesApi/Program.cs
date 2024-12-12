@@ -90,6 +90,7 @@ app.UseAuthorization();
 app.MapControllers();
 using (var serviceScope = app.Services.CreateScope()) {
     var context = serviceScope.ServiceProvider.GetService<ProfilesDbContext>();
+    context.Database.EnsureCreated();
     if (!context.Accounts.Any()) {
         context.EnsureSeedData();
     }
