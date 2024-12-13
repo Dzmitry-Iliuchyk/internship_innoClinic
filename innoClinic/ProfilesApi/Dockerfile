@@ -12,19 +12,23 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Offices.Api/Offices.Api.csproj", "Offices.Api/"]
-RUN dotnet restore "./Offices.Api/Offices.Api.csproj"
+COPY ["ProfilesApi/Profiles.Api.csproj", "ProfilesApi/"]
+COPY ["Profiles.Application/Profiles.Application.csproj", "Profiles.Application/"]
+COPY ["Profiles.Domain/Profiles.Domain.csproj", "Profiles.Domain/"]
+COPY ["innoClinic.Abstractions/Shared.Abstractions.csproj", "innoClinic.Abstractions/"]
+COPY ["Profiles.DataAccess/Profiles.DataAccess.csproj", "Profiles.DataAccess/"]
+RUN dotnet restore "./ProfilesApi/Profiles.Api.csproj"
 COPY . .
-WORKDIR "/src/Offices.Api"
-RUN dotnet build "./Offices.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/ProfilesApi"
+RUN dotnet build "./Profiles.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Offices.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Profiles.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Offices.Api.dll"]
+ENTRYPOINT ["dotnet", "Profiles.Api.dll"]
