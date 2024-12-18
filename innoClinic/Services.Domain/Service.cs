@@ -1,4 +1,5 @@
 ﻿using Shared.Abstractions.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Services.Domain {
     public class Service : Entity<Guid> {

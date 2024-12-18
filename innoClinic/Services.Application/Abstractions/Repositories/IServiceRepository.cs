@@ -2,15 +2,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Services.Application.Abstractions.Repositories {
     public interface IServiceRepository {
-        Task<Service?> GetAsync(Guid id);
+        Task<bool> AnyAsync(Expression<Func<Service,bool>> filter);
+        Task<Service?> GetAsync( Expression<Func<Service, bool>> filter );
         Task<IList<Service>> GetAllAsync();
-        Task DeleteAsync(Guid id);
+        Task DeleteAsync( Service service );
         Task UpdateAsync(Service updatedService);
-        Task<Guid> CreateAsync(Service service);
+        Task CreateAsync(Service service);
+        Task<Service?> GetLightAsync( Expression<Func<Service, bool>> filter );
     }
 }
