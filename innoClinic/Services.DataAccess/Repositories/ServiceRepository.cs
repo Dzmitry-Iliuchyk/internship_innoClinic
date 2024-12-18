@@ -13,7 +13,13 @@ namespace Services.DataAccess.Repositories {
         public async Task<bool> AnyAsync( Expression<Func<Service, bool>> filter ) {
             return await entities.AnyAsync(filter);
         }
-
+        public override async Task<IList<Service>?> GetAllAsync() {
+            return await entities
+                .AsNoTracking()
+                .Include( s => s.Specialization )
+                .Include( s => s.Category )
+                .ToListAsync();
+        }
         public async Task<Service?> GetAsync( Expression<Func<Service, bool>> filter ) {
             return await entities
                 .AsNoTracking()
