@@ -22,7 +22,7 @@ jobs:
         dotnet-version: 8.0.x
     - name: Restore dependencies
       working-directory: ./innoClinic
-      run: dotnet restore
+      run: dotnet restore innoClinic.sln
     - name: Build
       working-directory: ./innoClinic
       run: dotnet build --no-restore
