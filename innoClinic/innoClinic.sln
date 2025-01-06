@@ -37,8 +37,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Profiles.DataAccess", "Prof
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Profiles.Application", "Profiles.Application\Profiles.Application.csproj", "{318992AF-19BF-446C-9A84-D18A679182B3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D1E07C9C-EDDB-4C18-A0A9-53971A43A2B2}"
-EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{4A86CB02-E668-40CA-9B7E-A868C82CB77E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Appointments.Api", "Appointments.Api\Appointments.Api.csproj", "{8964580D-E2D0-44B0-B08A-59A8229FC4CC}"

@@ -1,24 +1,65 @@
-var builder = WebApplication.CreateBuilder( args );
+using Appointments.Application;
+using Appointments.DataAccess;
+using FastEndpoints;
+using FastEndpoints.Swagger;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 
+var builder = WebApplication.CreateBuilder( args );
+var config = builder.Configuration;
 // Add services to the container.
 
-builder.Services.AddControllers();
+var jwtOptions = config.GetRequiredSection( nameof( JwtOptions ) );
+builder.Services.Configure<JwtOptions>( jwtOptions );
+
+builder.Services.AddAuthentication( options => {
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+} ).AddJwtBearer( options => {
+    var credentials = GetKey( Path.Combine( Directory.GetCurrentDirectory(), "Auth", "public_key.pem" ) );
+    options.TokenValidationParameters = new TokenValidationParameters {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ClockSkew = TimeSpan.Zero,
+        ValidIssuer = jwtOptions.GetValue<string>( nameof( JwtOptions.Issuer ) ),
+        ValidAudience = jwtOptions.GetValue<string>( nameof( JwtOptions.Audience ) ),
+        IssuerSigningKey = credentials
+    };
+} );
+builder.Services.AddAuthorization();
+builder.Services.AddApplicationLayer();
+builder.Services.AddDataAccess(config);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services
+   .AddFastEndpoints()
+   .SwaggerDocument();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment()) {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
+// Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
+app
+   .UseFastEndpoints( c => { 
+       c.Serializer.Options.PropertyNamingPolicy = null; } )
+   .UseSwaggerGen();
 
-app.MapControllers();
 
 app.Run();
+
+static RsaSecurityKey GetKey( string pathToKey ) {
+    byte[] key = File.ReadAllBytes( pathToKey );
+    var rsa = RSA.Create();
+    rsa.ImportFromPem( Encoding.UTF8.GetChars( key ) );
+    return new RsaSecurityKey( rsa );
+}
