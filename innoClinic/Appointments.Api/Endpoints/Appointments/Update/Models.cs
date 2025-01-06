@@ -1,4 +1,4 @@
-﻿namespace Appointmeents.Update {
+﻿namespace Appointments.Update {
     internal sealed class UpdateAppointmentRequest {
         public Guid Id { get; set; }
         public Guid DoctorId { get; set; }

@@ -1,5 +1,6 @@
 using Appointments.Application;
 using Appointments.DataAccess;
+using Appointments.Middleware;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -14,6 +15,7 @@ var config = builder.Configuration;
 
 var jwtOptions = config.GetRequiredSection( nameof( JwtOptions ) );
 builder.Services.Configure<JwtOptions>( jwtOptions );
+builder.Services.AddSingleton<ExceptionHandlingMiddleware>();
 
 builder.Services.AddAuthentication( options => {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -42,9 +44,7 @@ builder.Services
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-
-// Configure the HTTP request pipeline.
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

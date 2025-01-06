@@ -1,4 +1,5 @@
 ﻿using Appointments.Application.Interfaces.Services;
+using System.Net;
 
 
 namespace Appointments.GetAll {
@@ -10,9 +11,13 @@ namespace Appointments.GetAll {
         }
 
         public override void Configure() {
-            Get( "Appointments/GetAll" );
+            Get( "appointments/getAll" );
             DontCatchExceptions();
             AllowAnonymous();
+            Summary( s => {
+                s.Summary = "Used to retrieve a list of appointments";
+                s.Responses[ (int)HttpStatusCode.OK ] = "Returns if successfully retrieved";
+            } );
         }
 
         public override async Task HandleAsync( CancellationToken c ) {

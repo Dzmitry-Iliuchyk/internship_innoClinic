@@ -1,4 +1,5 @@
 ﻿using Appointments.Application.Interfaces.Services;
+using System.Net;
 
 namespace Appointments.Get {
     public class Endpoint: Endpoint<GetAppointmentRequest, GetAppointmentResponse> {
@@ -9,10 +10,16 @@ namespace Appointments.Get {
         }
 
         public override void Configure() {
-            Get("/appointments/get/{@AppointmentId}" , x => new { x.AppointmentId} );
+            Get( "/appointments/{AppointmentId}/get");
             DontCatchExceptions();
             AllowAnonymous();
-           
+            Summary( s => {
+                s.Summary = "Used to retrieve new appointment";
+                s.Params[ "GetAppointmentRequest" ] = "Object with data which will be used to retrieve appointment";
+                s.Responses[ (int)HttpStatusCode.OK ] = "Returns if successfully created";
+                s.Responses[ (int)HttpStatusCode.NotFound ] = "If the item is not found";
+                s.Responses[ (int)HttpStatusCode.BadRequest ] = "If validation is not passed";
+            } );
         }
 
         public override async Task HandleAsync( GetAppointmentRequest r, CancellationToken c ) {

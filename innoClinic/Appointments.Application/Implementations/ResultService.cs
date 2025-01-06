@@ -1,4 +1,5 @@
 ﻿using Appointments.Application.Dtos;
+using Appointments.Application.Exceptions;
 using Appointments.Application.Interfaces.Repositories;
 using Appointments.Application.Interfaces.Services;
 using Appointments.Domain;
@@ -24,7 +25,7 @@ namespace Appointments.Application.Implementations {
         public async Task DeleteAsync( Guid id ) {
             var entity = await _repository.GetAsync(id);
             if (entity == null) {
-                throw new NotImplementedException();    
+                throw new ResultNotFoundException(id);    
             }
             await _repository.DeleteAsync( entity );
         }
@@ -34,10 +35,18 @@ namespace Appointments.Application.Implementations {
         }
 
         public async Task<ResultFullDto> GetAsync( Guid id ) {
-            return ( await _repository.GetAsync( id ) ).Adapt<ResultFullDto>( );
+            var result = await _repository.GetAsync(id);
+            if (result == null) {
+                throw new ResultNotFoundException( id );
+            }
+            return ( result ).Adapt<ResultFullDto>( );
         }
 
         public async Task UpdateAsync( ResultDto entity ) {
+            var result = await _repository.GetAsync( entity.Id );
+            if (result == null) {
+                throw new ResultNotFoundException( entity.Id );
+            }
             await _repository.UpdateAsync(entity.Adapt<Result>());
         }
     }
