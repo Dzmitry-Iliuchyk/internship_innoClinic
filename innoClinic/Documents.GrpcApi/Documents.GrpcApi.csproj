@@ -18,9 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Documents.Domain\Documents.Domain.csproj" />
     <ProjectReference Include="..\Documents.Application\Documents.Application.csproj" />
     <ProjectReference Include="..\Documents.DataAccess\Documents.DataAccess.csproj" />
+    <ProjectReference Include="..\Documents.Domain\Documents.Domain.csproj" />
   </ItemGroup>
 
 </Project>

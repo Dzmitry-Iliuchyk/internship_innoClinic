@@ -21,30 +21,30 @@ namespace Documents.GrpcApi.Services {
 
         [Authorize]
         public override async Task<BlobDetails> GetBlobDetails( GetBlobDetailsRequest request, ServerCallContext context ) {
-            return ( await _blobStorage.GetBlobDetailsAsync(request.PathToBlob, context.CancellationToken) ).ToGrpcDetails();
+            return ( await _blobStorage.GetBlobDetailsAsync( request.PathToBlob, context.CancellationToken ) ).ToGrpcDetails();
         }
 
         public override async Task<GetBlobsResponse> GetBlobs( GetBlobsRequest request, ServerCallContext context ) {
             return await ( await _blobStorage
                 .GetBlobsByMetadataAsync( request.ContainerName,
                                           new KeyValuePair<string, string>(
-                                              request.MetadataKey, 
-                                              request.MetadataValue 
+                                              request.MetadataKey,
+                                              request.MetadataValue
                                               ),
                                           context.CancellationToken ) )
                 .ToGrpcBlobsResponce();
         }
         public override async Task<GetBlobsDetailsResponse> GetBlobsDetails( GetBlobsDetailsRequest request, ServerCallContext context ) {
-            return (await _blobStorage
-                .GetBlobsDetailsAsync( request.ContainerName, context.CancellationToken ))
+            return ( await _blobStorage
+                .GetBlobsDetailsAsync( request.ContainerName, context.CancellationToken ) )
                 .ToGetBlobsDetailsResponse();
         }
         public override async Task<UploadResponse> UploadBlob( BlobUploadRequest request, ServerCallContext context ) {
-            await _blobStorage.UploadBlobAsync(new MemoryStream( request.Content.ToByteArray()), request.PathToBlob, context.CancellationToken);
+            await _blobStorage.UploadBlobAsync( new MemoryStream( request.Content.ToByteArray() ), request.PathToBlob, context.CancellationToken );
             var uploadResponse = new UploadResponse() {
                 IsSuccess = true
             };
-            return await ValueTask.FromResult(uploadResponse);
+            return await ValueTask.FromResult( uploadResponse );
         }
     }
 }

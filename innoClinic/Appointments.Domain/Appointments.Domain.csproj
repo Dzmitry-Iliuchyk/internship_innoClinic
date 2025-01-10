@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Documents.Domain\Documents.Domain.csproj" />
+    <ProjectReference Include="..\innoClinic.Abstractions\Shared.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>
