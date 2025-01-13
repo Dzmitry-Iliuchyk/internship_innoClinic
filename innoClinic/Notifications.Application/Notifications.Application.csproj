@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="MailKit" Version="4.9.0" />
+    <PackageReference Include="MassTransit" Version="8.3.4" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.4" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0" />
     <PackageReference Include="MimeKit" Version="4.9.0" />
@@ -15,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Notifications.Domain\Notifications.Domain.csproj" />
+    <ProjectReference Include="..\Shared.Events.Contracts\Shared.Events.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

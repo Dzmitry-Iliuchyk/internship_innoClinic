@@ -1,5 +1,5 @@
 using Grpc.Core;
-using Notifications.Application;
+using Notifications.Application.Interfaces;
 
 namespace Notifications.GrpcApi.Services {
     public class MailService: GrpcApi.MailService.MailServiceBase {

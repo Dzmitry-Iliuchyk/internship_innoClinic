@@ -69,6 +69,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notifications.Application",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notifications.Domain", "Notifications.Domain\Notifications.Domain.csproj", "{16EBEB5D-9CD1-4EF9-BD4C-26BDDF3E8185}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Events.Contracts", "Shared.Events.Contracts\Shared.Events.Contracts.csproj", "{D46A955D-D42F-47B1-A320-2D6A87F7FE57}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -179,6 +181,10 @@ Global
 		{16EBEB5D-9CD1-4EF9-BD4C-26BDDF3E8185}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16EBEB5D-9CD1-4EF9-BD4C-26BDDF3E8185}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16EBEB5D-9CD1-4EF9-BD4C-26BDDF3E8185}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D46A955D-D42F-47B1-A320-2D6A87F7FE57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D46A955D-D42F-47B1-A320-2D6A87F7FE57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D46A955D-D42F-47B1-A320-2D6A87F7FE57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D46A955D-D42F-47B1-A320-2D6A87F7FE57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

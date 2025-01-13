@@ -1,9 +1,10 @@
 ﻿using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using Notifications.Application.Interfaces;
 using Notifications.Domain;
 
-namespace Notifications.Application {
+namespace Notifications.Application.Services {
     public class EmailSender: IEmailSender {
         private readonly EmailConfiguration _emailConfig;
 
@@ -30,7 +31,7 @@ namespace Notifications.Application {
         private async Task<string> Send( MimeMessage mailMessage ) {
             using (var client = new SmtpClient()) {
                 try {
-                    
+
                     await client.ConnectAsync( _emailConfig.SmtpServer, _emailConfig.Port, true );
                     client.AuthenticationMechanisms.Remove( "XOAUTH2" );
                     await client.AuthenticateAsync( _emailConfig.UserName, _emailConfig.Password );

@@ -1,5 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using MassTransit;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Notifications.Application.Consumers;
+using Notifications.Application.Interfaces;
+using Notifications.Application.Services;
+using Shared.Events.Contracts;
 
 
 namespace Notifications.Application {
@@ -14,6 +19,23 @@ namespace Notifications.Application {
                 x.Port = int.Parse( emailConfiguration[ "Port" ] ?? throw new ArgumentNullException( "Port" ) );
             } );
             services.AddSingleton<IEmailSender, EmailSender>();
+            services.AddMassTransit( x => {
+                x.SetKebabCaseEndpointNameFormatter();
+
+                x.AddConsumer<SendEmailConsumer>();
+
+                x.UsingRabbitMq( ( context, cfg ) => {
+                    cfg.Host( "localhost", "/", h => {
+                        h.Username( "guest" );
+                        h.Password( "guest" );
+                    } );
+
+                    cfg.ConfigureEndpoints( context );
+                } );
+                //x.AddRequestClient<SendEmailRequest>();
+
+            } );
+    
             return services;
         }
     }
