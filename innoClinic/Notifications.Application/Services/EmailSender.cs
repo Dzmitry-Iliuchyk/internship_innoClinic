@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using MimeKit;
 using Notifications.Application.Interfaces;
 using Notifications.Domain;
+using System.Net.Mime;
 
 namespace Notifications.Application.Services {
     public class EmailSender: IEmailSender {
@@ -23,7 +24,13 @@ namespace Notifications.Application.Services {
             emailMessage.From.Add( new MailboxAddress( nameFrom, _emailConfig.From ) );
             emailMessage.Bcc.AddRange( message.To );
             emailMessage.Subject = message.Subject;
-            emailMessage.Body = new TextPart( MimeKit.Text.TextFormat.Html ) { Text = message.Content };
+            var bodyBuilder = new BodyBuilder();
+            if (message.File != null) {
+                bodyBuilder.Attachments.Add( message.File.FileName, message.File.FileContent,
+                    new MimeKit.ContentType( message.File.FileType.Split( "/" )[0], message.File.FileType.Split( "/" )[ 1 ] ) );
+            }
+            bodyBuilder.HtmlBody = message.HtmlBodyContent;
+            emailMessage.Body = bodyBuilder.ToMessageBody();
 
             return emailMessage;
         }
