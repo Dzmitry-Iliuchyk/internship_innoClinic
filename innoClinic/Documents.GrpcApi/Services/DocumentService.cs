@@ -3,7 +3,7 @@ using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Documents.GrpcApi.Services {
-    [Authorize]
+
     public class DocumentService: GrpcApi.DocumentService.DocumentServiceBase {
         private readonly IBlobStorage _blobStorage;
         public DocumentService( IBlobStorage blobStorage ) {
