@@ -6,6 +6,8 @@ services:
   #     dockerfile: ProfilesApi/Dockerfile
   #   depends_on:
   #     - db
+  #   networks:
+  #     - backend 
   # documents.grpcapi:
   #   image: ${DOCKER_REGISTRY-}documentsgrpcapi
   #   build:
@@ -26,26 +28,50 @@ services:
   #     - backend
   #   depends_on:
   #     - mongo
-  notifications.grpcapi:
-    image: ${DOCKER_REGISTRY-}notificationsgrpcapi
+
+  services.api:
+    image: ${DOCKER_REGISTRY-}servicesapi
     build:
       context: .
-      dockerfile: Notifications.GrpcApi/Dockerfile
+      dockerfile: Services.Api/Dockerfile
     depends_on:
-      - rabbit
+     - services_sql_server
+    networks:
+     - backend
+  services_sql_server:
+    image: mcr.microsoft.com/mssql/server:latest
+    user: root
+    container_name: services_sql_server
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=MsSql#2024Secure!
+      - TZ=Etc/UTC
+    ports:
+      - 1433:1433
+    volumes:
+      - services_sql_server_data:/var/opt/mssql/data
     networks:
       - backend 
-  rabbit:
-    image: masstransit/rabbitmq:latest
-    container_name: rabbit
-    ports:
-      - 5672:5672
-      - 15672:15672
-      - 15692:15692
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq  
-    networks:
-      - backend
+  # notifications.grpcapi:
+  #   image: ${DOCKER_REGISTRY-}notificationsgrpcapi
+  #   build:
+  #     context: .
+  #     dockerfile: Notifications.GrpcApi/Dockerfile
+  #   depends_on:
+  #     - rabbit
+  #   networks:
+  #     - backend 
+  # rabbit:
+  #   image: masstransit/rabbitmq:latest
+  #   container_name: rabbit
+  #   ports:
+  #     - 5672:5672
+  #     - 15672:15672
+  #     - 15692:15692
+  #   volumes:
+  #     - rabbitmq_data:/var/lib/rabbitmq  
+  #   networks:
+  #     - backend
   # db:
   #   image: mcr.microsoft.com/mssql/server:2022-latest
   #   environment:
@@ -84,14 +110,19 @@ services:
   #   networks:
   #     - backend
 
+
+
 volumes:
   # db_data:
   # azure_data:
   # mongo_data:
-  rabbitmq_data:
+  # rabbitmq_data:
+  services_sql_server_data:
 
 networks:
   backend:
     name: backend-network
+
+
 
 

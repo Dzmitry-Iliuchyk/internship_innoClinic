@@ -6,7 +6,9 @@
       "serviceActions": {
         "documents.grpcapi": "StartDebugging",
         "offices.api": "StartDebugging",
-        "notifications.grpcapi": "StartDebugging"
+        "notifications.grpcapi": "StartDebugging",
+        "profiles.api": "StartDebugging",
+        "services.api": "StartDebugging"
       }
     }
   }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Services.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,9 +48,7 @@ namespace Services.DataAccess.Migrations
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     SpecializationId = table.Column<int>(type: "int", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    ServiceCategoryId = table.Column<int>(type: "int", nullable: true),
-                    SpecializationId1 = table.Column<int>(type: "int", nullable: true)
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -62,21 +60,11 @@ namespace Services.DataAccess.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Services_ServiceCategories_ServiceCategoryId",
-                        column: x => x.ServiceCategoryId,
-                        principalTable: "ServiceCategories",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_Services_Specializations_SpecializationId",
                         column: x => x.SpecializationId,
                         principalTable: "Specializations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Services_Specializations_SpecializationId1",
-                        column: x => x.SpecializationId1,
-                        principalTable: "Specializations",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -91,19 +79,15 @@ namespace Services.DataAccess.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Services_ServiceCategoryId",
+                name: "IX_Services_Name",
                 table: "Services",
-                column: "ServiceCategoryId");
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Services_SpecializationId",
                 table: "Services",
                 column: "SpecializationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Services_SpecializationId1",
-                table: "Services",
-                column: "SpecializationId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Specializations_Name",
