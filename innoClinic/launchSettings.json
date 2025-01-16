@@ -8,7 +8,8 @@
         "offices.api": "StartDebugging",
         "notifications.grpcapi": "StartDebugging",
         "profiles.api": "StartDebugging",
-        "services.api": "StartDebugging"
+        "services.api": "StartDebugging",
+        "appointments.api": "StartDebugging"
       }
     }
   }
