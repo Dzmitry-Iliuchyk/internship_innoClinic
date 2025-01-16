@@ -12,22 +12,22 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Documents.GrpcApi/Documents.GrpcApi.csproj", "Documents.GrpcApi/"]
-COPY ["Documents.Application/Documents.Application.csproj", "Documents.Application/"]
-COPY ["Documents.Domain/Documents.Domain.csproj", "Documents.Domain/"]
-COPY ["Documents.DataAccess/Documents.DataAccess.csproj", "Documents.DataAccess/"]
-RUN dotnet restore "./Documents.GrpcApi/Documents.GrpcApi.csproj"
+COPY ["Offices.Api/Offices.Api.csproj", "Offices.Api/"]
+COPY ["Offices.Application/Offices.Application.csproj", "Offices.Application/"]
+COPY ["Offices.Domain/Offices.Domain.csproj", "Offices.Domain/"]
+COPY ["Offices.DataAccess/Offices.DataAccess.csproj", "Offices.DataAccess/"]
+RUN dotnet restore "./Offices.Api/Offices.Api.csproj"
 COPY . .
-WORKDIR "/src/Documents.GrpcApi"
-RUN dotnet build "./Documents.GrpcApi.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/Offices.Api"
+RUN dotnet build "./Offices.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Documents.GrpcApi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Offices.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Documents.GrpcApi.dll"]
+ENTRYPOINT ["dotnet", "Offices.Api.dll"]

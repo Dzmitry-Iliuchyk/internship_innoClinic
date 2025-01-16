@@ -6,15 +6,44 @@ services:
   #     dockerfile: ProfilesApi/Dockerfile
   #   depends_on:
   #     - db
-  documents.grpcapi:
-    image: ${DOCKER_REGISTRY-}documentsgrpcapi
+  # documents.grpcapi:
+  #   image: ${DOCKER_REGISTRY-}documentsgrpcapi
+  #   build:
+  #     context: .
+  #     dockerfile: Documents.GrpcApi/Dockerfile
+  #   environment:
+  #     - AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=http;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;AccountName=devstoreaccount1;BlobEndpoint=http://host.docker.internal:10000/devstoreaccount1;
+  #   depends_on:
+  #     - azurite
+  #   networks:
+  #     - backend
+  # offices.api:
+  #   image: ${DOCKER_REGISTRY-}officesapi
+  #   build:
+  #     context: .
+  #     dockerfile: Offices.Api/Dockerfile
+  #   networks:
+  #     - backend
+  #   depends_on:
+  #     - mongo
+  notifications.grpcapi:
+    image: ${DOCKER_REGISTRY-}notificationsgrpcapi
     build:
       context: .
-      dockerfile: Documents.GrpcApi/Dockerfile
-    environment:
-      - AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=http;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;AccountName=devstoreaccount1;BlobEndpoint=http://host.docker.internal:10000/devstoreaccount1;
+      dockerfile: Notifications.GrpcApi/Dockerfile
     depends_on:
-      - azurite
+      - rabbit
+    networks:
+      - backend 
+  rabbit:
+    image: masstransit/rabbitmq:latest
+    container_name: rabbit
+    ports:
+      - 5672:5672
+      - 15672:15672
+      - 15692:15692
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq  
     networks:
       - backend
   # db:
@@ -26,23 +55,43 @@ services:
   #     - "1433:1433"
   #   volumes:
   #     - db_data:/var/opt/mssql
-  azurite:
-    image: mcr.microsoft.com/azure-storage/azurite:latest
-    container_name: azurite
-    hostname: azurite
-    restart: always
-    command: 'azurite --loose --blobHost 0.0.0.0 --blobPort 10000 --location /workspace --debug /workspace/debug.log'
-    ports:
-      - 10000:10000
-    volumes:
-      - azure_data:/workspace
-    networks:
-      - backend
+  # azurite:
+  #   image: mcr.microsoft.com/azure-storage/azurite:latest
+  #   container_name: azurite
+  #   hostname: azurite
+  #   restart: always
+  #   command: 'azurite --loose --blobHost 0.0.0.0 --blobPort 10000 --location /workspace --debug /workspace/debug.log'
+  #   ports:
+  #     - 10000:10000
+  #   volumes:
+  #     - azure_data:/workspace
+  #   networks:
+  #     - backend
+  # mongo:
+  #   image: mongo:latest
+  #   container_name: offices-mongo
+  #   ports:
+  #     - '27017:27017'
+  #   restart: always
+  #   logging:
+  #     options:
+  #       max-size: 1g
+  #   environment:
+  #     - MONGO_INITDB_ROOT_USERNAME=mongoadmin
+  #     - MONGO_INITDB_ROOT_PASSWORD=mongoadmin
+  #   volumes:
+  #     - mongo_data:/data/db
+  #   networks:
+  #     - backend
 
 volumes:
   # db_data:
-  azure_data:
+  # azure_data:
+  # mongo_data:
+  rabbitmq_data:
 
 networks:
   backend:
     name: backend-network
+
+

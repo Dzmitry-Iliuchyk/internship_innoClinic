@@ -5,6 +5,7 @@ using Notifications.Application.Consumers;
 using Notifications.Application.Interfaces;
 using Notifications.Application.Services;
 using Shared.Events.Contracts;
+using static MassTransit.MessageHeaders;
 
 
 namespace Notifications.Application {
@@ -25,9 +26,10 @@ namespace Notifications.Application {
                 x.AddConsumer<SendEmailConsumer>();
 
                 x.UsingRabbitMq( ( context, cfg ) => {
-                    cfg.Host( "localhost", "/", h => {
-                        h.Username( "guest" );
-                        h.Password( "guest" );
+                    cfg.Host( config[ "rabbitMq:host" ] ?? throw new ArgumentNullException( "rabbitMq:host" ),
+                        "/", h => {
+                        h.Username( config[ "rabbitMq:user" ] ?? throw new ArgumentNullException( "rabbitMq:user" ) );
+                        h.Password( config[ "rabbitMq:password" ]??throw new ArgumentNullException( "rabbitMq:password" ) );
                     } );
 
                     cfg.ConfigureEndpoints( context );
