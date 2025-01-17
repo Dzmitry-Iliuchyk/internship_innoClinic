@@ -41,24 +41,17 @@ namespace Services.DataAccess.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("ServiceCategoryId")
-                        .HasColumnType("int");
-
                     b.Property<int>("SpecializationId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SpecializationId1")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("ServiceCategoryId");
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.HasIndex("SpecializationId");
-
-                    b.HasIndex("SpecializationId1");
 
                     b.ToTable("Services", (string)null);
                 });
@@ -114,24 +107,16 @@ namespace Services.DataAccess.Migrations
             modelBuilder.Entity("Services.Domain.Service", b =>
                 {
                     b.HasOne("Services.Domain.ServiceCategory", "Category")
-                        .WithMany()
+                        .WithMany("Services")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Services.Domain.ServiceCategory", null)
-                        .WithMany("Services")
-                        .HasForeignKey("ServiceCategoryId");
-
                     b.HasOne("Services.Domain.Specialization", "Specialization")
-                        .WithMany()
+                        .WithMany("Services")
                         .HasForeignKey("SpecializationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Services.Domain.Specialization", null)
-                        .WithMany("Services")
-                        .HasForeignKey("SpecializationId1");
 
                     b.Navigation("Category");
 

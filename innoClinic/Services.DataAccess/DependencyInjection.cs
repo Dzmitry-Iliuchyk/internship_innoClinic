@@ -11,7 +11,7 @@ namespace Services.DataAccess {
             services.AddDbContext<ServiceContext>( p => {
                 p.UseSqlServer(config.GetConnectionString( "Services" ) );
                 p.UseSeeding((c,_)=> Seeder.Seed(c));
-            } );
+                } );
             services.AddScoped<IServiceRepository, ServiceRepository>();
             services.AddScoped<IServiceCategoryRepository, ServiceCategoryRepository>();
             services.AddScoped<ISpecializationRepository, SpecializationRepository>();

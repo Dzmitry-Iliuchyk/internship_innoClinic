@@ -1,11 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Services.Api.Middlewares;
 using Services.Application;
 using Services.DataAccess;
-using Services.Domain;
-using System;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -52,7 +50,12 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
+using (var scope = app.Services.CreateScope()) {
+    var context = scope.ServiceProvider.GetRequiredService<ServiceContext>();
+    if (context.Database.GetPendingMigrations().Any()) {
+        context.Database.Migrate();
+    }
+}
 app.Run();
 static RsaSecurityKey GetKey( string pathToKey ) {
     byte[] key = File.ReadAllBytes( pathToKey );

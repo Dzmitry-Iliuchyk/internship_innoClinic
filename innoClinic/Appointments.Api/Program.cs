@@ -4,6 +4,7 @@ using Appointments.Middleware;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Net;
 using System.Security.Cryptography;
@@ -54,6 +55,12 @@ app
        c.Serializer.Options.PropertyNamingPolicy = null; } )
    .UseSwaggerGen();
 
+using (var scope = app.Services.CreateScope()) {
+    var context = scope.ServiceProvider.GetRequiredService<AppointmentsDbContext>();
+    if (context.Database.GetPendingMigrations().Any()) {
+        context.Database.Migrate();
+    }
+}
 
 app.Run();
 

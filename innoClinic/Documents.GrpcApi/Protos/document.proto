@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+option csharp_namespace = "Documents.GrpcApi";
+
+package documents;
+
+// The greeting service definition.
+service DocumentService {
+    rpc UploadBlob(BlobUploadRequest) returns (UploadResponse);
+    rpc GetBlobsDetails(GetBlobsDetailsRequest) returns (GetBlobsDetailsResponse);
+    rpc DeleteBlob(DeleteBlobRequest) returns (DeleteBlobResponse);
+    rpc GetBlob(GetBlobRequest) returns (Blob);
+    rpc GetBlobDetails(GetBlobDetailsRequest) returns (BlobDetails);
+    rpc GetBlobs(GetBlobsRequest) returns (GetBlobsResponse);
+}
+message BlobUploadRequest {
+    bytes content = 1;
+    string pathToBlob = 2;
+}
+message UploadResponse {
+    bool isSuccess = 1;
+}
+message GetBlobsDetailsRequest {
+    string containerName = 1;
+}
+message GetBlobsDetailsResponse {
+    repeated BlobDetails blobsDetails = 1;
+}
+message DeleteBlobRequest {
+    string pathToBlob = 1;
+}
+message DeleteBlobResponse {
+    bool isSuccess = 1;
+}
+message GetBlobRequest {
+    string pathToBlob = 1;
+}
+message Blob {
+    BlobDetails details = 1;
+    bytes content = 2;
+}
+message GetBlobDetailsRequest {
+    string pathToBlob = 1;
+}
+message GetBlobsRequest {
+    string containerName = 1;
+    string metadataKey = 2;
+    string metadataValue = 3;
+}
+message GetBlobsResponse {
+    repeated Blob blobs = 1;
+}
+message FileChunk {
+    bytes content = 1;
+}
+message BlobDetails {
+    string name = 1;
+    map<string, string> metadata = 2;
+    google.protobuf.Int64Value contentLength = 3;
+    string contentType = 4;
+    google.protobuf.Timestamp lastModified = 5;
+    google.protobuf.Timestamp createdAt = 6;
+}
