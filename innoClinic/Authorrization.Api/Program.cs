@@ -3,6 +3,7 @@ using Authorization.Application;
 using Authorization.Application.Implementations;
 using Authorization.DataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -14,8 +15,11 @@ var cfg = builder.Configuration;
 var jwtOptions = cfg.GetRequiredSection( nameof( JwtOptions ) );
 builder.Services.Configure<JwtOptions>( jwtOptions );
 // Add services to the container.
+var currentRoot = Directory.GetParent( Directory.GetCurrentDirectory() ).FullName == "/"
+                ? "/src"
+                : Directory.GetParent( Directory.GetCurrentDirectory() ).FullName;
 
-var credentials = TokenService.GetSecurityKey( Path.Combine( Directory.GetParent(Directory.GetCurrentDirectory()).FullName, "Authorization.Application\\public_key.pem" ) );
+var credentials = TokenService.GetSecurityKey( Path.Combine( currentRoot, "Authorization.Application", "public_key.pem" ) );
 
 builder.Services.AddAuthentication( options => {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -78,9 +82,13 @@ app.UseAuthorization();
 
 app.MapControllers();
 using (var serviceScope = app.Services.CreateScope()) {
-    var context = serviceScope.ServiceProvider.GetService<AuthDbContext>();
+    var context = serviceScope.ServiceProvider.GetRequiredService<AuthDbContext>();
+    if (context.Database.GetPendingMigrations().Any()) {
+        context.Database.Migrate();
+    }
     if (!context.Users.Any()) {
         context.SeedUsers();
     }
 }
+
 app.Run();

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Profiles.Api;
+using Profiles.Api.Middleware;
 using Profiles.Application;
 using Profiles.Application.Common.Security;
 using Profiles.DataAccess;
@@ -77,6 +78,7 @@ builder.Services.AddSwaggerGen( c => {
 } );
 
 var app = builder.Build();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment()) {

@@ -1,43 +1,90 @@
 services:
-  # profiles.api:
-  #   image: ${DOCKER_REGISTRY-}profilesapi
-  #   build:
-  #     context: .
-  #     dockerfile: ProfilesApi/Dockerfile
-  #   depends_on:
-  #     - db
-  #   networks:
-  #     - backend 
-  # documents.grpcapi:
-  #   image: ${DOCKER_REGISTRY-}documentsgrpcapi
-  #   build:
-  #     context: .
-  #     dockerfile: Documents.GrpcApi/Dockerfile
-  #   environment:
-  #     - AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=http;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;AccountName=devstoreaccount1;BlobEndpoint=http://host.docker.internal:10000/devstoreaccount1;
-  #   depends_on:
-  #     - azurite
-  #   networks:
-  #     - backend
-  # offices.api:
-  #   image: ${DOCKER_REGISTRY-}officesapi
-  #   build:
-  #     context: .
-  #     dockerfile: Offices.Api/Dockerfile
-  #   networks:
-  #     - backend
-  #   depends_on:
-  #     - mongo
-  # notifications.grpcapi:
-  #   image: ${DOCKER_REGISTRY-}notificationsgrpcapi
-  #   build:
-  #     context: .
-  #     dockerfile: Notifications.GrpcApi/Dockerfile
-  #   depends_on:
-  #     - rabbit
-  #   networks:
-  #     - backend 
-
+# Profiles
+  profiles.api:
+    image: ${DOCKER_REGISTRY-}profilesapi
+    build:
+      context: .
+      dockerfile: ProfilesApi/Dockerfile
+    depends_on:
+      - db
+    networks:
+      - backend 
+# Profiles_DB
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: "MsSql#2024Secure!"
+      ACCEPT_EULA: "Y"
+      TZ: "Etc/UTC"
+    ports:
+      - "1850:1433"
+    volumes:
+      - db_data:/var/opt/mssql
+    networks:
+      - backend 
+# Offices
+  offices.api:
+    image: ${DOCKER_REGISTRY-}officesapi
+    build:
+      context: .
+      dockerfile: Offices.Api/Dockerfile
+    networks:
+      - backend
+    depends_on:
+      - mongo
+# Offices_DB
+  mongo:
+    image: mongo:latest
+    container_name: offices-mongo
+    ports:
+      - '27017:27017'
+    restart: always
+    logging:
+      options:
+        max-size: 1g
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongoadmin
+      - MONGO_INITDB_ROOT_PASSWORD=mongoadmin
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - backend
+# Notifications
+  notifications.grpcapi:
+    image: ${DOCKER_REGISTRY-}notificationsgrpcapi
+    build:
+      context: .
+      dockerfile: Notifications.GrpcApi/Dockerfile
+    depends_on:
+      - rabbit
+    networks:
+      - backend 
+    # Authorization
+  authorization.api:
+    image: ${DOCKER_REGISTRY-}authorizationapi
+    build:
+      context: .
+      dockerfile: Authorrization.Api/Dockerfile
+    depends_on:
+      - auth_server
+    networks:
+      - backend 
+       # Authorization_DB
+  auth_server:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    user: root
+    container_name: auth_server
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=MsSql#2024Secure!
+      - TZ=Etc/UTC
+    ports:
+      - 1400:1433
+    volumes:
+      - auth_server_data:/var/opt/mssql/data
+    networks:
+      - backend 
+  # Appointments
   appointments.api:
     image: ${DOCKER_REGISTRY-}appointmentsapi
     build:
@@ -47,6 +94,7 @@ services:
       - appointments_postgres
     networks:
       - backend
+# Appointments_Db
   appointments_postgres:
     image: postgres:latest
     environment:
@@ -57,97 +105,80 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"  
+      - "6000:5432"  
     networks:
       - backend
-  # services.api:
-  #   image: ${DOCKER_REGISTRY-}servicesapi
-  #   build:
-  #     context: .
-  #     dockerfile: Services.Api/Dockerfile
-  #   depends_on:
-  #    - services_sql_server
-  #   networks:
-  #    - backend
-  # services_sql_server:
-  #   image: mcr.microsoft.com/mssql/server:latest
-  #   user: root
-  #   container_name: services_sql_server
-  #   environment:
-  #     - ACCEPT_EULA=Y
-  #     - SA_PASSWORD=MsSql#2024Secure!
-  #     - TZ=Etc/UTC
-  #   ports:
-  #     - 1433:1433
-  #   volumes:
-  #     - services_sql_server_data:/var/opt/mssql/data
-  #   networks:
-  #     - backend 
-  # rabbit:
-  #   image: masstransit/rabbitmq:latest
-  #   container_name: rabbit
-  #   ports:
-  #     - 5672:5672
-  #     - 15672:15672
-  #     - 15692:15692
-  #   volumes:
-  #     - rabbitmq_data:/var/lib/rabbitmq  
-  #   networks:
-  #     - backend
-  # db:
-  #   image: mcr.microsoft.com/mssql/server:2022-latest
-  #   environment:
-  #     SA_PASSWORD: "MsSql#2024Secure!"
-  #     ACCEPT_EULA: "Y"
-  #   ports:
-  #     - "1433:1433"
-  #   volumes:
-  #     - db_data:/var/opt/mssql
-  # azurite:
-  #   image: mcr.microsoft.com/azure-storage/azurite:latest
-  #   container_name: azurite
-  #   hostname: azurite
-  #   restart: always
-  #   command: 'azurite --loose --blobHost 0.0.0.0 --blobPort 10000 --location /workspace --debug /workspace/debug.log'
-  #   ports:
-  #     - 10000:10000
-  #   volumes:
-  #     - azure_data:/workspace
-  #   networks:
-  #     - backend
-  # mongo:
-  #   image: mongo:latest
-  #   container_name: offices-mongo
-  #   ports:
-  #     - '27017:27017'
-  #   restart: always
-  #   logging:
-  #     options:
-  #       max-size: 1g
-  #   environment:
-  #     - MONGO_INITDB_ROOT_USERNAME=mongoadmin
-  #     - MONGO_INITDB_ROOT_PASSWORD=mongoadmin
-  #   volumes:
-  #     - mongo_data:/data/db
-  #   networks:
-  #     - backend
-
-
-
-
+    # Services
+  services.api:
+    image: ${DOCKER_REGISTRY-}servicesapi
+    build:
+      context: .
+      dockerfile: Services.Api/Dockerfile
+    depends_on:
+     - services_sql_server
+    networks:
+     - backend
+ #Services_DB
+  services_sql_server:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    user: root
+    container_name: services_sql_server
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=MsSql#2024Secure!
+      - TZ=Etc/UTC
+    ports:
+      - 1500:1433
+    volumes:
+      - services_sql_server_data:/var/opt/mssql/data
+    networks:
+      - backend 
+# MessageBroker
+  rabbit:
+    image: masstransit/rabbitmq:latest
+    container_name: rabbit
+    ports:
+      - 5672:5672
+      - 15672:15672
+      - 15692:15692
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq  
+    networks:
+      - backend
+  #Documents
+  documents.grpcapi:
+    image: ${DOCKER_REGISTRY-}documentsgrpcapi
+    build:
+      context: .
+      dockerfile: Documents.GrpcApi/Dockerfile
+    environment:
+      - AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=http;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;AccountName=devstoreaccount1;BlobEndpoint=http://host.docker.internal:10000/devstoreaccount1;
+    depends_on:
+      - azurite
+    networks:
+      - backend
+  #Documents_DB
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:latest
+    container_name: azurite
+    hostname: azurite
+    restart: always
+    command: 'azurite --loose --blobHost 0.0.0.0 --blobPort 10000 --location /workspace --debug /workspace/debug.log'
+    ports:
+      - 10000:10000
+    volumes:
+      - azure_data:/workspace
+    networks:
+      - backend
 volumes:
-  # db_data:
-  # azure_data:
-  # mongo_data:
-  # rabbitmq_data:
-  # services_sql_server_data:
+  db_data:
+  azure_data:
+  mongo_data:
+  rabbitmq_data:
+  services_sql_server_data:
   postgres-data:
+  auth_server_data:
 
 networks:
   backend:
     name: backend-network
-
-
-
-
-
