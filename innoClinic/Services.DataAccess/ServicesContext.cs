@@ -18,18 +18,18 @@ namespace Services.DataAccess {
                 entity.Property( e => e.Id ).ValueGeneratedNever();
                 entity.Property( e => e.Name ).IsRequired().HasMaxLength( 80 );
                 entity.HasIndex( e => e.Name ).IsUnique( true );
-                entity.Property( e => e.Price ).IsRequired();
+                entity.Property( e => e.Price ).IsRequired().HasColumnType( "decimal(18,2)" );
                 entity.Property( e => e.CategoryId ).IsRequired();
                 entity.Property( e => e.SpecializationId ).IsRequired();
                 entity.Property( e => e.IsActive ).IsRequired();
 
-                entity.HasOne( e => e.Category )
-                      .WithMany()
-                      .HasForeignKey( e => e.CategoryId );
+                //entity.HasOne( e => e.Category )
+                //      .WithMany()
+                //      .HasForeignKey( e => e.CategoryId );
 
-                entity.HasOne( e => e.Specialization )
-                      .WithMany()
-                      .HasForeignKey( e => e.SpecializationId );
+                //entity.HasOne( e => e.Specialization )
+                //      .WithMany()
+                //      .HasForeignKey( e => e.SpecializationId );
             } );
             modelBuilder.Entity<ServiceCategory>( entity => {
                 entity.ToTable( "ServiceCategories" );

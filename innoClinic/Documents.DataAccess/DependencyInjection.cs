@@ -8,7 +8,8 @@ namespace Documents.DataAccess {
         public static IServiceCollection AddDataAccess(this IServiceCollection services, IConfiguration config) {
             services.AddScoped<IBlobStorage, AzureBlobStorage>();
             services.AddAzureClients( clientBuilder => {
-                clientBuilder.AddBlobServiceClient( config[ "StorageConnection:blobServiceUri" ]! );
+                var conn = Environment.GetEnvironmentVariable( "AZURE_STORAGE_CONNECTION_STRING" );
+                clientBuilder.AddBlobServiceClient( conn );
             } );
             return services;
         }

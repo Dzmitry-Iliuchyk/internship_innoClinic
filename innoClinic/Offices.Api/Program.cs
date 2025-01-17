@@ -8,7 +8,6 @@ using Offices.DataAccess.DIConfiguration;
 using Serilog;
 using System.Reflection;
 using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder( args );
@@ -20,7 +19,7 @@ builder.Services.AddAuthentication( options => {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 } ).AddJwtBearer( options => {
-    var credentials = GetKey( Path.Combine( Directory.GetCurrentDirectory(), "Auth\\public_key.pem " ) );
+    var credentials = GetKey( Path.Combine( Directory.GetCurrentDirectory(), "Auth", "public_key.pem" ) );
     options.TokenValidationParameters = new TokenValidationParameters {
         ValidateIssuer = true,
         ValidateAudience = true,
@@ -90,7 +89,7 @@ app.UseAuthorization();
 app.MapControllers();
 app.Use( async ( cont, next ) => await next( cont ) );
 app.Run();
-static RsaSecurityKey GetKey(string pathToKey) {
+static RsaSecurityKey GetKey( string pathToKey ) {
     byte[] key = File.ReadAllBytes( pathToKey );
     var rsa = RSA.Create();
     rsa.ImportFromPem( Encoding.UTF8.GetChars( key ) );
