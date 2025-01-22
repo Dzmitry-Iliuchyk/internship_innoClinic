@@ -18,6 +18,6 @@ namespace Offices.DataAccess.Models {
         [BsonElement( "phone_id" )]
         [BsonRequired]
         [BsonRepresentation( BsonType.String )]
-        public Guid? PhotoId { get; set; }
+        public string? PhotoUrl { get; set; }
     }
 }

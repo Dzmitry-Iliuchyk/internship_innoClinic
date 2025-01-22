@@ -32,6 +32,11 @@ namespace Offices.DataAccess.Repositories {
                 .Find( x => x.Id == id )
                 .AnyAsync();
         }
+        public async Task<bool> AnyByNumberAsync( string phone ) {
+            return await _offices
+                .Find( x => x.RegistryPhoneNumber == phone )
+                .AnyAsync();
+        }
 
         public async Task<Office> GetAsync( string id ) {
             var office = await _offices

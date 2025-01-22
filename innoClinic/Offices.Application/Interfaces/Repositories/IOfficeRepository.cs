@@ -8,5 +8,6 @@ namespace Offices.Application.Interfaces.Repositories {
         Task DeleteAsync(string id);
         Task CreateAsync(Office entity);
         Task<bool> AnyAsync( string id );
+        Task<bool> AnyByNumberAsync( string phone );
     }
 }

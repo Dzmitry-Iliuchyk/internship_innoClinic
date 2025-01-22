@@ -13,8 +13,11 @@ namespace Offices.Api.Middleware {
             try {
                 await next( context );
             }
-            catch (OfficeNotFoundException ex) {
+            catch (NotFoundException ex) {
                 await HandleApplicationException( context, ex, HttpStatusCode.NotFound );
+            }
+            catch (BadRequestException ex) {
+                await HandleApplicationException( context, ex, HttpStatusCode.BadRequest );
             }
             catch (ValidationException ex) {
                 await HandleValidationException( context, ex );
