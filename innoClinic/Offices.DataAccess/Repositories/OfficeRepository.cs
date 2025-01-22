@@ -58,5 +58,11 @@ namespace Offices.DataAccess.Repositories {
             var entity = _mapper.Map<OfficeEntity>( office );
             await _offices.ReplaceOneAsync( x => x.Id == entity.Id, entity );
         }
+
+        public async Task SetPathToOffice(string id, string path ) {
+            await _offices.FindOneAndUpdateAsync( x => x.Id == id,
+                new UpdateDefinitionBuilder<OfficeEntity>()
+                .Set(nameof(OfficeEntity.PhotoUrl),path));
+        }
     }
 }

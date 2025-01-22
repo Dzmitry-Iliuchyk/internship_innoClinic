@@ -69,5 +69,11 @@ namespace Offices.Application.Implementations.Services {
 
             await _repository.UpdateAsync( office );
         }
+        public async Task SetPathToOffice( string id, string path ) {
+            if (await _repository.AnyAsync(id)) {
+                throw new OfficeNotFoundException( id );
+            }
+            await _repository.SetPathToOffice( id, path );
+        }
     }
 }

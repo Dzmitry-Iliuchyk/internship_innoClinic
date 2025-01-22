@@ -43,13 +43,28 @@ namespace Offices.Api.Controllers {
         /// <param name="id">Identifier of office which you want to update</param>
         /// <param name="updateOfficeDto">Object with data which replace old one</param>
         /// <returns>Status code only</returns>
-        /// <response code="201">Returns if successfully updated</response>
+        /// <response code="204">Returns if successfully updated</response>
         /// <response code="404">If the item not found</response>
-        [ProducesResponseType( StatusCodes.Status201Created )]
+        [ProducesResponseType( StatusCodes.Status204NoContent )]
         [ProducesResponseType( StatusCodes.Status404NotFound, Type = typeof( ErrorResponse ) )]
         [HttpPut( "[action]" )]
         public async Task<IResult> UpdateOffice( string id, UpdateOfficeDto updateOfficeDto ) {
             await _officeService.UpdateAsync( id, updateOfficeDto );
+            return Results.NoContent();
+        }
+        /// <summary>
+        /// Used to update path to photo
+        /// </summary>
+        /// <param name="id">Identifier of office which you want to update</param>
+        /// <param name="path">psth to blob</param>
+        /// <returns>Status code only</returns>
+        /// <response code="201">Returns if successfully updated</response>
+        /// <response code="404">If the item not found</response>
+        [ProducesResponseType( StatusCodes.Status204NoContent )]
+        [ProducesResponseType( StatusCodes.Status404NotFound, Type = typeof( ErrorResponse ) )]
+        [HttpPatch( "[action]" )]
+        public async Task<IResult> SetPathToOffice( string id, string path ) {
+            await _officeService.SetPathToOffice( id, path );
             return Results.NoContent();
         }
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿namespace FacadeApi.Offices.Dtos {
     public class UpdateOfficeDto {
+        public string Id { get; set; }
         public AddressDto Address { get; set; }
         public string RegistryPhoneNumber { get; set; }
         public bool Status { get; set; }

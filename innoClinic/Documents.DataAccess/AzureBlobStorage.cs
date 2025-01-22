@@ -19,8 +19,11 @@ namespace Documents.DataAccess {
         }
         public async Task<Blob> GetBlobAsync( string pathToBlob, CancellationToken cancellationToken = default ) {
             var (containerName, blobName) = GetParsedPath( pathToBlob );
-            var blobClient = _blobService.GetBlobContainerClient( containerName );
-            var result = await blobClient.GetBlobClient( blobName ).DownloadAsync( cancellationToken );
+            var blobClient = _blobService.GetBlobContainerClient( containerName ).GetBlobClient( blobName );
+            if (await blobClient.ExistsAsync()) {
+                return null;
+            }
+            var result = await blobClient.DownloadAsync( cancellationToken );
             return new Blob {
                 Content = result.Value.Content,
                 Details = new BlobDetails {
@@ -92,9 +95,9 @@ namespace Documents.DataAccess {
         }
         public async Task<BlobDetails> GetBlobDetailsAsync( string pathToBlob, CancellationToken cancellationToken = default ) {
             var (containerName, blobName) = GetParsedPath( pathToBlob );
-            var blobClient = _blobService.GetBlobContainerClient( containerName );
-
-            var result = await blobClient.GetBlobClient( blobName ).GetPropertiesAsync( cancellationToken: cancellationToken );
+            var blobClient = _blobService.GetBlobContainerClient( containerName ).GetBlobClient( blobName );
+            
+            var result = await blobClient.GetPropertiesAsync( cancellationToken: cancellationToken );
 
             return new BlobDetails {
                 Name = blobName,
@@ -130,8 +133,6 @@ namespace Documents.DataAccess {
             var blobClient = _blobService.GetBlobContainerClient( containerName );
             var result = await blobClient.UploadBlobAsync( blobName, stream, cancellationToken );
         }
-
-
 
         private (string containerName, string pathToBlob) GetParsedPath( string path ) {
             var data = path.Split( ":" );
