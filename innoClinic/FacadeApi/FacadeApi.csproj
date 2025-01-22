@@ -21,4 +21,8 @@
     <Protobuf Include="Protos\document.proto" GrpcServices="Client" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Profiles\Dtos\" />
+  </ItemGroup>
+
 </Project>

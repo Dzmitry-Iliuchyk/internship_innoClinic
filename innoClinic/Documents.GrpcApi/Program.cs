@@ -1,4 +1,5 @@
 using Documents.DataAccess;
+using Documents.GrpcApi.Interceptors;
 using Documents.GrpcApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Azure;
@@ -32,6 +33,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddDataAccess(config);
 builder.Services.AddGrpc( opt => {
     opt.MaxReceiveMessageSize = 100 * 1024 * 1024;
+    opt.Interceptors.Add<ExceptionHandlingInterceptor>();
 } );
 
 var app = builder.Build();

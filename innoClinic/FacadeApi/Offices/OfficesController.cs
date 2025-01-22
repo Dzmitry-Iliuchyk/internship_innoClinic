@@ -91,7 +91,6 @@ namespace FacadeApi.Offices {
                 catch (RpcException ex) {
                     throw;
                 }
-
             }
 
             var result = await officeClient.PutAsync( $"/offices/UpdateOffice?id={updateOfficeDto.Id}", JsonContent.Create( request ) );

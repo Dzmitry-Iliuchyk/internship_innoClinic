@@ -9,7 +9,6 @@ builder.Services.AddHttpClient( "profiles", cfg => {
 } );
 builder.Services.AddHttpClient( "offices", cfg => {
     cfg.BaseAddress = new Uri( "http://offices.api" );
-    
 } );
 builder.Services.AddGrpcClient<DocumentService.DocumentServiceClient>( "documents", cfg => {
     cfg.Address = new Uri( "http://documents.grpcapi" );

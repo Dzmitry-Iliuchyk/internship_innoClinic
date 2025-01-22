@@ -83,7 +83,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Events.Contracts", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Facade", "Facade", "{AAC8D94B-83CE-4DA0-BB0A-F2FC11338D9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacadeApi", "..\FacadeApi\FacadeApi.csproj", "{7FE49020-9ADA-4E88-8B2E-3D03006AA74C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacadeApi", "FacadeApi\FacadeApi.csproj", "{7FE49020-9ADA-4E88-8B2E-3D03006AA74C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
