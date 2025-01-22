@@ -3,16 +3,16 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Offices.DataAccess.Models {
     public class AddressEntity {
-        [BsonElement( "city" )]
+        [BsonElement( "City" )]
         [BsonRequired]
         public required string City { get; set; }
-        [BsonElement( "street" )]
+        [BsonElement( "Street" )]
         [BsonRequired]
         public required string Street { get; set; }
-        [BsonElement( "house_number" )]
+        [BsonElement( "House_number" )]
         [BsonRequired]
         public required string HouseNumber { get; set; }
-        [BsonElement( "office_number" )]
+        [BsonElement( "Office_number" )]
         public string? OfficeNumber { get; set; }
     }
 }

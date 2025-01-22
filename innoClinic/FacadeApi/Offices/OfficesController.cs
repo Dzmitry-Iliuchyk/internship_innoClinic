@@ -18,8 +18,12 @@ namespace FacadeApi.Offices {
         [HttpGet( "[action]" )]
         public async Task<IResult> GetOffices() {
             using var officeClient = _clientFactory.CreateClient( "offices" );
+            var result = await officeClient.GetAsync( $"api/Offices/GetOffices" );
             var offices = JsonSerializer.Deserialize<List<OfficeDtoFromApi>>(
-                    ( await officeClient.GetAsync( $"/offices/GetOffices" ) ).Content.ReadAsStream()
+                    ( result ).Content.ReadAsStream(),
+                    new JsonSerializerOptions {
+                        PropertyNameCaseInsensitive = true
+                    }
                 );
             var res = new List<OfficeDto>();
             foreach (var office in offices) {
@@ -50,7 +54,10 @@ namespace FacadeApi.Offices {
         public async Task<IResult> GetOffice( string id ) {
             using var officeClient = _clientFactory.CreateClient( "offices" );
             var office = JsonSerializer.Deserialize<OfficeDtoFromApi>(
-                    ( await officeClient.GetAsync( $"/offices/{id}/GetOffice" ) ).Content.ReadAsStream()
+                    ( await officeClient.GetAsync( $"api/Offices/{id}/GetOffice" ) ).Content.ReadAsStream(),
+                    new JsonSerializerOptions {
+                        PropertyNameCaseInsensitive = true
+                    }
                 );
             Photo photo = null;
             if (string.IsNullOrEmpty( office.PhotoUrl )) {
@@ -73,14 +80,15 @@ namespace FacadeApi.Offices {
         }
 
         [HttpPut( "[action]" )]
-        public async Task<IResult> UpdateOffice( UpdateOfficeDto updateOfficeDto ) {
+        public async Task<IResult> UpdateOffice( UpdateOfficeDto updateOfficeDto, IFormFile? file ) {
             using var officeClient = _clientFactory.CreateClient( "offices" );
             var request = updateOfficeDto.ToUpdateOfficeDtoForApi();
-            if (updateOfficeDto.Photo != null) {
+            if (file != null) {
                 try {
-                    var photoUrl = Extensions.GetPathToOfficeBlob( updateOfficeDto.Photo.Name, updateOfficeDto.Id );
+                    using var filestream = file.OpenReadStream();
+                    var photoUrl = Extensions.GetPathToOfficeBlob( file.Name, updateOfficeDto.Id );
                     var docResult = await _documents.UploadBlobAsync( new BlobUploadRequest() {
-                        Content = Google.Protobuf.ByteString.CopyFrom( updateOfficeDto.Photo.Content ),
+                        Content = Google.Protobuf.ByteString.FromStream(filestream ),
                         PathToBlob = photoUrl,
                     } );
                     if (!docResult.IsSuccess) {
@@ -93,7 +101,7 @@ namespace FacadeApi.Offices {
                 }
             }
 
-            var result = await officeClient.PutAsync( $"/offices/UpdateOffice?id={updateOfficeDto.Id}", JsonContent.Create( request ) );
+            var result = await officeClient.PutAsync( $"api/Offices/UpdateOffice?id={updateOfficeDto.Id}", JsonContent.Create( request ) );
             if (!result.IsSuccessStatusCode) {
                 await _documents.DeleteBlobAsync( new DeleteBlobRequest() {
                     PathToBlob = request.PhotoUrl,
@@ -106,8 +114,11 @@ namespace FacadeApi.Offices {
         [HttpDelete( "[action]" )]
         public async Task<IResult> DeleteOffice( string id ) {
             using var officeClient = _clientFactory.CreateClient( "offices" );
-            var office = JsonSerializer.Deserialize<OfficeDtoFromApi>( ( await officeClient.GetAsync( $"/offices/GetOffice?id={id}" ) ).Content.ReadAsStream() );
-            var result = await officeClient.DeleteAsync( $"/offices/DeleteOffice?id={id}" );
+            var office = JsonSerializer.Deserialize<OfficeDtoFromApi>( ( await officeClient.GetAsync( $"api/Offices/GetOffice?id={id}" ) ).Content.ReadAsStream(),
+                new JsonSerializerOptions {
+                PropertyNameCaseInsensitive = true
+            } );
+            var result = await officeClient.DeleteAsync( $"api/Offices/DeleteOffice?id={id}" );
             if (result.IsSuccessStatusCode && !string.IsNullOrEmpty( office?.PhotoUrl )) {
                 await _documents.DeleteBlobAsync( new DeleteBlobRequest() {
                     PathToBlob = office.PhotoUrl,
@@ -117,33 +128,34 @@ namespace FacadeApi.Offices {
         }
 
         [HttpPost( "[action]" )]
-        public async Task<IResult> CreateOffice( CreateOfficeDto createOfficeDto ) {
+        public async Task<IResult> CreateOffice( CreateOfficeDto createOfficeDto) {
             using var officeClient = _clientFactory.CreateClient( "offices" );
             var request = createOfficeDto.ToCreateOfficeDtoForApi();
-            var result = await officeClient.PostAsync( $"/offices/CreateOffice", JsonContent.Create( request ) );
+            var result = await officeClient.PostAsync( $"api/Offices/CreateOffice", JsonContent.Create( request ) );
             if (!result.IsSuccessStatusCode) {
                 throw new NotImplementedException();
             }
-            if (createOfficeDto.Photo != null) {
-                var path = Extensions.GetPathToOfficeBlob( createOfficeDto.Photo.Name, await result.Content.ReadAsStringAsync() );
+            if (createOfficeDto.File != null) {
+                var id = JsonSerializer.Deserialize<string>( await result.Content.ReadAsStreamAsync(),
+                        new JsonSerializerOptions {
+                            PropertyNameCaseInsensitive = true
+                        } );
+                var path = Extensions.GetPathToOfficeBlob( createOfficeDto.File.FileName,id );
 
                 try {
+                    using var filestream = createOfficeDto.File.OpenReadStream();
                     var docResult = await _documents.UploadBlobAsync( new BlobUploadRequest() {
-                        Content = Google.Protobuf.ByteString.CopyFrom( createOfficeDto.Photo.Content ),
+                        Content = Google.Protobuf.ByteString.FromStream( filestream ),
                         PathToBlob = path,
                     } );
-                    await officeClient.PatchAsync( $"/offices/SetPathToOffice",
-                        JsonContent.Create( ( new {
-                            id = await result.Content.ReadAsStringAsync(),
-                            path = path
-                        } ) ) );
+                    await officeClient.PatchAsync( $"api/Offices/SetPathToOffice?id={id}&path={path}", null );
                 }
                 catch (RpcException ex) {
                     throw;
                 }
 
             }
-            return Results.Ok( result.Content );
+            return Results.Ok( result.Content.ReadAsStringAsync() );
         }
     }
 }

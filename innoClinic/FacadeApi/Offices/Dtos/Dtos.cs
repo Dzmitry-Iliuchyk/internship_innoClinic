@@ -4,7 +4,6 @@
         public AddressDto Address { get; set; }
         public string RegistryPhoneNumber { get; set; }
         public bool Status { get; set; }
-        public Photo? Photo { get; set; }
     }
     public class UpdateOfficeDtoForApi {
         public AddressDto Address { get; set; }
@@ -16,7 +15,7 @@
         public AddressDto Address { get; set; }
         public string RegistryPhoneNumber { get; set; }
         public bool Status { get; set; }
-        public Photo? Photo { get; set; }
+        public IFormFile? File { get; set; }
     }
     public class CreateOfficeDtoForApi {
         public AddressDto Address { get; set; }

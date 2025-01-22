@@ -6,16 +6,16 @@ namespace Offices.DataAccess.Models {
         [BsonId]
         [BsonRepresentation( BsonType.ObjectId )]
         public required string Id { get; set; }
-        [BsonElement( "adrdess" )]
+        [BsonElement( "Adrdess" )]
         [BsonRequired]
         public required AddressEntity Address { get; set; }
-        [BsonElement( "registry_phone_number" )]
+        [BsonElement( "Registry_phone_number" )]
         [BsonRequired]
         public required string RegistryPhoneNumber { get; set; }
-        [BsonElement( "status" )]
+        [BsonElement( "Status" )]
         [BsonRequired]
         public required bool Status { get; set; }
-        [BsonElement( "phone_id" )]
+        [BsonElement( "PhotoUrl" )]
         [BsonRequired]
         [BsonRepresentation( BsonType.String )]
         public string? PhotoUrl { get; set; }

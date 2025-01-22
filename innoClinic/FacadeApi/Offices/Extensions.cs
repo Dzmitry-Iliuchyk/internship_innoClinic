@@ -7,6 +7,7 @@ namespace FacadeApi.Offices {
                  Address = updateOfficeDto.Address,
                  RegistryPhoneNumber = updateOfficeDto.RegistryPhoneNumber,
                  Status = updateOfficeDto.Status,
+                 PhotoUrl = ""
             };
 
             return updateOfficeDtoForApi;
@@ -21,6 +22,7 @@ namespace FacadeApi.Offices {
                 Address = updateOfficeDto.Address,
                 RegistryPhoneNumber = updateOfficeDto.RegistryPhoneNumber,
                 Status = updateOfficeDto.Status,
+                PhotoUrl = ""
             };
             return createOfficeDtoForApi;
         }
