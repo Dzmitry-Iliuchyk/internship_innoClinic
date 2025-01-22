@@ -14,6 +14,7 @@ service DocumentService {
     rpc GetBlob(GetBlobRequest) returns (Blob);
     rpc GetBlobDetails(GetBlobDetailsRequest) returns (BlobDetails);
     rpc GetBlobs(GetBlobsRequest) returns (GetBlobsResponse);
+    rpc GetBlobsByPrefix(GetBlobsByPrefixRequest) returns (GetBlobsResponse);
 }
 message BlobUploadRequest {
     bytes content = 1;
@@ -49,6 +50,10 @@ message GetBlobsRequest {
     string metadataKey = 2;
     string metadataValue = 3;
 }
+message GetBlobsByPrefixRequest{
+    string path = 1;
+}
+
 message GetBlobsResponse {
     repeated Blob blobs = 1;
 }
