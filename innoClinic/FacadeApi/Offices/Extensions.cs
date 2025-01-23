@@ -1,4 +1,5 @@
-﻿using FacadeApi.Offices.Dtos;
+﻿using Documents.GrpcApi;
+using FacadeApi.Offices.Dtos;
 
 namespace FacadeApi.Offices {
     public static class Extensions {
@@ -12,7 +13,17 @@ namespace FacadeApi.Offices {
 
             return updateOfficeDtoForApi;
         }
-
+        public static List<Photo> ToPhotos(this GetBlobsResponse blobs) {
+            var photos = new List<Photo>();
+            foreach (var blob in blobs.Blobs) {
+                photos.Add( new Photo() { 
+                    Name = blob.Details.Name,
+                    Content = blob.Content.ToBase64(),
+                    Metadata = blob.Details.Metadata
+                } );
+            }
+            return photos;
+        }
         public static string GetPathToOfficeBlob( string fileName, string id ) {
             return $"office:{id}/{fileName}";
         }

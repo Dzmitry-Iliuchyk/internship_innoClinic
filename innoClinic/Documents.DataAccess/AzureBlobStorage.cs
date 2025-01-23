@@ -20,7 +20,7 @@ namespace Documents.DataAccess {
         public async Task<Blob> GetBlobAsync( string pathToBlob, CancellationToken cancellationToken = default ) {
             var (containerName, blobName) = GetParsedPath( pathToBlob );
             var blobClient = _blobService.GetBlobContainerClient( containerName ).GetBlobClient( blobName );
-            if (await blobClient.ExistsAsync()) {
+            if (!await blobClient.ExistsAsync()) {
                 return null;
             }
             var result = await blobClient.DownloadAsync( cancellationToken );

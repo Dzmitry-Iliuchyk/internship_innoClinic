@@ -11,6 +11,10 @@ builder.Services.AddHttpClient( "offices", cfg => {
     cfg.BaseAddress = new Uri( "http://offices.api:8080" );
 } );
 builder.Services.AddGrpcClient<DocumentService.DocumentServiceClient>( "documents", cfg => {
+    cfg.ChannelOptionsActions.Add( x => {
+        x.MaxReceiveMessageSize = 100 * 1024 * 1024;
+        x.MaxSendMessageSize = 100 * 1024 * 1024;   
+        } );
     cfg.Address = new Uri( "http://documents.grpcapi:8080" );
 } );
 builder.Services.AddControllers();

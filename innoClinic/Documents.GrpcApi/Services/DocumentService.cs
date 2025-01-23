@@ -15,7 +15,7 @@ namespace Documents.GrpcApi.Services {
             return new() { IsSuccess = result };
         }
 
-        public override async Task<Blob> GetBlob( GetBlobRequest request, ServerCallContext context ) {
+        public override async Task<Blob?> GetBlob( GetBlobRequest request, ServerCallContext context ) {
             return await ( await _blobStorage.GetBlobAsync( request.PathToBlob ) ).ToGrpcBlob();
         }
 

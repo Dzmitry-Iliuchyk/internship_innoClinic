@@ -16,11 +16,20 @@ namespace FacadeApi.Offices {
         }
 
         [HttpGet( "[action]" )]
+        public async Task<IResult> GetAllPhotos(string id) {
+            var officePhotos = await _documents.GetBlobsByPrefixAsync( new GetBlobsByPrefixRequest() {
+                Path = Extensions.GetPathToOfficeBlob("", id)
+            } );
+            
+            return Results.Ok( officePhotos.ToPhotos() );
+        }
+
+        [HttpGet( "[action]" )]
         public async Task<IResult> GetOffices() {
             using var officeClient = _clientFactory.CreateClient( "offices" );
-            var result = await officeClient.GetAsync( $"api/Offices/GetOffices" );
+            var httpResult = await officeClient.GetAsync( $"api/Offices/GetOffices" );
             var offices = JsonSerializer.Deserialize<List<OfficeDtoFromApi>>(
-                    ( result ).Content.ReadAsStream(),
+                    ( httpResult ).Content.ReadAsStream(),
                     new JsonSerializerOptions {
                         PropertyNameCaseInsensitive = true
                     }
@@ -33,7 +42,7 @@ namespace FacadeApi.Offices {
                 var photo = new Photo();
                 if (docResult != null) {
                     photo = new() {
-                        Content = docResult.Content.ToArray(),
+                        Content = docResult.Content.ToBase64(),
                         Name = docResult.Details.Name,
                     };
                 }
@@ -65,7 +74,7 @@ namespace FacadeApi.Offices {
                     PathToBlob = office.PhotoUrl,
                 } );
                 photo = new() {
-                    Content = docResult.Content.ToArray(),
+                    Content = docResult.Content.ToBase64(),
                     Name = docResult.Details.Name,
                 };
             }

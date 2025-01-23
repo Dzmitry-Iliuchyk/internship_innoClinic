@@ -33,6 +33,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddDataAccess(config);
 builder.Services.AddGrpc( opt => {
     opt.MaxReceiveMessageSize = 100 * 1024 * 1024;
+    opt.MaxSendMessageSize = 100 * 1024 * 1024;
     opt.Interceptors.Add<ExceptionHandlingInterceptor>();
 } );
 
