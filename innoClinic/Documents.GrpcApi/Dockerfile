@@ -15,7 +15,9 @@ WORKDIR /src
 COPY ["Documents.GrpcApi/Documents.GrpcApi.csproj", "Documents.GrpcApi/"]
 COPY ["Documents.Application/Documents.Application.csproj", "Documents.Application/"]
 COPY ["Documents.Domain/Documents.Domain.csproj", "Documents.Domain/"]
+COPY ["Shared.Events.Contracts/Shared.Events.Contracts.csproj", "Shared.Events.Contracts/"]
 COPY ["Documents.DataAccess/Documents.DataAccess.csproj", "Documents.DataAccess/"]
+COPY ["Shared.ServiceDiscovery/Shared.ServiceDiscovery.csproj", "Shared.ServiceDiscovery/"]
 RUN dotnet restore "./Documents.GrpcApi/Documents.GrpcApi.csproj"
 COPY . .
 WORKDIR "/src/Documents.GrpcApi"

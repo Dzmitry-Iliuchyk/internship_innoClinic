@@ -1,6 +1,6 @@
 ﻿using Documents.GrpcApi;
+using FacadeApi.Exceptions;
 using FacadeApi.Offices.Dtos;
-using FacadeApi.Offices.Exceptions;
 using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;

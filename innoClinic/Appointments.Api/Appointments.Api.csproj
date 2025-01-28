@@ -30,6 +30,7 @@
     <ProjectReference Include="..\Appointments.Application\Appointments.Application.csproj" />
     <ProjectReference Include="..\Appointments.DataAccess\Appointments.DataAccess.csproj" />
     <ProjectReference Include="..\Appointments.Domain\Appointments.Domain.csproj" />
+    <ProjectReference Include="..\Shared.ServiceDiscovery\Shared.ServiceDiscovery.csproj" />
   </ItemGroup>
 
 </Project>

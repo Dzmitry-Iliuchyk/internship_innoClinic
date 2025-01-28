@@ -1,5 +1,5 @@
 ﻿using Documents.GrpcApi;
-using FacadeApi.Offices.Exceptions;
+using FacadeApi.Exceptions;
 using FacadeApi.Results.Dtos;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;

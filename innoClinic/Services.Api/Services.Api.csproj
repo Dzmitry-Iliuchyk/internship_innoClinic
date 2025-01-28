@@ -23,6 +23,7 @@
     <ProjectReference Include="..\Services.Application\Services.Application.csproj" />
     <ProjectReference Include="..\Services.DataAccess\Services.DataAccess.csproj" />
     <ProjectReference Include="..\Services.Domain\Services.Domain.csproj" />
+    <ProjectReference Include="..\Shared.ServiceDiscovery\Shared.ServiceDiscovery.csproj" />
   </ItemGroup>
 
 </Project>
