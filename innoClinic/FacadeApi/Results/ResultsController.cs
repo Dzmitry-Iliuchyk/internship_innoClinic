@@ -1,10 +1,12 @@
 ﻿using Documents.GrpcApi;
+using FacadeApi.Offices.Exceptions;
 using FacadeApi.Results.Dtos;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Events.Contracts;
 using Shared.PdfGenerator;
 using System.IO;
+using System.Text.Json;
 
 namespace FacadeApi.ResultsApi {
     [ApiController]
@@ -29,8 +31,24 @@ namespace FacadeApi.ResultsApi {
             using var resultsClient = GetClientWithHeaders();
 
 
-            var appointment = await resultsClient.GetFromJsonAsync<AppointmentResponse>( $"appointments/{r.AppointmentId}/get" );
-            var emails = await resultsClient.GetFromJsonAsync<EmailsResponse>( $"appointments/{appointment.Id}/getEmails" );
+            var appointmentHttpResult = await resultsClient.GetAsync( $"appointments/{r.AppointmentId}/get" );
+            if (!appointmentHttpResult.IsSuccessStatusCode) {
+                throw new NotSuccessHttpRequest( appointmentHttpResult );
+            }
+            var appointment = JsonSerializer.Deserialize<AppointmentResponse>(
+                await appointmentHttpResult.Content.ReadAsStreamAsync(),
+                options: new() {
+                    PropertyNameCaseInsensitive = true
+            } );
+
+            var emailsHttpResult = await resultsClient.GetAsync( $"appointments/{appointment.Id}/getEmails" );
+            if (!emailsHttpResult.IsSuccessStatusCode) {
+                throw new NotSuccessHttpRequest( emailsHttpResult );
+            }
+            var emails = JsonSerializer.Deserialize<EmailsResponse>( await appointmentHttpResult.Content.ReadAsStreamAsync(),
+                options: new() {
+                    PropertyNameCaseInsensitive = true
+                } );
 
             var content = JsonContent.Create( new ResultCreateDto {
                 AppointmentId = r.AppointmentId,
@@ -41,7 +59,7 @@ namespace FacadeApi.ResultsApi {
             } );
             var httpResult = await resultsClient.PostAsync( "result/create", content );
             if (!httpResult.IsSuccessStatusCode) {
-                throw new NotImplementedException();
+                throw new NotSuccessHttpRequest( httpResult );
             }
 
             var pdf = _pdf.GeneratePdf( HtmlTamplates.GetResultsTamplateToPdf( r.Complaints, r.Conclusion, r.Recomendations ) );
@@ -52,7 +70,8 @@ namespace FacadeApi.ResultsApi {
                 PathToBlob = GetPathToBlob(r.AppointmentId),
             } );
             await _bus.Publish( new SendEmailRequest() {
-                TextContent = HtmlTamplates.GetResultsTamplateForEmailMessage( string.Format( "{0} {1}", appointment.PatientFirstName, appointment.PatientSecondName ) ),
+                TextContent = HtmlTamplates.GetResultsTamplateForEmailMessage( string.Format( "{0} {1}",
+                appointment.PatientFirstName, appointment.PatientSecondName ) ),
                 NameFrom = "innoClinic",
                 Subject = "Results",
                 To = emails.Emails,
@@ -62,10 +81,11 @@ namespace FacadeApi.ResultsApi {
                     FileContent = pdf
                 }
             } );
-            return Microsoft.AspNetCore.Http.Results.Ok(await httpResult.Content.ReadAsStringAsync());
+            return Microsoft.AspNetCore.Http.Results.Content(await httpResult.Content.ReadAsStringAsync(),
+                statusCode: (int)httpResult.StatusCode);
         }
         [HttpPut( "[action]" )]
-        public async Task<IResult> sendResult( ResultUpdateRequest r ) {
+        public async Task<IResult> TestSendEmail( ResultUpdateRequest r ) {
             
             await _bus.Publish( new SendEmailRequest() {
                 TextContent = HtmlTamplates.GetResultsTamplateForEmailMessage( string.Format( "{0} {1}", "sfsf", "fsdfs" ) ),
@@ -110,7 +130,8 @@ namespace FacadeApi.ResultsApi {
             } );
 
             await _bus.Publish( new SendEmailRequest() {
-                TextContent = HtmlTamplates.GetResultsTamplateForEmailMessage( string.Format( "{0} {1}", appointment.PatientFirstName, appointment.PatientSecondName ) ),
+                TextContent = HtmlTamplates.GetResultsTamplateForEmailMessage( string.Format( "{0} {1}",
+                appointment.PatientFirstName, appointment.PatientSecondName ) ),
                 NameFrom = "innoClinic",
                 Subject = "Results update",
                 To = emails,

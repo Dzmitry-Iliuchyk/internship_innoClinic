@@ -131,8 +131,9 @@ namespace Documents.DataAccess {
         public async Task UploadBlobAsync( Stream stream, string pathToBlob, CancellationToken cancellationToken = default ) {
             var (containerName, blobName) = GetParsedPath( pathToBlob );
             var blobContainer = _blobService.GetBlobContainerClient( containerName );
-            await blobContainer.CreateIfNotExistsAsync();
-            var result = await blobContainer.UploadBlobAsync( blobName, stream, cancellationToken );
+            await blobContainer.CreateIfNotExistsAsync(cancellationToken: cancellationToken);
+            var blobClient = blobContainer.GetBlobClient(blobName);
+            var result = await blobClient.UploadAsync( stream, overwrite: true, cancellationToken );
         }
 
         private (string containerName, string pathToBlob) GetParsedPath( string path ) {

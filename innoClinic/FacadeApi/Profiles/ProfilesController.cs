@@ -36,7 +36,10 @@ namespace FacadeApi.Profiles {
                 PathToBlob = photoUrl,
             } );
             var result = await officeClient.PatchAsync( $"Utility/SetImagePath?id={id}&path={photoUrl}",null );
-            return Microsoft.AspNetCore.Http.Results.StatusCode( (int)result.StatusCode );
+            if (!result.IsSuccessStatusCode) {
+                await _documents.DeleteBlobAsync( new DeleteBlobRequest { PathToBlob = photoUrl } );
+            }
+            return Microsoft.AspNetCore.Http.Results.Content(await result.Content.ReadAsStringAsync(), statusCode: (int?)result.StatusCode );
         }
         [HttpGet( "{id:guid}/[action]" )]
         public async Task<IResult> GetPhoto( Guid id ) {
@@ -49,7 +52,7 @@ namespace FacadeApi.Profiles {
             var docResult = await _documents.GetBlobAsync( new GetBlobRequest() {
                 PathToBlob = photoUrl,
             } );
-            return Microsoft.AspNetCore.Http.Results.Ok( docResult.ToPhoto());
+            return Microsoft.AspNetCore.Http.Results.Ok( docResult?.ToPhoto());
         }
         private HttpClient GetClientWithHeaders() {
             var officeClient = _clientFactory.CreateClient( "profiles" );

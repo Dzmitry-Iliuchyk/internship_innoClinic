@@ -17,7 +17,9 @@ namespace Notifications.Application.Consumers {
         }
 
         public async Task Consume( ConsumeContext<SendEmailRequest> context ) {
-            var file = context.Message.File != null ? new Domain.File( context.Message.File.FileName, context.Message.File.FileContentType, context.Message.File.FileContent ): null;
+            var file = context.Message.File != null 
+                ? new Domain.File( context.Message.File.FileName, context.Message.File.FileContentType, context.Message.File.FileContent )
+                : null;
             var result = await _sender.SendEmail(new Message( context.Message.To, context.Message.Subject, context.Message.TextContent, file), context.Message.NameFrom);
             await context.RespondAsync(new SendEmailResponse() { Message = result } );
         }
