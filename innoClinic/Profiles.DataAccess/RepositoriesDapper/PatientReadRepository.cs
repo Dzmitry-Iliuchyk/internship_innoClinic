@@ -59,4 +59,25 @@ namespace Profiles.DataAccess.RepositoriesDapper {
             }
         }
     }
+    public class AccountReadRepository: IAccountReadRepository {
+        private readonly DapperProfileContext _context;
+        public AccountReadRepository( DapperProfileContext context ) {
+            _context = context;
+        }
+
+        public async Task<string> GetPathToImage( Guid id ) {
+            const string sql = @" 
+                    SELECT a.PhotoUrl
+                    FROM Accounts a 
+                    WHERE a.Id = @accId
+                        ";
+            var param = new DynamicParameters();
+            param.Add( "accId", id, System.Data.DbType.Guid );
+            using (var connection = _context.CreateConnection()) {
+                var imagePath = await connection.QuerySingleOrDefaultAsync<string>( sql, param )??"";
+                return imagePath;
+            }
+        }
+
+    }
 }

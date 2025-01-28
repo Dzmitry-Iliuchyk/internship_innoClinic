@@ -7,11 +7,11 @@ services:
       context: .
       dockerfile: ProfilesApi/Dockerfile
     depends_on:
-      - db
+      - profiles_db
     networks:
       - backend 
 # Profiles_DB
-  db:
+  profiles_db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
       SA_PASSWORD: "MsSql#2024Secure!"

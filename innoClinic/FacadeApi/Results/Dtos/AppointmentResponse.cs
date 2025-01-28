@@ -1,12 +1,5 @@
-﻿using FastEndpoints;
-
-
-namespace Appointments.Get {
-    public  class GetAppointmentRequest {
-        public string AppointmentId { get; set; }
-    }
-
-    public sealed class GetAppointmentResponse {
+﻿namespace FacadeApi.Results.Dtos {
+    public sealed class AppointmentResponse {
         public Guid Id { get; set; }
         public string DoctorFirstName { get; set; }
         public string DoctorSecondName { get; set; }
@@ -16,9 +9,11 @@ namespace Appointments.Get {
         public string OfficeAddress { get; set; }
         public string PatientFirstName { get; set; }
         public string PatientSecondName { get; set; }
-        public string? PatientEmail { get; set; }
 
         public DateTime StartTime { get; set; }
         public TimeSpan Duration { get; set; }
+    }
+    public sealed class EmailsResponse {
+        public List<string> Emails {  get; set; }
     }
 }

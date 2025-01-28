@@ -46,6 +46,15 @@ namespace Appointments.Application.Implementations {
             }
             return appointment.Adapt<AppointmentDto>( );
         }
+        public async Task<List<string>> GetEmailsAsync( Guid id ) {
+            var appointment = await _repository.GetAsync(id);
+            if (appointment == null) {
+                throw new AppointmentNotFoundException(id);
+            }
+            return new List<string> {
+                appointment.PatientEmail
+            };
+        }
 
         public async Task UpdateAsync( AppointmentUpdateDto entity ) {
             var appointment = await _repository.GetAsync( entity.Id );

@@ -7,5 +7,6 @@ namespace Appointments.Application.Interfaces.Services {
         Task UpdateAsync( AppointmentUpdateDto entity );
         Task DeleteAsync( Guid entity );
         Task<IList<AppointmentDto>> GetAllAsync();
+        Task<List<string>> GetEmailsAsync( Guid id );
     }
 }

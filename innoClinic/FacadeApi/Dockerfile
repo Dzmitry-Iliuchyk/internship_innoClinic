@@ -13,6 +13,8 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["FacadeApi/FacadeApi.csproj", "FacadeApi/"]
+COPY ["Shared.Events.Contracts/Shared.Events.Contracts.csproj", "Shared.Events.Contracts/"]
+COPY ["Shared.PdfGenerator/Shared.PdfGenerator.csproj", "Shared.PdfGenerator/"]
 RUN dotnet restore "./FacadeApi/FacadeApi.csproj"
 COPY . .
 WORKDIR "/src/FacadeApi"

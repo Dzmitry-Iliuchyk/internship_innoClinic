@@ -1,6 +1,7 @@
 ﻿using Documents.GrpcApi;
 using FacadeApi.Offices.Dtos;
 using Grpc.Core;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -21,12 +22,12 @@ namespace FacadeApi.Offices {
                 Path = Extensions.GetPathToOfficeBlob("", id)
             } );
             
-            return Results.Ok( officePhotos.ToPhotos() );
+            return Microsoft.AspNetCore.Http.Results.Ok( officePhotos.ToPhotos() );
         }
 
         [HttpGet( "[action]" )]
         public async Task<IResult> GetOffices() {
-            using var officeClient = _clientFactory.CreateClient( "offices" );
+            using var officeClient = GetClientWithHeaders();
             var httpResult = await officeClient.GetAsync( $"api/Offices/GetOffices" );
             var offices = JsonSerializer.Deserialize<List<OfficeDtoFromApi>>(
                     ( httpResult ).Content.ReadAsStream(),
@@ -56,12 +57,12 @@ namespace FacadeApi.Offices {
                 } );
             }
 
-            return Results.Ok( res );
+            return Microsoft.AspNetCore.Http.Results.Ok( res );
         }
 
         [HttpGet( "{id}/[action]" )]
         public async Task<IResult> GetOffice( string id ) {
-            using var officeClient = _clientFactory.CreateClient( "offices" );
+            using var officeClient = GetClientWithHeaders();
             var office = JsonSerializer.Deserialize<OfficeDtoFromApi>(
                     ( await officeClient.GetAsync( $"api/Offices/{id}/GetOffice" ) ).Content.ReadAsStream(),
                     new JsonSerializerOptions {
@@ -79,7 +80,7 @@ namespace FacadeApi.Offices {
                 };
             }
 
-            return Results.Ok( new OfficeDto {
+            return Microsoft.AspNetCore.Http.Results.Ok( new OfficeDto {
                 Id = office.Id,
                 Address = office.Address,
                 RegistryPhoneNumber = office.RegistryPhoneNumber,
@@ -90,12 +91,12 @@ namespace FacadeApi.Offices {
 
         [HttpPut( "[action]" )]
         public async Task<IResult> UpdateOffice( UpdateOfficeDto updateOfficeDto, IFormFile? file ) {
-            using var officeClient = _clientFactory.CreateClient( "offices" );
+            using var officeClient = GetClientWithHeaders();
             var request = updateOfficeDto.ToUpdateOfficeDtoForApi();
             if (file != null) {
                 try {
                     using var filestream = file.OpenReadStream();
-                    var photoUrl = Extensions.GetPathToOfficeBlob( file.Name, updateOfficeDto.Id );
+                    var photoUrl = Extensions.GetPathToOfficeBlob( file.FileName, updateOfficeDto.Id );
                     var docResult = await _documents.UploadBlobAsync( new BlobUploadRequest() {
                         Content = Google.Protobuf.ByteString.FromStream(filestream ),
                         PathToBlob = photoUrl,
@@ -117,12 +118,12 @@ namespace FacadeApi.Offices {
                 } );
                 throw new NotImplementedException();
             }
-            return Results.Ok( result.Content );
+            return Microsoft.AspNetCore.Http.Results.Ok( result.Content );
         }
 
         [HttpDelete( "[action]" )]
         public async Task<IResult> DeleteOffice( string id ) {
-            using var officeClient = _clientFactory.CreateClient( "offices" );
+            using var officeClient = GetClientWithHeaders();
             var office = JsonSerializer.Deserialize<OfficeDtoFromApi>( ( await officeClient.GetAsync( $"api/Offices/GetOffice?id={id}" ) ).Content.ReadAsStream(),
                 new JsonSerializerOptions {
                 PropertyNameCaseInsensitive = true
@@ -133,12 +134,12 @@ namespace FacadeApi.Offices {
                     PathToBlob = office.PhotoUrl,
                 } );
             }
-            return Results.StatusCode( (int)result.StatusCode );
+            return Microsoft.AspNetCore.Http.Results.StatusCode( (int)result.StatusCode );
         }
 
         [HttpPost( "[action]" )]
         public async Task<IResult> CreateOffice( CreateOfficeDto createOfficeDto) {
-            using var officeClient = _clientFactory.CreateClient( "offices" );
+            using var officeClient = GetClientWithHeaders();
             var request = createOfficeDto.ToCreateOfficeDtoForApi();
             var result = await officeClient.PostAsync( $"api/Offices/CreateOffice", JsonContent.Create( request ) );
             if (!result.IsSuccessStatusCode) {
@@ -149,7 +150,7 @@ namespace FacadeApi.Offices {
                         new JsonSerializerOptions {
                             PropertyNameCaseInsensitive = true
                         } );
-                var path = Extensions.GetPathToOfficeBlob( createOfficeDto.File.FileName,id );
+                var path = Extensions.GetPathToOfficeBlob( createOfficeDto.File.FileName, id );
 
                 try {
                     using var filestream = createOfficeDto.File.OpenReadStream();
@@ -164,7 +165,14 @@ namespace FacadeApi.Offices {
                 }
 
             }
-            return Results.Ok( result.Content.ReadAsStringAsync() );
+            return Microsoft.AspNetCore.Http.Results.Ok( result.Content.ReadAsStringAsync() );
+        }
+        private HttpClient GetClientWithHeaders() {
+            var officeClient = _clientFactory.CreateClient( "offices" );
+            if (Request.Headers.Authorization.Any()) {
+                officeClient.DefaultRequestHeaders.Add( "Authorization", Request.Headers.Authorization.ToString() );
+            }
+            return officeClient;
         }
     }
 }

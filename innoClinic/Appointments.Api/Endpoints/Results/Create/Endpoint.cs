@@ -20,7 +20,7 @@ namespace Result.Create {
 
         public override async Task HandleAsync(ResultCreateRequest r, CancellationToken c ) {
             var res = await ResultService.CreateAsync(r.Adapt<ResultCreateDto>());
-            await SendAsync( new ResultCreateResponse() {Id= res } );
+            await SendAsync( new ResultCreateResponse() { Id= res } );
         }
     }
 }

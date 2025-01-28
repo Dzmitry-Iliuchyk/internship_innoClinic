@@ -21,6 +21,7 @@
         public Guid PatientId { get; set; }
         public string PatientFirstName { get; set; }
         public string PatientSecondName { get; set; }
+        public string? PatientEmail { get; set; }
         #endregion Patient
 
         public DateTime StartTime { get; set; }
