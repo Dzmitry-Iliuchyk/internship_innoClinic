@@ -11,6 +11,8 @@ namespace Profiles.DataAccess {
             var connectionString = configuration.GetConnectionString( "Profiles" );
             services.AddSqlServer<ProfilesDbContext>(connectionString);
             services.AddSingleton<DapperProfileContext>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IAccountReadRepository, AccountReadRepository>();
             services.AddScoped<IDoctorCommandRepository, DoctorCommandRepository>();
             services.AddScoped<IPatientCommandRepository, PatientCommandRepository>();
             services.AddScoped<IReceptionistCommandRepository, ReceptionistCommandRepository>();

@@ -58,6 +58,9 @@ namespace Appointments.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("PatientEmail")
+                        .HasColumnType("text");
+
                     b.Property<string>("PatientFirstName")
                         .IsRequired()
                         .HasMaxLength(80)

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace ProfilesApi.Controllers {
+namespace FacadeApi.Controllers {
     [ApiController]
     [Route( "[controller]" )]
     public class WeatherForecastController: ControllerBase {

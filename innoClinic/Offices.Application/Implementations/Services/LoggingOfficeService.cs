@@ -39,6 +39,10 @@ namespace Offices.Application.Implementations.Services {
             await ExecuteAndLogAsync(_officeService.UpdateAsync(id, officeDto), nameof(UpdateAsync));
         }
 
+        public async Task SetPathToOffice( string id, string path ) {
+            await ExecuteAndLogAsync( _officeService.SetPathToOffice( id, path ), nameof( SetPathToOffice ) );
+        }
+
         private async Task ExecuteAndLogAsync( Task action, string methodName ) {
             long timestamp = Stopwatch.GetTimestamp();
 
@@ -87,6 +91,5 @@ namespace Offices.Application.Implementations.Services {
             var filteredLines = lines.Where( line => !_excludedStartWith.Any( exclusion=>line.Contains( exclusion ) ) ).ToList();
             return string.Join( Environment.NewLine, filteredLines );
         }
-
     }
 }

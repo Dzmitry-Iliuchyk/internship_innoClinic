@@ -11,4 +11,5 @@ namespace Profiles.Application.Interfaces.Repositories {
         Task<Patient?> GetAsync( Guid id );
         Task<IList<Patient>?> GetAllAsync();
     }
+
 }

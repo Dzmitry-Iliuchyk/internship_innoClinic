@@ -28,6 +28,9 @@ namespace Offices.Application.Implementations.Services {
             var office = _mapper.Map<Office>( officeDto );
             office.Id = _idGenerator.GenerateId();
             await _validator.ValidateAndThrowAsync( office );
+            if (await _repository.AnyByNumberAsync(officeDto.RegistryPhoneNumber)) {
+                throw new OfficeAlreadyExistException(officeDto.RegistryPhoneNumber);
+            }
             await _repository.CreateAsync( office );
             return office.Id;
         }
@@ -52,14 +55,25 @@ namespace Offices.Application.Implementations.Services {
         }
 
         public async Task UpdateAsync( string id, UpdateOfficeDto officeDto ) {
-            if (await _repository.AnyAsync(id)) {
+            if (!await _repository.AnyAsync(id)) {
                 throw new OfficeNotFoundException( id );
+            }
+            var doc = await _repository.GetAsync( id );
+            if (await _repository.AnyByNumberAsync( officeDto.RegistryPhoneNumber ) 
+                && officeDto.RegistryPhoneNumber != doc.RegistryPhoneNumber ) {
+                throw new PhoneAlreadyExistException( $"This phone number {officeDto.RegistryPhoneNumber} already fixed for another office." );
             }
             var office = _mapper.Map<Office>( officeDto );
             office.Id = id;
             await _validator.ValidateAndThrowAsync( office );
 
             await _repository.UpdateAsync( office );
+        }
+        public async Task SetPathToOffice( string id, string path ) {
+            if (!await _repository.AnyAsync(id)) {
+                throw new OfficeNotFoundException( id );
+            }
+            await _repository.SetPathToOffice( id, path );
         }
     }
 }

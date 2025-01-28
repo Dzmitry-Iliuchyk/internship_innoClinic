@@ -1,3 +1,4 @@
+name: inno_clinic
 services:
 # Profiles
   profiles.api:
@@ -6,11 +7,11 @@ services:
       context: .
       dockerfile: ProfilesApi/Dockerfile
     depends_on:
-      - db
+      - profiles_db
     networks:
       - backend 
 # Profiles_DB
-  db:
+  profiles_db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
       SA_PASSWORD: "MsSql#2024Secure!"
@@ -69,7 +70,7 @@ services:
       - auth_server
     networks:
       - backend 
-       # Authorization_DB
+  # Authorization_DB
   auth_server:
     image: mcr.microsoft.com/mssql/server:2022-latest
     user: root
@@ -170,6 +171,18 @@ services:
       - azure_data:/workspace
     networks:
       - backend
+  #facadeApi
+  facadeapi:
+    image: ${DOCKER_REGISTRY-}facadeapi
+    build:
+      context: .
+      dockerfile: FacadeApi/Dockerfile
+    depends_on: 
+      - documents.grpcapi
+      - offices.api
+      - profiles.api
+    networks:
+      - backend
 volumes:
   db_data:
   azure_data:
@@ -182,3 +195,4 @@ volumes:
 networks:
   backend:
     name: backend-network
+

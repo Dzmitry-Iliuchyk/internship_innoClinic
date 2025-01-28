@@ -38,6 +38,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IIdentityService, IdentityService>();
 builder.Services.AddDataAccess(config);
 builder.Services.AddApplicationLayer();
+builder.Services.AddSingleton<ExceptionHandlingMiddleware>();
 builder.Services.AddControllers();
 builder.Services.AddLogging( opt => {
     opt.ClearProviders();
@@ -85,7 +86,7 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
     app.UseSwagger();
     app.UseSwaggerUI();
 //}
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

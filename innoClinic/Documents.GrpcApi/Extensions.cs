@@ -5,10 +5,13 @@ using Google.Protobuf.WellKnownTypes;
 
 namespace Documents.GrpcApi {
     public static class Extensions {
-        public static async Task<GrpcApi.Blob> ToGrpcBlob( this Domain.Blob blob ) {
+        public static async Task<GrpcApi.Blob?> ToGrpcBlob( this Domain.Blob? blob ) {
+            if (blob==null) {
+                return null;
+            }
             return new GrpcApi.Blob() {
-                Content = await Google.Protobuf.ByteString.FromStreamAsync( blob.Content ),
-                Details = blob.Details.ToGrpcDetails()
+                Content = await Google.Protobuf.ByteString.FromStreamAsync( blob?.Content ),
+                Details = blob?.Details.ToGrpcDetails()
             };
         }
         public static async Task<GetBlobsResponse> ToGrpcBlobsResponce( this List<Domain.Blob> blobs ) {

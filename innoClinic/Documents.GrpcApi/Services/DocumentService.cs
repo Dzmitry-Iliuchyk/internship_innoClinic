@@ -15,7 +15,7 @@ namespace Documents.GrpcApi.Services {
             return new() { IsSuccess = result };
         }
 
-        public override async Task<Blob> GetBlob( GetBlobRequest request, ServerCallContext context ) {
+        public override async Task<Blob?> GetBlob( GetBlobRequest request, ServerCallContext context ) {
             return await ( await _blobStorage.GetBlobAsync( request.PathToBlob ) ).ToGrpcBlob();
         }
 
@@ -34,6 +34,13 @@ namespace Documents.GrpcApi.Services {
                                           context.CancellationToken ) )
                 .ToGrpcBlobsResponce();
         }
+
+        public override async Task<GetBlobsResponse> GetBlobsByPrefix( GetBlobsByPrefixRequest request, ServerCallContext context ) {
+            return await ( await _blobStorage
+                .GetBlobsByPrefixAsync( request.Path, context.CancellationToken ) )
+                .ToGrpcBlobsResponce();
+        }
+
         public override async Task<GetBlobsDetailsResponse> GetBlobsDetails( GetBlobsDetailsRequest request, ServerCallContext context ) {
             return ( await _blobStorage
                 .GetBlobsDetailsAsync( request.ContainerName, context.CancellationToken ) )

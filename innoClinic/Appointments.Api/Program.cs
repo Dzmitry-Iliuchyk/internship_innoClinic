@@ -46,7 +46,7 @@ builder.Services
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -57,6 +57,7 @@ app
 
 using (var scope = app.Services.CreateScope()) {
     var context = scope.ServiceProvider.GetRequiredService<AppointmentsDbContext>();
+    context.Database.EnsureCreated();
     if (context.Database.GetPendingMigrations().Any()) {
         context.Database.Migrate();
     }

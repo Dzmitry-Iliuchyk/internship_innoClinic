@@ -8,5 +8,6 @@ namespace Documents.Application {
         Task<Blob> GetBlobAsync( string pathToBlob, CancellationToken cancellationToken = default );
         Task<BlobDetails> GetBlobDetailsAsync( string pathToBlob, CancellationToken cancellationToken = default );
         Task<List<Blob>> GetBlobsByMetadataAsync( string containerName, KeyValuePair<string, string> metadata, CancellationToken cancellationToken = default );
+        Task<List<Blob>> GetBlobsByPrefixAsync( string pathToBlobs, CancellationToken cancellationToken = default );
     }
 }

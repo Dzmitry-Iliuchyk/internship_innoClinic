@@ -14,4 +14,6 @@
         public string FileContentType { get; set; }
         public string FileName { get; set; }
     }
+   
+
 }
