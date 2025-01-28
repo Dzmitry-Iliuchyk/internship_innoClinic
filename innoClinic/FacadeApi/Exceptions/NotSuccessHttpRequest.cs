@@ -1,4 +1,4 @@
-﻿namespace FacadeApi.Offices.Exceptions {
+﻿namespace FacadeApi.Exceptions {
 
     public class NotSuccessHttpRequest: Exception {
         public HttpResponseMessage httpResult;

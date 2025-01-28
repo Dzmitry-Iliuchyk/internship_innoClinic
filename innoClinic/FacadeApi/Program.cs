@@ -1,6 +1,8 @@
 using Documents.GrpcApi;
+using FacadeApi.Middleware;
 using FacadeApi.Services;
 using MassTransit;
+using Serilog;
 using Shared.Events.Contracts;
 using Shared.PdfGenerator;
 using SixLabors.ImageSharp;
@@ -29,7 +31,6 @@ builder.Services.AddMassTransit( x => {
     x.SetKebabCaseEndpointNameFormatter();
 
     //x.AddConsumer<>();
-
     x.UsingRabbitMq( ( context, cfg ) => {
         cfg.Host( config[ "rabbitMq:host" ] ?? throw new ArgumentNullException( "rabbitMq:host" ),
             "/", h => {
@@ -43,13 +44,22 @@ builder.Services.AddMassTransit( x => {
 } );
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<PdfGeneratorService>();
+builder.Services.AddSingleton<IMiddleware, ExceptionHandlingMiddleware>();
+builder.Services.AddLogging( opt => {
+    opt.ClearProviders();
+    var logger = new LoggerConfiguration()
+        .ReadFrom.Configuration( config )
+        .CreateLogger();
+
+    opt.AddSerilog( logger );
+} );
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
