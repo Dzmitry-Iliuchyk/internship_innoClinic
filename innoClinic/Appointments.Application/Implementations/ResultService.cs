@@ -14,12 +14,13 @@ namespace Appointments.Application.Implementations {
         }
 
         public async Task<Guid> CreateAsync( ResultCreateDto entity ) {
-            var appointment = entity.Adapt<Result>();
-            appointment.Id = Guid.NewGuid();
+            var result = entity.Adapt<Result>();
+            result.Id = Guid.NewGuid();
+            result.CreatedDate = DateTime.UtcNow;
 
-            await _repository.CreateAsync( appointment );
+            await _repository.CreateAsync( result );
 
-            return appointment.Id;
+            return result.Id;
         }
 
         public async Task DeleteAsync( Guid id ) {

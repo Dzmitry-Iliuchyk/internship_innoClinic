@@ -23,7 +23,6 @@ namespace Authorization.DataAccess.Repositories {
                 .AsNoTracking()
                 .FirstOrDefaultAsync( u => u.Id == userId );
         }
-
         public async Task<User?> GetAsync( string email ) {
             return await entities
                 .AsNoTracking()

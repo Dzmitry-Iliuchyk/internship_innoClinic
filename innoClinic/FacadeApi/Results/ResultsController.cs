@@ -16,6 +16,9 @@ namespace FacadeApi.ResultsApi {
         private readonly PdfGeneratorService _pdf;
         private readonly IPublishEndpoint _bus;
         private readonly DocumentService.DocumentServiceClient _documents;
+        private static JsonSerializerOptions _jsonSerializerOptions = new() {
+            PropertyNameCaseInsensitive = true,
+        };
 
         public ResultsController( IHttpClientFactory clientFactory,
                                   DocumentService.DocumentServiceClient documents,
@@ -37,24 +40,20 @@ namespace FacadeApi.ResultsApi {
             }
             var appointment = JsonSerializer.Deserialize<AppointmentResponse>(
                 await appointmentHttpResult.Content.ReadAsStreamAsync(),
-                options: new() {
-                    PropertyNameCaseInsensitive = true
-            } );
+                _jsonSerializerOptions );
 
             var emailsHttpResult = await resultsClient.GetAsync( $"appointments/{appointment.Id}/getEmails" );
             if (!emailsHttpResult.IsSuccessStatusCode) {
                 throw new NotSuccessHttpRequest( emailsHttpResult );
             }
             var emails = JsonSerializer.Deserialize<EmailsResponse>( await appointmentHttpResult.Content.ReadAsStreamAsync(),
-                options: new() {
-                    PropertyNameCaseInsensitive = true
-                } );
+                _jsonSerializerOptions );
 
             var content = JsonContent.Create( new ResultCreateDto {
                 AppointmentId = r.AppointmentId,
                 Complaints = r.Complaints,
                 Conclusion = r.Conclusion,
-                DocumentUrl = GetPathToBlob( r.AppointmentId ),
+                DocumentUrl = "",
                 Recomendations = r.Recomendations
             } );
             var httpResult = await resultsClient.PostAsync( "result/create", content );
@@ -67,8 +66,10 @@ namespace FacadeApi.ResultsApi {
 
             var docResult = await _documents.UploadBlobAsync( new BlobUploadRequest() {
                 Content = Google.Protobuf.ByteString.CopyFrom( pdf ),
-                PathToBlob = GetPathToBlob(r.AppointmentId),
-            } );
+                PathToBlob = GetPathToBlob( JsonSerializer.Deserialize<ResultCreateResponse>(
+                    httpResult.Content.ReadAsStream(),
+                    _jsonSerializerOptions )!.Id )
+            });
             await _bus.Publish( new SendEmailRequest() {
                 TextContent = HtmlTamplates.GetResultsTamplateForEmailMessage( string.Format( "{0} {1}",
                 appointment.PatientFirstName, appointment.PatientSecondName ) ),
@@ -84,9 +85,17 @@ namespace FacadeApi.ResultsApi {
             return Microsoft.AspNetCore.Http.Results.Content(await httpResult.Content.ReadAsStringAsync(),
                 statusCode: (int)httpResult.StatusCode);
         }
-        [HttpPut( "[action]" )]
-        public async Task<IResult> TestSendEmail( ResultUpdateRequest r ) {
-            
+        [HttpDelete( "[action]" )]
+        public async Task<IResult> DeleteResult( ResultDeleteRequest r ) {
+            using var resultsClient = GetClientWithHeaders();
+
+            var appointmentHttpResult = await resultsClient.GetAsync( $"result/{r.Id}/delete" );
+            if (!appointmentHttpResult.IsSuccessStatusCode) {
+                throw new NotSuccessHttpRequest( appointmentHttpResult );
+            }
+            var docResult = await _documents.DeleteBlobAsync( new DeleteBlobRequest() {
+                PathToBlob = GetPathToBlob( r.Id ),
+            } );
             await _bus.Publish( new SendEmailRequest() {
                 TextContent = HtmlTamplates.GetResultsTamplateForEmailMessage( string.Format( "{0} {1}", "sfsf", "fsdfs" ) ),
                 NameFrom = "innoClinic",
@@ -94,7 +103,7 @@ namespace FacadeApi.ResultsApi {
                 To = [ "dima6061551@mail.ru"],
                 
             } );
-            return Microsoft.AspNetCore.Http.Results.Ok( );
+            return Microsoft.AspNetCore.Http.Results.NoContent( );
         }
         [HttpPut( "[action]" )]
         public async Task<IResult> UpdateResult( ResultUpdateRequest r ) {
@@ -109,7 +118,7 @@ namespace FacadeApi.ResultsApi {
                 AppointmentId = r.AppointmentId,
                 Complaints = r.Complaints,
                 Conclusion = r.Conclusion,
-                DocumentUrl = GetPathToBlob( r.AppointmentId ),
+                DocumentUrl = GetPathToBlob( r.Id ),
                 Recomendations = r.Recomendations
             } );
             var httpResult = await resultsClient.PostAsync( "result/update", content );
@@ -119,7 +128,7 @@ namespace FacadeApi.ResultsApi {
 
             var pdf = _pdf.GeneratePdf( HtmlTamplates.GetResultsTamplateToPdf( r.Complaints, r.Conclusion, r.Recomendations ) );
             
-            string pathToBlob = GetPathToBlob( r.AppointmentId );
+            string pathToBlob = GetPathToBlob( r.Id );
 
             await _documents.DeleteBlobAsync( new DeleteBlobRequest() {
                 PathToBlob = pathToBlob,
@@ -144,8 +153,8 @@ namespace FacadeApi.ResultsApi {
             return Microsoft.AspNetCore.Http.Results.Ok( await httpResult.Content.ReadAsStringAsync() );
         }
 
-        private static string GetPathToBlob( Guid appointmentId ) {
-            return $"results:{appointmentId}/result.pdf";
+        private static string GetPathToBlob( Guid resultId ) {
+            return $"results:{resultId}/result.pdf";
         }
 
         private HttpClient GetClientWithHeaders() {

@@ -11,6 +11,9 @@ namespace FacadeApi.Offices {
     public class OfficesController: ControllerBase {
         private readonly IHttpClientFactory _clientFactory;
         private readonly DocumentService.DocumentServiceClient _documents;
+        private static JsonSerializerOptions _jsonSerializerOptions = new() {
+            PropertyNameCaseInsensitive = true,
+        };
         public OfficesController( IHttpClientFactory clientFactory, DocumentService.DocumentServiceClient client ) {
             this._clientFactory = clientFactory;
             _documents = client;
@@ -34,9 +37,7 @@ namespace FacadeApi.Offices {
             }
             var offices = JsonSerializer.Deserialize<List<OfficeDtoFromApi>>(
                     ( httpResult ).Content.ReadAsStream(),
-                    new JsonSerializerOptions {
-                        PropertyNameCaseInsensitive = true
-                    }
+                    _jsonSerializerOptions
                 );
             var res = new List<OfficeDto>();
             foreach (var office in offices) {
@@ -69,9 +70,7 @@ namespace FacadeApi.Offices {
             }
             var office = JsonSerializer.Deserialize<OfficeDtoFromApi>(
                     httpResult.Content.ReadAsStream(),
-                    new JsonSerializerOptions {
-                        PropertyNameCaseInsensitive = true
-                    }
+                    _jsonSerializerOptions
                 );
 
             Photo photo = null;
@@ -124,9 +123,8 @@ namespace FacadeApi.Offices {
         public async Task<IResult> DeleteOffice( string id ) {
             using var officeClient = GetClientWithHeaders();
             var office = JsonSerializer.Deserialize<OfficeDtoFromApi>( ( await officeClient.GetAsync( $"api/Offices/GetOffice?id={id}" ) ).Content.ReadAsStream(),
-                new JsonSerializerOptions {
-                    PropertyNameCaseInsensitive = true
-                } );
+                _jsonSerializerOptions );
+
             var httpResult = await officeClient.DeleteAsync( $"api/Offices/DeleteOffice?id={id}" );
             if (httpResult.IsSuccessStatusCode && !string.IsNullOrEmpty( office?.PhotoUrl )) {
                 await _documents.DeleteBlobAsync( new DeleteBlobRequest() {
@@ -146,9 +144,7 @@ namespace FacadeApi.Offices {
             }
             if (createOfficeDto.File != null) {
                 var id = JsonSerializer.Deserialize<string>( await httpResult.Content.ReadAsStreamAsync(),
-                        new JsonSerializerOptions {
-                            PropertyNameCaseInsensitive = true
-                        } );
+                        _jsonSerializerOptions );
                 var path = Extensions.GetPathToOfficeBlob( createOfficeDto.File.FileName, id );
 
 

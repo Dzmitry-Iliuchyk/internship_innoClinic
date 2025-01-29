@@ -66,6 +66,18 @@ namespace Authorization.Application.Implementations {
             var token = _token.GenerateToken( userInDb );
             return token;
         }
+        public async Task UpdateAsync( UpdateModel updateModel ) {
+            var userInDb = await _userRepository.GetAsync( updateModel.Id );
+            if (userInDb == null) {
+                throw new UserNotFoundException(updateModel.Id);
+            }
+
+            var passwordHash = _hasher.HashPassword(null, updateModel.Password );
+            userInDb.PasswordHash = passwordHash;
+            userInDb.Email = updateModel.Email;
+
+            await _userRepository.UpdateAsync( userInDb );
+        }
 
         public async Task SignUpAsync( SignUpModel signUpModel ) {
             await _signUpValidator.ValidateAndThrowAsync(signUpModel);

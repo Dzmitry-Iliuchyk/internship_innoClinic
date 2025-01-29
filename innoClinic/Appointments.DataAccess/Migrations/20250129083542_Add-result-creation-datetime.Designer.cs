@@ -3,6 +3,7 @@ using System;
 using Appointments.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Appointments.DataAccess.Migrations
 {
     [DbContext(typeof(AppointmentsDbContext))]
-    partial class AppointmentsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250129083542_Add-result-creation-datetime")]
+    partial class Addresultcreationdatetime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
