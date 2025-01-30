@@ -11,5 +11,6 @@ namespace Authorization.Application.Abstractions.Services {
         Task<IEnumerable<User>> GetUsers();
         Task<User> GetUserWithRoles( Guid userId );
         Task<User> GetUserWithRoles( string email );
+        Task UpdateAsync( UpdateModel updateModel );
     }
 }

@@ -15,5 +15,4 @@ namespace Notifications.GrpcApi.Services {
             return (await _sender.SendEmail(request.ToDomainMessage(), request.NameFrom)).ToGrpcResponse();
         }
     }
-
 }

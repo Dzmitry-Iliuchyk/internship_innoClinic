@@ -17,6 +17,7 @@ COPY ["Authorization.DataAccess/Authorization.DataAccess.csproj", "Authorization
 COPY ["Authorization.Application/Authorization.Application.csproj", "Authorization.Application/"]
 COPY ["Authorization.Domain/Authorization.Domain.csproj", "Authorization.Domain/"]
 COPY ["innoClinic.Abstractions/Shared.Abstractions.csproj", "innoClinic.Abstractions/"]
+COPY ["Shared.ServiceDiscovery/Shared.ServiceDiscovery.csproj", "Shared.ServiceDiscovery/"]
 RUN dotnet restore "./Authorrization.Api/Authorization.Api.csproj"
 COPY . .
 WORKDIR "/src/Authorrization.Api"

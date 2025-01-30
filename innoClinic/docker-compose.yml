@@ -183,6 +183,26 @@ services:
       - profiles.api
     networks:
       - backend
+    #GatewayApi
+  gatewayApi:
+    image: ${DOCKER_REGISTRY-}innoclinic
+    build:
+      context: .
+      dockerfile: innoClinic/Dockerfile
+    networks:
+      - backend
+    depends_on:
+      - facadeapi
+      - consul
+  
+  consul:
+    image: consul:1.15.4
+    command: consul agent -dev -log-level=warn -ui -client=0.0.0.0
+    hostname: consul
+    container_name: consul
+    networks:
+      - backend
+
 volumes:
   db_data:
   azure_data:
@@ -195,4 +215,5 @@ volumes:
 networks:
   backend:
     name: backend-network
+
 

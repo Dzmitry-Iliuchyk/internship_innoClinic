@@ -17,6 +17,7 @@ COPY ["Appointments.Application/Appointments.Application.csproj", "Appointments.
 COPY ["Appointments.Domain/Appointments.Domain.csproj", "Appointments.Domain/"]
 COPY ["innoClinic.Abstractions/Shared.Abstractions.csproj", "innoClinic.Abstractions/"]
 COPY ["Appointments.DataAccess/Appointments.DataAccess.csproj", "Appointments.DataAccess/"]
+COPY ["Shared.ServiceDiscovery/Shared.ServiceDiscovery.csproj", "Shared.ServiceDiscovery/"]
 RUN dotnet restore "./Appointments.Api/Appointments.Api.csproj"
 COPY . .
 WORKDIR "/src/Appointments.Api"

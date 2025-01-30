@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Profiles.Api;
@@ -11,6 +12,7 @@ using Serilog;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using Shared.ServiceDiscovery;
 
 var builder = WebApplication.CreateBuilder( args );
 var config = builder.Configuration;
@@ -49,7 +51,7 @@ builder.Services.AddLogging( opt => {
 
     opt.AddSerilog( logger );
 } );
-
+ConfigureConsul( builder.Services );
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen( c => {
@@ -105,4 +107,9 @@ static RsaSecurityKey GetKey( string pathToKey ) {
     var rsa = RSA.Create();
     rsa.ImportFromPem( Encoding.UTF8.GetChars( key ) );
     return new RsaSecurityKey( rsa );
+}
+void ConfigureConsul( IServiceCollection services ) {
+    var serviceConfig = config.GetServiceConfig();
+
+    services.RegisterConsulServices( serviceConfig );
 }

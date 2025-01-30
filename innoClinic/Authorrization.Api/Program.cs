@@ -4,10 +4,11 @@ using Authorization.Application.Implementations;
 using Authorization.DataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using Shared.ServiceDiscovery;
 
 
 var builder = WebApplication.CreateBuilder( args );
@@ -68,6 +69,8 @@ builder.Services.AddSwaggerGen( c => {
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     c.IncludeXmlComments( Path.Combine( AppContext.BaseDirectory, xmlFilename ) );
 } );
+
+ConfigureConsul( builder.Services );
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -92,3 +95,8 @@ using (var serviceScope = app.Services.CreateScope()) {
 }
 
 app.Run();
+void ConfigureConsul( IServiceCollection services ) {
+    var serviceConfig = builder.Configuration.GetServiceConfig();
+
+    services.RegisterConsulServices( serviceConfig );
+}

@@ -1,10 +1,268 @@
 {
-  "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:5003"
-  },
+  //"GlobalConfiguration": {
+  //  "BaseUrl": "https://localhost:5003"
+  //},
   "Routes": [
+    //Auth
     {
-      "DownstreamPathTemplate": "/Profiles/{everything}",
+      "DownstreamPathTemplate": "/api/Auth/SignUp",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authorization.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/signup",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Auth/Update",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authorization.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/update",
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Auth/SignIn",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authorization.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/signin",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Auth/AddRoleToUser",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authorization.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/addrole",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Auth/RemoveRoleFromUser",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authorization.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/removeRole",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Auth/GetRoles",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authorization.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/getRoles",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Auth/GetUsers",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authorization.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/getUsers",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Auth/GetUserWithRoles",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authorization.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/getUserWithRoles",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Auth/ThrowException",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authorization.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/throw",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    // Services
+    {
+      "DownstreamPathTemplate": "/Services/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "services.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/services/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "PATCH" ]
+    },
+    // Appointments
+    {
+      "DownstreamPathTemplate": "/appointments/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "appointments.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/appointments/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "PATCH" ]
+    },
+    // Results
+    {
+      "DownstreamPathTemplate": "/result/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "appointments.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/result/{everything}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Results/CreateResult",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "facadeapi",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/result/create",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Results/UpdateResult",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "facadeapi",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/result/update",
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Results/DeleteResult",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "facadeapi",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/result/update",
+      "UpstreamHttpMethod": [ "DELETE" ]
+    },
+    // Offices
+    {
+      "DownstreamPathTemplate": "/api/Offices/GetOfficesWithPhoto",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "facadeapi",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/offices/getOffices",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Offices/GetAllPhotos",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "facadeapi",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/offices/getAllPhotos",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Offices/GetOfficeWithPhoto",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "facadeapi",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/offices/getOffice",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Offices/UpdateOffice",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "facadeapi",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/offices/update",
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Offices/DeleteOffice",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "facadeapi",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/offices/delete",
+      "UpstreamHttpMethod": [ "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Offices/CreateOffice",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "facadeapi",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/offices/create",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    // Receptionist
+    {
+      "DownstreamPathTemplate": "/ReceptionistProfile/{id}/Get",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -12,8 +270,223 @@
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/Profiles/{everything}",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+      "UpstreamPathTemplate": "/api/receptionists/{id}/get",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/ReceptionistProfile/Get",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "profiles.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/receptionists/getAll",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/ReceptionistProfile/Create",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "profiles.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/receptionists/create",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/ReceptionistProfile/{receptionistId}/Delete",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "profiles.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/receptionists/{receptionistId}/delete",
+      "UpstreamHttpMethod": [ "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/ReceptionistProfile/Update",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "profiles.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/receptionists/update",
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    // Doctors
+    {
+      "DownstreamPathTemplate": "/DoctorProfile/{id}/Get",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "profiles.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/doctors/{id}/get",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/DoctorProfile/Get",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "profiles.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/doctors/getAll",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/DoctorProfile/Create",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "profiles.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/doctors/create",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/DoctorProfile/{doctorId}/Delete",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "profiles.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/doctors/{doctorId}/delete",
+      "UpstreamHttpMethod": [ "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/DoctorProfile/Update",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "profiles.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/doctors/update",
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    // Patients
+    {
+      "DownstreamPathTemplate": "/PatientProfile/{id}/Get",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "profiles.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/patients/{id}/get",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/PatientProfile/Get",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "profiles.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/patients/getAll",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/PatientProfile/Create",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "profiles.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/patients/create",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/PatientProfile/{patientId}/Delete",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "profiles.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/patients/{patientId}/delete",
+      "UpstreamHttpMethod": [ "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/PatientProfile/Update",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "profiles.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/patients/update",
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    // ServicesCategory
+    {
+      "DownstreamPathTemplate": "/ServicesCategory/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "services.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/servicesCategory/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "PATCH" ]
+    },
+    //Profiles
+    {
+      "DownstreamPathTemplate": "/Profiles/{id}/GetPhoto",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "facadeapi",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/profiles/{id}/getPhoto",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Profiles/UploadImageToProfile",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "facadeapi",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/profiles/uploadImage",
+      "UpstreamHttpMethod": [ "POST" ]
     }
-  ]
+  ],
+  "GlobalConfiguration": {
+    "ServiceDiscoveryProvider": {
+      "Host": "consul",
+      "Port": 8500,
+      "Type": "Consul"
+    }
+  }
 }

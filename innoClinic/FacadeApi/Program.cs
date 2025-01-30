@@ -6,6 +6,7 @@ using Serilog;
 using Shared.Events.Contracts;
 using Shared.PdfGenerator;
 using SixLabors.ImageSharp;
+using Shared.ServiceDiscovery;
 
 var builder = WebApplication.CreateBuilder( args );
 var config = builder.Configuration;
@@ -44,7 +45,7 @@ builder.Services.AddMassTransit( x => {
 } );
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<PdfGeneratorService>();
-builder.Services.AddSingleton<IMiddleware, ExceptionHandlingMiddleware>();
+builder.Services.AddSingleton<ExceptionHandlingMiddleware>();
 builder.Services.AddLogging( opt => {
     opt.ClearProviders();
     var logger = new LoggerConfiguration()
@@ -57,7 +58,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+ConfigureConsul( builder.Services );
 var app = builder.Build();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 // Configure the HTTP request pipeline.
@@ -73,3 +74,8 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+void ConfigureConsul( IServiceCollection services ) {
+    var serviceConfig = config.GetServiceConfig();
+
+    services.RegisterConsulServices( serviceConfig );
+}

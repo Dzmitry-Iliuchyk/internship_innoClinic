@@ -112,6 +112,9 @@ namespace Appointments.DataAccess.Migrations
                         .HasMaxLength(3000)
                         .HasColumnType("character varying(3000)");
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("DocumentUrl")
                         .IsRequired()
                         .HasMaxLength(300)

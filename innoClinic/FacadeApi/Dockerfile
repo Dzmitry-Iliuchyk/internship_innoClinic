@@ -15,6 +15,7 @@ WORKDIR /src
 COPY ["FacadeApi/FacadeApi.csproj", "FacadeApi/"]
 COPY ["Shared.Events.Contracts/Shared.Events.Contracts.csproj", "Shared.Events.Contracts/"]
 COPY ["Shared.PdfGenerator/Shared.PdfGenerator.csproj", "Shared.PdfGenerator/"]
+COPY ["Shared.ServiceDiscovery/Shared.ServiceDiscovery.csproj", "Shared.ServiceDiscovery/"]
 RUN dotnet restore "./FacadeApi/FacadeApi.csproj"
 COPY . .
 WORKDIR "/src/FacadeApi"

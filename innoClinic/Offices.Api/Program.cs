@@ -9,6 +9,7 @@ using Serilog;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using Shared.ServiceDiscovery;
 
 var builder = WebApplication.CreateBuilder( args );
 var config = builder.Configuration;
@@ -44,7 +45,7 @@ builder.Services.AddLogging( opt => {
 
     opt.AddSerilog( logger );
 } );
-
+ConfigureConsul( builder.Services );
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -87,8 +88,13 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.Use( async ( cont, next ) => await next( cont ) );
+
 app.Run();
+void ConfigureConsul( IServiceCollection services ) {
+    var serviceConfig = config.GetServiceConfig();
+
+    services.RegisterConsulServices( serviceConfig );
+}
 static RsaSecurityKey GetKey( string pathToKey ) {
     byte[] key = File.ReadAllBytes( pathToKey );
     var rsa = RSA.Create();

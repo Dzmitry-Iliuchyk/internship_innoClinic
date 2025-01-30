@@ -39,6 +39,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Shared.Events.Contracts\Shared.Events.Contracts.csproj" />
     <ProjectReference Include="..\Shared.PdfGenerator\Shared.PdfGenerator.csproj" />
+    <ProjectReference Include="..\Shared.ServiceDiscovery\Shared.ServiceDiscovery.csproj" />
   </ItemGroup>
 
 </Project>
