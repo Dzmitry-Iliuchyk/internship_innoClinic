@@ -45,7 +45,7 @@ builder.Services.AddMassTransit( x => {
 } );
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<PdfGeneratorService>();
-builder.Services.AddSingleton<IMiddleware, ExceptionHandlingMiddleware>();
+builder.Services.AddSingleton<ExceptionHandlingMiddleware>();
 builder.Services.AddLogging( opt => {
     opt.ClearProviders();
     var logger = new LoggerConfiguration()

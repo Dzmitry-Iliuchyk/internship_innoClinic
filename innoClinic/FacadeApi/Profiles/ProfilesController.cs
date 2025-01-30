@@ -31,8 +31,11 @@ namespace FacadeApi.Profiles {
 
             using var filestream = file.OpenReadStream();
             var photoUrl = ProfileExtensions.GetPathToProfilesImage( id, file.FileName);
+            using var photo = await _imageService.ResizeImage( filestream, file.ContentType );
+            photo.Position = 0;
+            var byteString = Google.Protobuf.ByteString.FromStream( photo );
             var docResult = await _documents.UploadBlobAsync( new BlobUploadRequest() {
-                Content = Google.Protobuf.ByteString.FromStream( await _imageService.ResizeImage(filestream, file.ContentType) ),
+                Content = byteString,
                 PathToBlob = photoUrl,
             } );
             var result = await officeClient.PatchAsync( $"Utility/SetImagePath?id={id}&path={photoUrl}",null );

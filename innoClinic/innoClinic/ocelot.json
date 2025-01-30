@@ -270,7 +270,7 @@
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/receptionists/{id}/get",
+      "UpstreamPathTemplate": "/api/receptionists/{id}/get",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -282,7 +282,7 @@
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/receptionists/getAll",
+      "UpstreamPathTemplate": "/api/receptionists/getAll",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -294,7 +294,7 @@
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/receptionists/create",
+      "UpstreamPathTemplate": "/api/receptionists/create",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -306,7 +306,7 @@
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/receptionists/{receptionistId}/delete",
+      "UpstreamPathTemplate": "/api/receptionists/{receptionistId}/delete",
       "UpstreamHttpMethod": [ "DELETE" ]
     },
     {
@@ -318,7 +318,7 @@
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/receptionists/update",
+      "UpstreamPathTemplate": "/api/receptionists/update",
       "UpstreamHttpMethod": [ "PUT" ]
     },
     // Doctors
@@ -331,7 +331,7 @@
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/doctors/{id}/get",
+      "UpstreamPathTemplate": "/api/doctors/{id}/get",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -343,7 +343,7 @@
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/doctors/getAll",
+      "UpstreamPathTemplate": "/api/doctors/getAll",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -355,7 +355,7 @@
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/doctors/create",
+      "UpstreamPathTemplate": "/api/doctors/create",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -367,7 +367,7 @@
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/doctors/{doctorId}/delete",
+      "UpstreamPathTemplate": "/api/doctors/{doctorId}/delete",
       "UpstreamHttpMethod": [ "DELETE" ]
     },
     {
@@ -379,7 +379,7 @@
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/doctors/update",
+      "UpstreamPathTemplate": "/api/doctors/update",
       "UpstreamHttpMethod": [ "PUT" ]
     },
     // Patients
@@ -392,7 +392,7 @@
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/patients/{id}/get",
+      "UpstreamPathTemplate": "/api/patients/{id}/get",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -404,7 +404,7 @@
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/patients/getAll",
+      "UpstreamPathTemplate": "/api/patients/getAll",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -416,7 +416,7 @@
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/patients/create",
+      "UpstreamPathTemplate": "/api/patients/create",
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -428,7 +428,7 @@
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/patients/{patientId}/delete",
+      "UpstreamPathTemplate": "/api/patients/{patientId}/delete",
       "UpstreamHttpMethod": [ "DELETE" ]
     },
     {
@@ -440,7 +440,7 @@
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/patients/update",
+      "UpstreamPathTemplate": "/api/patients/update",
       "UpstreamHttpMethod": [ "PUT" ]
     },
     // ServicesCategory
