@@ -41,7 +41,7 @@ namespace Profiles.Application.Common.Behavior {
                     break;
 
                 case UpdatePersonCommandBase updatePerson:
-                  
+                    
                     await _publishEndpoint.Publish( new ProfileUpdated() {
                         Email = updatePerson.Email,
                         Id = updatePerson.Id },
@@ -50,12 +50,19 @@ namespace Profiles.Application.Common.Behavior {
                     break;
 
                 case CreatePersonCommandBase createPerson:
+
                     if (response is Guid id) {
                         await _publishEndpoint.Publish( new ProfileCreated() {
                             Id = id,
                             Email = createPerson.Email,
-                        }, 
-                        x=>x.Durable = true,
+                            Roles = request switch {
+                                CreateDoctorCommand => Roles.Doctor,
+                                CreatePatientCommand => Roles.Patient,
+                                CreateReceptionistCommand => Roles.Receptionist,
+                                _ => throw new NotImplementedException()
+                            }
+                        },
+                        x => x.Durable = true,
                         cancellationToken );
                     }
                     break;

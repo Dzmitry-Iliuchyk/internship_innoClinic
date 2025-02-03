@@ -46,7 +46,7 @@ namespace Authorization.Api.Controllers {
             return Results.Ok( token );
         }
         /// <summary>
-        /// Used to update data about user.
+        /// Used to update password by user email.
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Nothing</returns>
@@ -56,8 +56,23 @@ namespace Authorization.Api.Controllers {
         [ProducesResponseType( StatusCodes.Status204NoContent )]
         [ProducesResponseType( StatusCodes.Status400BadRequest, Type = typeof( ErrorResponse ) )]
         [ProducesResponseType( StatusCodes.Status404NotFound, Type = typeof( ErrorResponse ) )]
-        public async Task<IResult> Update( UpdateRequest request ) {
-            await _auth.UpdateAsync( new Application.Dtos.UpdateModel { Email = request.Email, Password = request.Password, Id = request.Id } );
+        public async Task<IResult> UpdatePassword( UpdatePasswordRequest request ) {
+            await _auth.UpdatePasswordAsync( new Application.Dtos.UpdatePasswordModel { Email = request.Email, Password = request.Password } );
+            return Results.NoContent();
+        }
+        /// <summary>
+        /// Used to update user email.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Nothing</returns>
+        /// <response code="204">Returns if updated successfully</response
+        /// <response code="404">If user doesn't exist </response>
+        [HttpPut( "[action]" )]
+        [ProducesResponseType( StatusCodes.Status204NoContent )]
+        [ProducesResponseType( StatusCodes.Status400BadRequest, Type = typeof( ErrorResponse ) )]
+        [ProducesResponseType( StatusCodes.Status404NotFound, Type = typeof( ErrorResponse ) )]
+        public async Task<IResult> UpdateEmail( UpdateEmailRequest request ) {
+            await _auth.UpdateEmailAsync( new Application.Dtos.UpdateEmailModel { Id = request.Id, Email = request.NewEmail } );
             return Results.NoContent();
         }
         /// <summary>

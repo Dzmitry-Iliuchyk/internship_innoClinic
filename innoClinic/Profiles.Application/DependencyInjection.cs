@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Profiles.Application.Common.Behavior;
+using Profiles.Application.Consumers;
 
 namespace Profiles.Application {
     public static class DependencyInjection {
@@ -17,7 +18,10 @@ namespace Profiles.Application {
             services.AddMassTransit( x => {
                 x.SetKebabCaseEndpointNameFormatter();
 
-                //x.AddConsumer<>();
+                x.AddConsumer<SpecializationUpdatedConsumer>();
+                x.AddConsumer<SpecializationDeletedConsumer>();
+                x.AddConsumer<SpecializationCreatedConsumer>();
+
                 x.UsingRabbitMq( ( context, cfg ) => {
                     cfg.Host( config[ "rabbitMq:host" ] ?? throw new ArgumentNullException( "rabbitMq:host" ),
                         "/", h => {

@@ -40,7 +40,7 @@ builder.Services.AddAuthentication( options => {
 builder.Services.AddScoped<ExceptionHandlingMiddleware>();
 builder.Services.AddAuthorization();
 builder.Services.ConfigureAuthDataAccess( cfg.GetConnectionString( "Auth" ) );
-builder.Services.ConfigureAuthApplicationDependncies();
+builder.Services.ConfigureAuthApplicationDependncies(cfg);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
