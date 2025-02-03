@@ -1,16 +1,13 @@
 using Appointments.Application;
 using Appointments.DataAccess;
 using Appointments.Middleware;
-using FastEndpoints;
 using FastEndpoints.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System.Net;
+using Shared.ServiceDiscovery;
 using System.Security.Cryptography;
 using System.Text;
-using Shared.ServiceDiscovery;
 
 var builder = WebApplication.CreateBuilder( args );
 var config = builder.Configuration;
@@ -37,8 +34,8 @@ builder.Services.AddAuthentication( options => {
     };
 } );
 builder.Services.AddAuthorization();
-builder.Services.AddApplicationLayer();
-builder.Services.AddDataAccess(config);
+builder.Services.AddApplicationLayer( config );
+builder.Services.AddDataAccess( config );
 ConfigureConsul( builder.Services );
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -54,8 +51,9 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 app
-   .UseFastEndpoints( c => { 
-       c.Serializer.Options.PropertyNamingPolicy = null; } )
+   .UseFastEndpoints( c => {
+       c.Serializer.Options.PropertyNamingPolicy = null;
+   } )
    .UseSwaggerGen();
 
 using (var scope = app.Services.CreateScope()) {

@@ -10,9 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Profiles.Application.Doctors.Commands.Delete {
-    public record DeleteDoctorCommand( [Required] Guid doctorId ): IRequest;
+    public record DeleteDoctorCommand( [Required] Guid doctorId ): IRequest<Unit>;
 
-    public class DeleteDoctorCommandHandler: IRequestHandler<DeleteDoctorCommand> {
+    public class DeleteDoctorCommandHandler: IRequestHandler<DeleteDoctorCommand,Unit> {
         private readonly IDoctorCommandRepository _repository;
         private readonly IDoctorReadRepository _readRepo;
         public DeleteDoctorCommandHandler( IDoctorCommandRepository repository, IDoctorReadRepository readRepo ) {
@@ -20,10 +20,11 @@ namespace Profiles.Application.Doctors.Commands.Delete {
             this._readRepo = readRepo;
         }
 
-        public async Task Handle( DeleteDoctorCommand request, CancellationToken cancellationToken = default ) {
+        public async Task<Unit> Handle( DeleteDoctorCommand request, CancellationToken cancellationToken = default ) {
             var doc = await _readRepo.GetAsync(request.doctorId);
             if (doc != null) {
                 await _repository.DeleteAsync( doc );
+                return Unit.Value;
             } else
                 throw new DoctorNotFoundException(request.doctorId.ToString());
         }

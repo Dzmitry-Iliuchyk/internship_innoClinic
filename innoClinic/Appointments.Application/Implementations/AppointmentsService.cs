@@ -9,11 +9,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MassTransit;
+//using Shared.Events.Contracts;
 
 namespace Appointments.Application.Implementations {
     public class AppointmentsService: IAppointmentService {
         private readonly IAppointmentRepository _repository;
-
+        private readonly IPublishEndpoint _publisher;
         public AppointmentsService( IAppointmentRepository repository ) {
             this._repository = repository;
         }
@@ -23,7 +25,7 @@ namespace Appointments.Application.Implementations {
             appointment.Id = Guid.NewGuid();
 
             await _repository.CreateAsync( appointment );
-
+           // await _publisher.Publish( new AppointmentCreatedEvent() );
             return appointment.Id;
         }
 

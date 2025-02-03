@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using MediatR;
+using Profiles.Application.Common;
 using Profiles.Application.Interfaces.Repositories;
 using Profiles.Domain;
 using System;
@@ -10,15 +11,15 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Profiles.Application.Receptionists.Commands.Create {
-    public record CreateReceptionistCommand( 
-                                    [Required] string officeId,
-                                    [Required] string firstName,
-                                    [Required] string lastName,
-                                    [Required] string email,
-                                    [Required] string phoneNumber,
-                                    [Required] Guid createdBy,
-                                    [Required] string? photoUrl,
-                                    [Required] string? middleName ): IRequest<Guid>;
+    public record CreateReceptionistCommand(
+        [Required] string OfficeId,
+        [Required] string FirstName,
+        [Required] string LastName,
+        [Required] string Email,
+        [Required] string PhoneNumber,
+        [Required] Guid CreatedBy,
+        string? PhotoUrl,
+        string? MiddleName ): CreatePersonCommandBase( FirstName, LastName, Email, PhoneNumber, CreatedBy, PhotoUrl, MiddleName );
 
     public class CreateReceptionistCommandHandler: IRequestHandler<CreateReceptionistCommand, Guid> {
         private readonly IReceptionistCommandRepository _repository;

@@ -39,7 +39,7 @@ builder.Services.AddAuthentication( options => {
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IIdentityService, IdentityService>();
 builder.Services.AddDataAccess(config);
-builder.Services.AddApplicationLayer();
+builder.Services.AddApplicationLayer(config);
 builder.Services.AddSingleton<ExceptionHandlingMiddleware>();
 builder.Services.AddControllers();
 builder.Services.AddLogging( opt => {

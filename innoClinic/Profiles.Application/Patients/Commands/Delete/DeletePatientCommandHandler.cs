@@ -1,17 +1,12 @@
 ﻿using MediatR;
 using Profiles.Application.Common.Exceptions;
 using Profiles.Application.Interfaces.Repositories;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Profiles.Application.Patients.Commands.Delete {
-    public record DeletePatientCommand( [Required] Guid patientId ): IRequest;
+    public record DeletePatientCommand( [Required] Guid patientId ): IRequest<Unit>;
 
-    public class DeletePatientCommandHandler: IRequestHandler<DeletePatientCommand> {
+    public class DeletePatientCommandHandler: IRequestHandler<DeletePatientCommand, Unit> {
         private readonly IPatientCommandRepository _repository;
         private readonly IPatientReadRepository _repoRead;
         public DeletePatientCommandHandler( IPatientCommandRepository repository, IPatientReadRepository repoRead ) {
@@ -19,12 +14,14 @@ namespace Profiles.Application.Patients.Commands.Delete {
             this._repoRead = repoRead;
         }
 
-        public async Task Handle( DeletePatientCommand request, CancellationToken cancellationToken = default ) {
+        public async Task<Unit> Handle( DeletePatientCommand request, CancellationToken cancellationToken = default ) {
             var doc = await _repoRead.GetAsync( request.patientId );
-            if (doc != null)
+            if (doc != null) {
                 await _repository.DeleteAsync( doc );
-            else
+                return Unit.Value;
+            } else
                 throw new PatientNotFoundException( request.patientId.ToString() );
         }
+
     }
 }
