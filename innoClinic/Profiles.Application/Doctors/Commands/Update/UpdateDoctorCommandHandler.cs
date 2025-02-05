@@ -1,9 +1,11 @@
 ﻿using Mapster;
+using MassTransit;
 using MediatR;
 using Profiles.Application.Common;
 using Profiles.Application.Common.Exceptions;
 using Profiles.Application.Interfaces.Repositories;
 using Profiles.Domain;
+using Shared.Events.Contracts;
 using System.ComponentModel.DataAnnotations;
 
 namespace Profiles.Application.Doctors.Commands.Update {
@@ -25,9 +27,11 @@ namespace Profiles.Application.Doctors.Commands.Update {
     public class UpdateDoctorCommandHandler: IRequestHandler<UpdateDoctorCommand> {
         private readonly IDoctorCommandRepository _repository;
         private readonly IDoctorReadRepository _readRepo;
-        public UpdateDoctorCommandHandler( IDoctorCommandRepository repository, IDoctorReadRepository readRepo ) {
+        private readonly IPublishEndpoint _publisher;
+        public UpdateDoctorCommandHandler( IDoctorCommandRepository repository, IDoctorReadRepository readRepo, IPublishEndpoint publisher ) {
             this._repository = repository;
             this._readRepo = readRepo;
+            this._publisher = publisher;
         }
 
         public async Task Handle( UpdateDoctorCommand request, CancellationToken cancellationToken = default ) {
@@ -36,6 +40,14 @@ namespace Profiles.Application.Doctors.Commands.Update {
                 throw new DoctorNotFoundException( request.DoctorId.ToString() );
             }
             await _repository.UpdateAsync( (request, doc).Adapt<Doctor>() );
+
+            await _publisher.Publish<DoctorUpdated>( new DoctorUpdated {
+                Id = doc.Id,
+                Email = doc.Email,
+                FirstName = doc.FirstName,
+                SecondName = doc.LastName,
+                Specialization = doc.Specialization.Name,
+            } );
         }
     }
 

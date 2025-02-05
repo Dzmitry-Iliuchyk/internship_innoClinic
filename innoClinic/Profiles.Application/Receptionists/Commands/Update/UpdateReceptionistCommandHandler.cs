@@ -1,9 +1,11 @@
 ﻿using Mapster;
+using MassTransit;
 using MediatR;
 using Profiles.Application.Common;
 using Profiles.Application.Common.Exceptions;
 using Profiles.Application.Interfaces.Repositories;
 using Profiles.Domain;
+using Shared.Events.Contracts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -25,9 +27,11 @@ namespace Profiles.Application.Receptionists.Commands.Update {
     public class UpdateReceptionistCommandHandler: IRequestHandler<UpdateReceptionistCommand> {
         private readonly IReceptionistCommandRepository _repository;
         private readonly IReceptionistReadRepository _repoRead;
-        public UpdateReceptionistCommandHandler( IReceptionistCommandRepository repository, IReceptionistReadRepository repoRead ) {
+        private readonly IPublishEndpoint _publisher;
+        public UpdateReceptionistCommandHandler( IReceptionistCommandRepository repository, IReceptionistReadRepository repoRead, IPublishEndpoint publisher ) {
             this._repository = repository;
             this._repoRead = repoRead;
+            this._publisher = publisher;
         }
         public async Task Handle( UpdateReceptionistCommand request, CancellationToken cancellationToken = default ) {
             var receptionist = await _repoRead.GetAsync( request.Id );
@@ -35,6 +39,13 @@ namespace Profiles.Application.Receptionists.Commands.Update {
                 throw new ReceptionistNotFoundException( request.Id.ToString() );
             var updatedReceptionist = (request, receptionist).Adapt<Receptionist>();
             await _repository.UpdateAsync( updatedReceptionist );
+
+            await _publisher.Publish<ReceptionistUpdated>( new ReceptionistUpdated {
+                Id = updatedReceptionist.Id,
+                Email = updatedReceptionist.Email,
+                FirstName = updatedReceptionist.FirstName,
+                SecondName = updatedReceptionist.LastName,
+            } );
         }
     }
 }

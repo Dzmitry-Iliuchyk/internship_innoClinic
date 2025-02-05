@@ -1,8 +1,10 @@
 ﻿using Mapster;
+using MassTransit;
 using MediatR;
 using Profiles.Application.Common;
 using Profiles.Application.Interfaces.Repositories;
 using Profiles.Domain;
+using Shared.Events.Contracts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -24,13 +26,23 @@ namespace Profiles.Application.Patients.Commands.Create {
 
     public class CreatePatientCommandHandler: IRequestHandler<CreatePatientCommand, Guid> {
         private readonly IPatientCommandRepository _repository;
-        public CreatePatientCommandHandler( IPatientCommandRepository repository ) {
+        private readonly IPublishEndpoint _publisher;
+        public CreatePatientCommandHandler( IPatientCommandRepository repository, IPublishEndpoint publisher ) {
             this._repository = repository;
+            this._publisher = publisher;
         }
 
         public async Task<Guid> Handle( CreatePatientCommand request, CancellationToken cancellationToken = default ) {
             var patient = request.Adapt<Patient>() ;
             await _repository.CreateAsync( patient );
+
+
+            await _publisher.Publish<PatientCreated>( new PatientCreated {
+                Id = patient.Id,
+                Email = patient.Email,
+                FirstName = patient.FirstName,
+                SecondName = patient.LastName,
+            } );
             return patient.Id;
         }
     }

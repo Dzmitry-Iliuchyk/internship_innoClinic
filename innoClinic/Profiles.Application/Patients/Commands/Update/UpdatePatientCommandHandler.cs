@@ -1,9 +1,11 @@
 ﻿using Mapster;
+using MassTransit;
 using MediatR;
 using Profiles.Application.Common;
 using Profiles.Application.Common.Exceptions;
 using Profiles.Application.Interfaces.Repositories;
 using Profiles.Domain;
+using Shared.Events.Contracts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -24,10 +26,12 @@ namespace Profiles.Application.Patients.Commands.Update {
         : UpdatePersonCommandBase( Id, FirstName, LastName, Email, PhoneNumber, UpdatedBy, PhotoUrl, MiddleName );
     public class UpdatePatientCommandHandler: IRequestHandler<UpdatePatientCommand> {
         private readonly IPatientReadRepository _repoRead;
+        private readonly IPublishEndpoint _publisher;
         private readonly IPatientCommandRepository _repository;
-        public UpdatePatientCommandHandler( IPatientCommandRepository repository, IPatientReadRepository repoRead ) {
+        public UpdatePatientCommandHandler( IPatientCommandRepository repository, IPatientReadRepository repoRead, IPublishEndpoint publisher ) {
             this._repository = repository;
             this._repoRead = repoRead;
+            this._publisher = publisher;
         }
 
         public async Task Handle( UpdatePatientCommand request, CancellationToken cancellationToken = default ) {
@@ -37,6 +41,13 @@ namespace Profiles.Application.Patients.Commands.Update {
             }
             var updatedPatient = (request, patient).Adapt<Patient>();
             await _repository.UpdateAsync( updatedPatient );
+
+            await _publisher.Publish<PatientUpdated>( new PatientUpdated {
+                Id = updatedPatient.Id,
+                Email = updatedPatient.Email,
+                FirstName = updatedPatient.FirstName,
+                SecondName = updatedPatient.LastName,
+            } );
         }
     }
 }

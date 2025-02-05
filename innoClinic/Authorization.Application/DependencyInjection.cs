@@ -21,9 +21,16 @@ namespace Authorization.Application {
             services.AddMassTransit( x => {
                 x.SetKebabCaseEndpointNameFormatter();
 
-                x.AddConsumer<ProfileCreatedConsumer>();
-                x.AddConsumer<ProfileUpdatedConsumer>();
-                x.AddConsumer<ProfileDeletedConsumer>();
+                x.AddConsumer<PatientCreatedConsumer>();
+                x.AddConsumer<PatientDeletedConsumer>();
+                x.AddConsumer<PatientUpdatedConsumer>();
+                x.AddConsumer<DoctorDeletedConsumer>();
+                x.AddConsumer<DoctorUpdatedConsumer>();
+                x.AddConsumer<DoctorCreatedConsumer>();
+                x.AddConsumer<ReceptionistCreatedConsumer>();
+                x.AddConsumer<ReceptionistDeletedConsumer>();
+                x.AddConsumer<ReceptionistUpdatedConsumer>();
+
                 x.UsingRabbitMq( ( context, cfg ) => {
                     cfg.Host( config[ "rabbitMq:host" ] ?? throw new ArgumentNullException( "rabbitMq:host" ),
                         "/", h => {

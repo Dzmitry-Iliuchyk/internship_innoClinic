@@ -1,8 +1,10 @@
-﻿using Appointments.Application.Implementations;
+﻿using Appointments.Application.Consumers;
+using Appointments.Application.Implementations;
 using Appointments.Application.Interfaces.Services;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Shared.Events.Contracts;
 
 namespace Appointments.Application {
     public static class DependencyInjection{
@@ -12,7 +14,12 @@ namespace Appointments.Application {
             services.AddMassTransit( x => {
                 x.SetKebabCaseEndpointNameFormatter();
 
-                //x.AddConsumer<>();
+                x.AddConsumer<DoctorCreatedConsumer>();
+                x.AddConsumer<DoctorDeletedConsumer>();
+                x.AddConsumer<DoctorUpdatedConsumer>();
+                x.AddConsumer<PatientCreatedConsumer>();
+                x.AddConsumer<PatientDeletedConsumer>();
+                x.AddConsumer<PatientUpdatedConsumer>();
                 x.UsingRabbitMq( ( context, cfg ) => {
                     cfg.Host( config[ "rabbitMq:host" ] ?? throw new ArgumentNullException( "rabbitMq:host" ),
                         "/", h => {

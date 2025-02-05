@@ -37,7 +37,7 @@ namespace Authorization.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Role", (string)null);
                 });
 
             modelBuilder.Entity("Authorrization.Api.Models.User", b =>

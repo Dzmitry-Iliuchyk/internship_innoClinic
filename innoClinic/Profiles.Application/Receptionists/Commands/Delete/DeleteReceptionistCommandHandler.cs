@@ -1,6 +1,8 @@
-﻿using MediatR;
+﻿using MassTransit;
+using MediatR;
 using Profiles.Application.Common.Exceptions;
 using Profiles.Application.Interfaces.Repositories;
+using Shared.Events.Contracts;
 using System.ComponentModel.DataAnnotations;
 
 namespace Profiles.Application.Receptionists.Commands.Delete {
@@ -9,19 +11,24 @@ namespace Profiles.Application.Receptionists.Commands.Delete {
     public class DeleteReceptionistCommandHandler: IRequestHandler<DeleteReceptionistCommand, Unit> {
         private readonly IReceptionistCommandRepository _repository;
         private readonly IReceptionistReadRepository _repoRead;
+        private readonly IPublishEndpoint _publisher;
         public DeleteReceptionistCommandHandler( IReceptionistCommandRepository repository, IReceptionistReadRepository repoRead ) {
             this._repository = repository;
             this._repoRead = repoRead;
         }
 
         public async Task<Unit> Handle( DeleteReceptionistCommand request, CancellationToken cancellationToken = default ) {
-            var doc = await _repoRead.GetAsync( request.receptionistId );
-            if (doc != null) {
-                await _repository.DeleteAsync( doc );
-                return Unit.Value;
+            var receptionist = await _repoRead.GetAsync( request.receptionistId );
+            if (receptionist != null) {
+                await _repository.DeleteAsync( receptionist );
+                
             } else
                 throw new ReceptionistNotFoundException( request.receptionistId.ToString() );
 
+            await _publisher.Publish<ReceptionistDeleted>( new ReceptionistDeleted {
+                Id = receptionist.Id,
+            } );
+            return Unit.Value;
         }
     }
 }

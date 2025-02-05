@@ -4,11 +4,6 @@ using Appointments.Application.Interfaces.Repositories;
 using Appointments.Application.Interfaces.Services;
 using Appointments.Domain;
 using Mapster;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MassTransit;
 //using Shared.Events.Contracts;
 
@@ -54,7 +49,7 @@ namespace Appointments.Application.Implementations {
                 throw new AppointmentNotFoundException(id);
             }
             return new List<string> {
-                appointment.PatientEmail
+                appointment.Patient.PatientEmail
             };
         }
 
