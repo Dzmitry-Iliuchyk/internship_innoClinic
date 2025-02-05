@@ -39,7 +39,7 @@ builder.Services.AddAuthentication( options => {
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IIdentityService, IdentityService>();
 builder.Services.AddDataAccess(config);
-builder.Services.AddApplicationLayer();
+builder.Services.AddApplicationLayer(config);
 builder.Services.AddSingleton<ExceptionHandlingMiddleware>();
 builder.Services.AddControllers();
 builder.Services.AddLogging( opt => {
@@ -96,8 +96,8 @@ app.MapControllers();
 using (var serviceScope = app.Services.CreateScope()) {
     var context = serviceScope.ServiceProvider.GetService<ProfilesDbContext>();
     context.Database.EnsureCreated();
-    if (!context.Accounts.Any()) {
-        context.EnsureSeedData();
+    if (context.Database.GetPendingMigrations().Any()) {
+        context.Database.Migrate();
     }
 }
 app.Run();

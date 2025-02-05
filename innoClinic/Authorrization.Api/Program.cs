@@ -40,7 +40,7 @@ builder.Services.AddAuthentication( options => {
 builder.Services.AddScoped<ExceptionHandlingMiddleware>();
 builder.Services.AddAuthorization();
 builder.Services.ConfigureAuthDataAccess( cfg.GetConnectionString( "Auth" ) );
-builder.Services.ConfigureAuthApplicationDependncies();
+builder.Services.ConfigureAuthApplicationDependncies(cfg);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -86,11 +86,9 @@ app.UseAuthorization();
 app.MapControllers();
 using (var serviceScope = app.Services.CreateScope()) {
     var context = serviceScope.ServiceProvider.GetRequiredService<AuthDbContext>();
+    context.Database.EnsureCreated();
     if (context.Database.GetPendingMigrations().Any()) {
         context.Database.Migrate();
-    }
-    if (!context.Users.Any()) {
-        context.SeedUsers();
     }
 }
 

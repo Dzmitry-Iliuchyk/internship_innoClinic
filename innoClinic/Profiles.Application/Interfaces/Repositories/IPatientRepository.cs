@@ -11,5 +11,12 @@ namespace Profiles.Application.Interfaces.Repositories {
         Task<Patient?> GetAsync( Guid id );
         Task<IList<Patient>?> GetAllAsync();
     }
+    public interface ISpecializationRepository {
+        Task<Specialization?> GetAsync( Expression<Func<Specialization, bool>> filter );
+        Task<IList<Specialization>> GetAllAsync();
+        Task DeleteAsync( Specialization specialization );
+        Task UpdateAsync( Specialization updatedSpecialization );
+        Task CreateAsync( Specialization specialization );
+    }
 
 }

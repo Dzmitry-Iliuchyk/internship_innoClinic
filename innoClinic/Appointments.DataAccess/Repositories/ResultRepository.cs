@@ -10,7 +10,7 @@ namespace Appointments.DataAccess.Repositories {
 
 
         public async Task<Result?> GetAsync( Guid id ) {
-            return await entities.AsNoTracking().OrderByDescending(x=>x.CreatedDate).FirstAsync();
+            return await entities.AsNoTracking().OrderByDescending(x=>x.CreatedDate).FirstAsync(x=>x.Id== id);
         }
     }
 }

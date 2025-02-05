@@ -1,30 +1,37 @@
-﻿using MediatR;
+﻿using MassTransit;
+using MediatR;
 using Profiles.Application.Common.Exceptions;
 using Profiles.Application.Interfaces.Repositories;
-using System;
-using System.Collections.Generic;
+using Profiles.Domain;
+using Shared.Events.Contracts.ProfilesMessages;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Profiles.Application.Patients.Commands.Delete {
-    public record DeletePatientCommand( [Required] Guid patientId ): IRequest;
+    public record DeletePatientCommand( [Required] Guid patientId ): IRequest<Unit>;
 
-    public class DeletePatientCommandHandler: IRequestHandler<DeletePatientCommand> {
+    public class DeletePatientCommandHandler: IRequestHandler<DeletePatientCommand, Unit> {
         private readonly IPatientCommandRepository _repository;
         private readonly IPatientReadRepository _repoRead;
-        public DeletePatientCommandHandler( IPatientCommandRepository repository, IPatientReadRepository repoRead ) {
+        private readonly IPublishEndpoint _publisher;
+        public DeletePatientCommandHandler( IPatientCommandRepository repository, IPatientReadRepository repoRead, IPublishEndpoint publisher ) {
             this._repository = repository;
             this._repoRead = repoRead;
+            this._publisher = publisher;
         }
 
-        public async Task Handle( DeletePatientCommand request, CancellationToken cancellationToken = default ) {
-            var doc = await _repoRead.GetAsync( request.patientId );
-            if (doc != null)
-                await _repository.DeleteAsync( doc );
-            else
+        public async Task<Unit> Handle( DeletePatientCommand request, CancellationToken cancellationToken = default ) {
+            var patient = await _repoRead.GetAsync( request.patientId );
+            if (patient != null) {
+                await _repository.DeleteAsync( patient );
+                
+            } else
                 throw new PatientNotFoundException( request.patientId.ToString() );
+
+            await _publisher.Publish<PatientDeleted>( new PatientDeleted {
+                Id = patient.Id,
+            } );
+            return Unit.Value;
         }
+
     }
 }

@@ -8,10 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="Mapster" Version="7.4.0" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.5" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Appointments.Domain\Appointments.Domain.csproj" />
+    <ProjectReference Include="..\Shared.Events.Contracts\Shared.Events.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

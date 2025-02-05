@@ -32,7 +32,7 @@ builder.Services.AddAuthentication( options => {
     };
 } );
 builder.Services.AddDataAccess(config);
-builder.Services.AddApplication();
+builder.Services.AddApplication(config);
 builder.Services.AddSingleton<ExceptionHandlingMiddleware>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -55,6 +55,7 @@ app.UseAuthorization();
 app.MapControllers();
 using (var scope = app.Services.CreateScope()) {
     var context = scope.ServiceProvider.GetRequiredService<ServiceContext>();
+    context.Database.EnsureCreated();
     if (context.Database.GetPendingMigrations().Any()) {
         context.Database.Migrate();
     }

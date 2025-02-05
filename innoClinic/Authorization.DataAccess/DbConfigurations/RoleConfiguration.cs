@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Authorization.DataAccess.DbConfigurations {
     internal sealed class RoleConfiguration: IEntityTypeConfiguration<Role> {
-        private const string TABLE_NAME = "Roles";
+        private const string TABLE_NAME = "Role";
         public void Configure( EntityTypeBuilder<Role> builder ) {
             builder.ToTable( TABLE_NAME );
             builder.HasKey( role => role.Id );

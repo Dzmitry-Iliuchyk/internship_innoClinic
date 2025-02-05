@@ -13,6 +13,10 @@ namespace Appointments.DataAccess {
             } );
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<IResultRepository, ResultRepository>();
+            services.AddScoped<IServiceRepository, ServiceRepository>();
+            services.AddScoped<IPatientRepository, PatientRepository>();
+            services.AddScoped<IOfficeRepository, OfficeRepository>();
+            services.AddScoped<IDoctorRepository, DoctorRepository>();
             return services;
         }
     }

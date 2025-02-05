@@ -20,16 +20,15 @@ namespace Profiles.Application.Common.Behavior {
                                              CancellationToken cancellationToken ) {
             var requestName = typeof( TRequest ).Name;
             _logger.LogInformation( "Starting request: {RequestName} ", requestName);
-
+            var startTimeStamp = Stopwatch.GetTimestamp();
             try {
-                var startTimeStamp = Stopwatch.GetTimestamp();
                 var response = await next();
-                _logger.LogInformation( "Completed request: {RequestName} and elapsed time is: {time} ",
+                _logger.LogInformation( "99999 Completed request: {RequestName} and elapsed time is: {time} ",
                     requestName, Stopwatch.GetElapsedTime( startTimeStamp ) );
                 return response;
             }
             catch (Exception ex) {
-                _logger.LogError( ex, "Request {RequestName} failed", requestName );
+                _logger.LogError( ex, "Request {RequestName} failed and elapsed time is: {time}", requestName, Stopwatch.GetElapsedTime( startTimeStamp ) );
                 throw;
             }
         }

@@ -1,33 +1,37 @@
 ﻿using Shared.Abstractions.Entities;
 
 namespace Appointments.Domain {
-    public class Appointment: Entity<Guid> {
-        #region Doctor
-        public Guid DoctorId { get; set; }
+    public class Doctor: Entity<Guid> {
         public string DoctorFirstName { get; set; }
         public string DoctorSecondName { get; set; }
         public string DoctorSpecialization { get; set; }
-        #endregion Doctor
-        #region Service
-        public int ServiceId { get; set; }
+    }
+    public class Service: Entity<Guid> {
         public string ServiceName { get; set; }
         public decimal ServicePrice { get; set; }
-        #endregion Service
-        #region Office
-        public string OfficeId { get; set; }
+    }
+    public class Office: Entity<string> {
         public string OfficeAddress { get; set; }
-
-        #endregion Office
-        #region Patient
-        public Guid PatientId { get; set; }
+        public string RegistryPhoneNumber { get; set; }
+    }
+    public class Patient: Entity<Guid> {
         public string PatientFirstName { get; set; }
         public string PatientSecondName { get; set; }
         public string? PatientEmail { get; set; }
-        #endregion Patient
+    }
+    public class Appointment: Entity<Guid> {
 
+        public Guid DoctorId { get; set; }
+        public Doctor? Doctor { get; set; }
+        public Guid ServiceId {  get; set; } 
+        public Service? Service { get; set; }
+        public string OfficeId { get; set; }
+        public Office? Office { get; set; }
+        public Guid PatientId { get; set; }
+        public Patient? Patient { get; set; }
         public DateTime StartTime { get; set; }
         public TimeSpan Duration { get; set; }
-        public ICollection<Result> Results { get; set; }
+        public ICollection<Result>? Results { get; set; }
     }
 
 }

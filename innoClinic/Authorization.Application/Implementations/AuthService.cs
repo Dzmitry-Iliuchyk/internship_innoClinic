@@ -66,14 +66,21 @@ namespace Authorization.Application.Implementations {
             var token = _token.GenerateToken( userInDb );
             return token;
         }
-        public async Task UpdateAsync( UpdateModel updateModel ) {
-            var userInDb = await _userRepository.GetAsync( updateModel.Id );
+        public async Task UpdatePasswordAsync( UpdatePasswordModel updateModel ) {
+            var userInDb = await _userRepository.GetAsync( updateModel.Email );
             if (userInDb == null) {
-                throw new UserNotFoundException(updateModel.Id);
+                throw new UserNotFoundException(updateModel.Email);
             }
 
             var passwordHash = _hasher.HashPassword(null, updateModel.Password );
             userInDb.PasswordHash = passwordHash;
+            await _userRepository.UpdateAsync( userInDb );
+        }
+        public async Task UpdateEmailAsync( UpdateEmailModel updateModel ) {
+            var userInDb = await _userRepository.GetAsync( updateModel.Id );
+            if (userInDb == null) {
+                throw new UserNotFoundException(updateModel.Id);
+            }
             userInDb.Email = updateModel.Email;
 
             await _userRepository.UpdateAsync( userInDb );
@@ -96,6 +103,29 @@ namespace Authorization.Application.Implementations {
                 RoleId = (int)Roles.Patient,
                 UserId = userToCrate.Id
             } );
+        }
+        public async Task CreateAccountAsync( CreateAccountModel createAccountModel ) {
+            if (await _userRepository.AnyAsync( createAccountModel.Email)) {
+                throw new UserAlredyExistException( createAccountModel.Email );
+            }
+            var userToCreate = new User() {
+                Id = createAccountModel.Id,
+                Email = createAccountModel.Email,
+                PasswordHash = _hasher.HashPassword( null, createAccountModel.Password )
+            };
+
+            await _userRepository.CreateAsync( userToCreate );
+            await _userRoleRepository.CreateAsync( new UserRole {
+                RoleId = (int)createAccountModel.Roles,
+                UserId = userToCreate.Id
+            } );
+        }
+        public async Task DeleteAccountAsync( Guid id ) {
+            var user = await _userRepository.GetAsync( id );
+            if (user == null) {
+                throw new UserNotFoundException( id );
+            }
+            await _userRepository.DeleteAsync( user );
         }
         public async Task<IEnumerable<string>> GetRoles(Guid userId) {
             if (!await _userRepository.AnyAsync(userId)) {

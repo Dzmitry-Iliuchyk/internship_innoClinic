@@ -35,7 +35,7 @@ builder.Services.AddAuthentication( options => {
 builder.Services.AddSingleton<ExceptionHandlingMiddleware>();
 builder.Services.Configure<OfficesDatabaseSettings>( config.GetRequiredSection( "OfficesDatabaseSettings" ) );
 builder.Services.AddOfficesDataAccess( config );
-builder.Services.AddOfficesApplication();
+builder.Services.AddOfficesApplication(config);
 builder.Services.AddLogging( opt => {
     opt.ClearProviders();
 

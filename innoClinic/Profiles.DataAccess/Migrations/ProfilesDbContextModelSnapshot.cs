@@ -49,7 +49,7 @@ namespace Profiles.DataAccess.Migrations
                     b.Property<bool>("IsEmailVerified")
                         .HasColumnType("bit");
 
-                    b.Property<string>("LastName")
+                    b.Property<string>("SecondName")
                         .IsRequired()
                         .HasMaxLength(80)
                         .IsUnicode(true)
