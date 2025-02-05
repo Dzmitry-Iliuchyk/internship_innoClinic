@@ -4,11 +4,11 @@ using MediatR;
 using Profiles.Application.Common;
 using Profiles.Application.Interfaces.Repositories;
 using Profiles.Domain;
-using Shared.Events.Contracts;
+using Shared.Events.Contracts.ProfilesMessages;
 using System.ComponentModel.DataAnnotations;
 using System.Security.AccessControl;
 
-namespace Profiles.Application.Doctors.Commands.Create{
+namespace Profiles.Application.Doctors.Commands.Create {
     public record CreateDoctorCommand(
         [Required] DateTime DateOfBirth,
         [Required] DateTime CareerStartYear,

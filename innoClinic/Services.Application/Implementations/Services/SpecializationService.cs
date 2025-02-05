@@ -3,7 +3,7 @@ using MassTransit;
 using Services.Application.Abstractions.Repositories;
 using Services.Application.Abstractions.Services;
 using Services.Domain;
-using Shared.Events.Contracts;
+using Shared.Events.Contracts.ServiceMessages;
 
 namespace Services.Application.Implementations.Services {
     public class SpecializationService: ISpecializationService {

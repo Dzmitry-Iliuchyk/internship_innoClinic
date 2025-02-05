@@ -1,6 +1,6 @@
 ﻿using Appointments.Application.Interfaces.Repositories;
 using MassTransit;
-using Shared.Events.Contracts;
+using Shared.Events.Contracts.ProfilesMessages;
 
 namespace Appointments.Application.Consumers {
     public class PatientCreatedConsumer: IConsumer<PatientCreated> {

@@ -13,7 +13,6 @@ namespace Profiles.Application {
                 cfg.RegisterServicesFromAssembly( typeof( DependencyInjection ).Assembly );
                 cfg.AddOpenBehavior( typeof( LoggingPipelineBehavior<,> ) );
                 cfg.AddOpenBehavior( typeof( AuthorizationBehaviour<,> ) );
-                cfg.AddOpenBehavior( typeof( MassTransitPipelineBehavior<,> ) );
             } );
             services.AddMassTransit( x => {
                 x.SetKebabCaseEndpointNameFormatter();

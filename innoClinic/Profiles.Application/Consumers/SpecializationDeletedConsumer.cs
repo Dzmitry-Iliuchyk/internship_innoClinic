@@ -1,6 +1,6 @@
 ﻿using MassTransit;
 using Profiles.Application.Interfaces.Repositories;
-using Shared.Events.Contracts;
+using Shared.Events.Contracts.ServiceMessages;
 
 namespace Profiles.Application.Consumers {
     public class SpecializationDeletedConsumer: IConsumer<SpecializationDeleted> {

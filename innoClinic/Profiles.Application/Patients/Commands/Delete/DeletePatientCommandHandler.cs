@@ -3,7 +3,7 @@ using MediatR;
 using Profiles.Application.Common.Exceptions;
 using Profiles.Application.Interfaces.Repositories;
 using Profiles.Domain;
-using Shared.Events.Contracts;
+using Shared.Events.Contracts.ProfilesMessages;
 using System.ComponentModel.DataAnnotations;
 
 namespace Profiles.Application.Patients.Commands.Delete {

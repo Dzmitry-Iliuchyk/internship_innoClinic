@@ -14,6 +14,12 @@ namespace Appointments.Application {
             services.AddMassTransit( x => {
                 x.SetKebabCaseEndpointNameFormatter();
 
+                x.AddConsumer<ServiceCreatedConsumer>();
+                x.AddConsumer<ServiceDeletedConsumer>();
+                x.AddConsumer<ServiceUpdatedConsumer>();
+                x.AddConsumer<OfficeCreatedConsumer>();
+                x.AddConsumer<OfficeDeletedConsumer>();
+                x.AddConsumer<OfficeUpdatedConsumer>();
                 x.AddConsumer<DoctorCreatedConsumer>();
                 x.AddConsumer<DoctorDeletedConsumer>();
                 x.AddConsumer<DoctorUpdatedConsumer>();

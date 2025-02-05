@@ -1,6 +1,6 @@
 ﻿using Appointments.Application.Interfaces.Repositories;
 using MassTransit;
-using Shared.Events.Contracts;
+using Shared.Events.Contracts.ProfilesMessages;
 using System;
 using System.Collections.Generic;
 using System.Linq;

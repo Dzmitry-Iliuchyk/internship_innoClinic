@@ -4,7 +4,7 @@ using MediatR;
 using Profiles.Application.Common;
 using Profiles.Application.Interfaces.Repositories;
 using Profiles.Domain;
-using Shared.Events.Contracts;
+using Shared.Events.Contracts.ProfilesMessages;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

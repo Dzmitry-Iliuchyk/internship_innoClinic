@@ -1,7 +1,7 @@
 ﻿using MassTransit;
 using Profiles.Application.Common.Exceptions;
 using Profiles.Application.Interfaces.Repositories;
-using Shared.Events.Contracts;
+using Shared.Events.Contracts.ServiceMessages;
 using System;
 using System.Collections.Generic;
 using System.Linq;

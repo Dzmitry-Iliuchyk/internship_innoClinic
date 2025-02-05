@@ -15,7 +15,6 @@ namespace Services.Application {
             services.AddScoped<ISpecializationService, SpecializationService>();
             services.AddMassTransit( x => {
                 x.SetKebabCaseEndpointNameFormatter();
-
                 //x.AddConsumer<>();
                 x.UsingRabbitMq( ( context, cfg ) => {
                     cfg.Host( config[ "rabbitMq:host" ] ?? throw new ArgumentNullException( "rabbitMq:host" ),

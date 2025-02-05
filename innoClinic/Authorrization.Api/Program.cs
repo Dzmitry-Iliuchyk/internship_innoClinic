@@ -86,11 +86,9 @@ app.UseAuthorization();
 app.MapControllers();
 using (var serviceScope = app.Services.CreateScope()) {
     var context = serviceScope.ServiceProvider.GetRequiredService<AuthDbContext>();
+    context.Database.EnsureCreated();
     if (context.Database.GetPendingMigrations().Any()) {
         context.Database.Migrate();
-    }
-    if (!context.Users.Any()) {
-        context.SeedUsers();
     }
 }
 

@@ -6,12 +6,13 @@ namespace Appointments.Domain {
         public string DoctorSecondName { get; set; }
         public string DoctorSpecialization { get; set; }
     }
-    public class Service: Entity<int> {
+    public class Service: Entity<Guid> {
         public string ServiceName { get; set; }
         public decimal ServicePrice { get; set; }
     }
     public class Office: Entity<string> {
         public string OfficeAddress { get; set; }
+        public string RegistryPhoneNumber { get; set; }
     }
     public class Patient: Entity<Guid> {
         public string PatientFirstName { get; set; }
@@ -22,7 +23,7 @@ namespace Appointments.Domain {
 
         public Guid DoctorId { get; set; }
         public Doctor? Doctor { get; set; }
-        public int ServiceId {  get; set; } 
+        public Guid ServiceId {  get; set; } 
         public Service? Service { get; set; }
         public string OfficeId { get; set; }
         public Office? Office { get; set; }

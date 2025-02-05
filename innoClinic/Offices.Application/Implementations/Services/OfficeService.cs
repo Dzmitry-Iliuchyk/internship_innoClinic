@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using MassTransit;
 using Offices.Application.Dtos;
 using Offices.Application.Exceptions;
 using Offices.Application.Interfaces.Repositories;
 using Offices.Application.Interfaces.Services;
 using Offices.Domain.Models;
+using Shared.Events.Contracts;
+using Shared.Events.Contracts.OfficesMessages;
 
 
 namespace Offices.Application.Implementations.Services {
@@ -13,15 +16,17 @@ namespace Offices.Application.Implementations.Services {
         private readonly IIdGenerator _idGenerator;
         private readonly IMapper _mapper;
         private readonly IValidator<Office> _validator;
-
+        private readonly IPublishEndpoint _publisher;
         public OfficeService( IOfficeRepository repository,
                               IValidator<Office> validator,
                               IMapper mapper,
-                              IIdGenerator idGenerator ) {
+                              IIdGenerator idGenerator,
+                              IPublishEndpoint publisher ) {
             _repository = repository;
             _validator = validator;
             _mapper = mapper;
             _idGenerator = idGenerator;
+            this._publisher = publisher;
         }
 
         public async Task<string> CreateAsync( CreateOfficeDto officeDto ) {
@@ -32,11 +37,22 @@ namespace Offices.Application.Implementations.Services {
                 throw new OfficeAlreadyExistException(officeDto.RegistryPhoneNumber);
             }
             await _repository.CreateAsync( office );
+
+            await _publisher.Publish(new OfficeCreated {
+                Id = office.Id,
+                Address = office.Address.ToString(),
+                RegistryPhoneNumber = office.RegistryPhoneNumber,
+                Status = office.Status,
+            } );
             return office.Id;
         }
 
         public async Task DeleteAsync( string id ) {
             await _repository.DeleteAsync( id );
+
+            await _publisher.Publish(new OfficeDeleted {
+                Id = id
+            } );
         }
 
         public async Task<OfficeDto> GetAsync( string id ) {
@@ -68,6 +84,13 @@ namespace Offices.Application.Implementations.Services {
             await _validator.ValidateAndThrowAsync( office );
 
             await _repository.UpdateAsync( office );
+
+            await _publisher.Publish(new OfficeUpdated {
+                Id = id,
+                Address = office.Address.ToString(),
+                RegistryPhoneNumber = office.RegistryPhoneNumber,
+                Status = office.Status
+            } );
         }
         public async Task SetPathToOffice( string id, string path ) {
             if (!await _repository.AnyAsync(id)) {

@@ -2,7 +2,7 @@
 
 namespace Appointments.Application.Interfaces.Repositories {
     public interface IServiceRepository {
-        Task<Service?> GetAsync( int id );
+        Task<Service?> GetAsync( Guid id );
         Task CreateAsync( Service entity );
         Task UpdateAsync( Service entity );
         Task DeleteAsync( Service entity );

@@ -1,6 +1,7 @@
 ﻿using Authorization.Application.Abstractions.Services;
 using MassTransit;
 using Shared.Events.Contracts;
+using Shared.Events.Contracts.ProfilesMessages;
 
 namespace Authorization.Application.Consumers {
     public class PatientCreatedConsumer: IConsumer<PatientCreated> {
