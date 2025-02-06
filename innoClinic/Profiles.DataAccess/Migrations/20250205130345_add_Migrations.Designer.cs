@@ -12,8 +12,8 @@ using Profiles.DataAccess;
 namespace Profiles.DataAccess.Migrations
 {
     [DbContext(typeof(ProfilesDbContext))]
-    [Migration("20241211061335_DateOnly-to-DateTime")]
-    partial class DateOnlytoDateTime
+    [Migration("20250205130345_add_Migrations")]
+    partial class add_Migrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,7 +34,7 @@ namespace Profiles.DataAccess.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CreatedBy")
+                    b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
@@ -52,7 +52,7 @@ namespace Profiles.DataAccess.Migrations
                     b.Property<bool>("IsEmailVerified")
                         .HasColumnType("bit");
 
-                    b.Property<string>("SecondName")
+                    b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(80)
                         .IsUnicode(true)
@@ -77,7 +77,7 @@ namespace Profiles.DataAccess.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UpdatedBy")
+                    b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -149,7 +149,6 @@ namespace Profiles.DataAccess.Migrations
                     b.HasBaseType("Profiles.Domain.Account");
 
                     b.Property<string>("OfficeId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.ToTable("Receptionists");

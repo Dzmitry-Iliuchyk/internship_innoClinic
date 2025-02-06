@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Authorization.DataAccess.Migrations
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20241128094849_Added_unique_index_to_user.Email")]
-    partial class Added_unique_index_to_userEmail
+    [Migration("20250205121900_add_Migrations")]
+    partial class add_Migrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

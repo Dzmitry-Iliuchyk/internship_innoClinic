@@ -10,7 +10,7 @@ namespace Profiles.DataAccess.RepositoriesDapper {
         }
         public async Task<Doctor?> GetAsync( Guid id ) {
             const string sql = @"
-                SELECT a.Id, a.FirstName, a.SecondName, a.MiddleName, a.Email, 
+                SELECT a.Id, a.FirstName, a.LastName, a.MiddleName, a.Email, 
                        a.PhoneNumber, a.IsEmailVerified, a.PhotoUrl, a.CreatedBy, a.CreatedAt, a.UpdatedBy, a.UpdatedAt,
                        d.DateOfBirth, d.CareerStartYear, d.OfficeId, d.Status, d.SpecializationId,
                        s.Id AS SpecializationId, s.Name, s.isActive

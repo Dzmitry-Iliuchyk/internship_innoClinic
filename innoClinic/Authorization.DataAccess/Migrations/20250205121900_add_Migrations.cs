@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Authorization.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class add_Migrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,7 +20,7 @@ namespace Authorization.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Roles", x => x.Id);
+                    table.PrimaryKey("PK_Role", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -48,7 +48,7 @@ namespace Authorization.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_UserRoles", x => new { x.RoleId, x.UserId });
                     table.ForeignKey(
-                        name: "FK_UserRoles_Roles_RoleId",
+                        name: "FK_UserRoles_Role_RoleId",
                         column: x => x.RoleId,
                         principalTable: "Role",
                         principalColumn: "Id",
@@ -65,6 +65,12 @@ namespace Authorization.DataAccess.Migrations
                 name: "IX_UserRoles_UserId",
                 table: "UserRoles",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email",
+                unique: true);
         }
 
         /// <inheritdoc />

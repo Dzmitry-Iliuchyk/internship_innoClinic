@@ -19,7 +19,7 @@ namespace Profiles.Application.Receptionists.Commands.Create {
         [Required] string LastName,
         [Required] string Email,
         [Required] string PhoneNumber,
-        [Required] Guid CreatedBy,
+        Guid? CreatedBy,
         string? PhotoUrl,
         string? MiddleName ): CreatePersonCommandBase( FirstName, LastName, Email, PhoneNumber, CreatedBy, PhotoUrl, MiddleName );
 

@@ -12,8 +12,8 @@ using Services.DataAccess;
 namespace Services.DataAccess.Migrations
 {
     [DbContext(typeof(ServiceContext))]
-    [Migration("20250116112326_init")]
-    partial class init
+    [Migration("20250205122201_add_Migrations")]
+    partial class add_Migrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

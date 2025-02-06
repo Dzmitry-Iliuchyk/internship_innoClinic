@@ -58,7 +58,7 @@ app
 
 using (var scope = app.Services.CreateScope()) {
     var context = scope.ServiceProvider.GetRequiredService<AppointmentsDbContext>();
-    context.Database.EnsureCreated();
+    
     if (context.Database.GetPendingMigrations().Any()) {
         context.Database.Migrate();
     }
