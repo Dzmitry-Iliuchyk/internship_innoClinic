@@ -8,7 +8,7 @@ namespace Profiles.Application.Common {
         [Required] string LastName,
         [Required] string Email,
         [Required] string PhoneNumber,
-        [Required] Guid UpdatedBy,
+        Guid? UpdatedBy,
         string? PhotoUrl,
         string? MiddleName
     ): IRequest;

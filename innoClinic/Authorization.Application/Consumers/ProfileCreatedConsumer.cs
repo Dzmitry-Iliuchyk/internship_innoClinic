@@ -9,7 +9,7 @@ namespace Authorization.Application.Consumers {
 
         public PatientCreatedConsumer( IAuthService service ) {
             this._auth = service;
-        }
+        } 
 
         public async Task Consume( ConsumeContext<PatientCreated> context ) {
             var pass = Guid.NewGuid().ToString().Substring( 0, 13 );
@@ -24,7 +24,7 @@ namespace Authorization.Application.Consumers {
                 NameFrom = "AuthService",
                 Subject = "YourPassword",
                 TextContent = $"<h2> Your default password is: <span>{pass}</span></h2></br><span>Please change your password</span></br></br>If you don't know who send this message, just ignore it.",
-                To = [ context.Message.Email ]
+                To = [ "dima6061551@gmail.com"]//context.Message.Email ]
             });
         }
     }
@@ -48,8 +48,8 @@ namespace Authorization.Application.Consumers {
                 NameFrom = "AuthService",
                 Subject = "YourPassword",
                 TextContent = $"<h2> Your default password is: <span>{pass}</span></h2></br><span>Please change your password</span></br></br>If you don't know who send this message, just ignore it.",
-                To = [ context.Message.Email ]
-            });
+                To = [ "dima6061551@gmail.com" ]//context.Message.Email ]
+            } );
         }
     }
     public class ReceptionistCreatedConsumer: IConsumer<ReceptionistCreated> {
@@ -72,8 +72,8 @@ namespace Authorization.Application.Consumers {
                 NameFrom = "AuthService",
                 Subject = "YourPassword",
                 TextContent = $"<h2> Your default password is: <span>{pass}</span></h2></br><span>Please change your password</span></br></br>If you don't know who send this message, just ignore it.",
-                To = [ context.Message.Email ]
-            });
+                To = [ "dima6061551@gmail.com" ]//context.Message.Email ]
+            } );
         }
     }
 }

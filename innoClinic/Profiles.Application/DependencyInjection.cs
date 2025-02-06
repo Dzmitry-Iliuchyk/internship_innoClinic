@@ -22,6 +22,11 @@ namespace Profiles.Application {
                 x.AddConsumer<SpecializationCreatedConsumer>();
 
                 x.UsingRabbitMq( ( context, cfg ) => {
+
+                    cfg.ReceiveEndpoint( "q-specialization-created-profiles", e => e.ConfigureConsumer<SpecializationUpdatedConsumer>( context ) );
+                    cfg.ReceiveEndpoint( "q-specialization-deleted-profiles", e => e.ConfigureConsumer<SpecializationDeletedConsumer>( context ) );
+                    cfg.ReceiveEndpoint( "q-specialization-updated-profiles", e => e.ConfigureConsumer<SpecializationCreatedConsumer>( context ) );
+
                     cfg.Host( config[ "rabbitMq:host" ] ?? throw new ArgumentNullException( "rabbitMq:host" ),
                         "/", h => {
                             h.Username( config[ "rabbitMq:user" ] ?? throw new ArgumentNullException( "rabbitMq:user" ) );

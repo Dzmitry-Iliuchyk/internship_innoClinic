@@ -7,7 +7,7 @@ namespace Profiles.Application.Common {
         [Required] string LastName,
         [Required] string Email,
         [Required] string PhoneNumber,
-        [Required] Guid CreatedBy,
+        Guid? CreatedBy,
         string? PhotoUrl,
         string? MiddleName
     ): IRequest<Guid>;

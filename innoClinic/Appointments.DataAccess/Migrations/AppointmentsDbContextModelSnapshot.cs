@@ -182,8 +182,8 @@ namespace Appointments.DataAccess.Migrations
                         .HasColumnType("character varying(120)");
 
                     b.Property<decimal>("ServicePrice")
-                        .HasPrecision(2)
-                        .HasColumnType("numeric(2)");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
 
                     b.HasKey("Id");
 

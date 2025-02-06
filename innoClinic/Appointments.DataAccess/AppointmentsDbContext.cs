@@ -86,7 +86,7 @@ namespace Appointments.DataAccess {
                 .HasMaxLength( 120 );
 
             builder.Property( a => a.ServicePrice )
-                .HasPrecision(2)
+                .HasPrecision(18,2)
                 .IsRequired();
         }
     }

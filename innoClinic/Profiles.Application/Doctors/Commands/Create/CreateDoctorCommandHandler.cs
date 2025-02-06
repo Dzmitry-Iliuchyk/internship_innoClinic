@@ -19,7 +19,7 @@ namespace Profiles.Application.Doctors.Commands.Create {
         [Required] string LastName,
         [Required] string Email,
         [Required] string PhoneNumber,
-        [Required] Guid CreatedBy,
+        Guid? CreatedBy,
         string? PhotoUrl,
         string? MiddleName ): CreatePersonCommandBase( FirstName, LastName, Email, PhoneNumber, CreatedBy, PhotoUrl, MiddleName );
     public class CreateDoctorCommandHandler: IRequestHandler<CreateDoctorCommand, Guid> {
@@ -36,6 +36,7 @@ namespace Profiles.Application.Doctors.Commands.Create {
             await _repository.CreateAsync(doc);
 
             var doctor = await _readRepository.GetAsync(doc.Id);
+
             await _publisher.Publish<DoctorCreated>(new DoctorCreated {
                 Id = doctor.Id,
                 Email = doctor.Email,

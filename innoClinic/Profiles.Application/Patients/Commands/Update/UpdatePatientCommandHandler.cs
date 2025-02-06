@@ -20,7 +20,7 @@ namespace Profiles.Application.Patients.Commands.Update {
                                        [Required] string LastName,
                                        [Required] string Email,
                                        [Required] string PhoneNumber,
-                                       [Required] Guid UpdatedBy,
+                                       Guid? UpdatedBy,
                                        string? PhotoUrl,
                                        string? MiddleName )
         : UpdatePersonCommandBase( Id, FirstName, LastName, Email, PhoneNumber, UpdatedBy, PhotoUrl, MiddleName );
