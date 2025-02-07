@@ -17,6 +17,7 @@ COPY ["Profiles.Application/Profiles.Application.csproj", "Profiles.Application/
 COPY ["Profiles.Domain/Profiles.Domain.csproj", "Profiles.Domain/"]
 COPY ["innoClinic.Abstractions/Shared.Abstractions.csproj", "innoClinic.Abstractions/"]
 COPY ["Profiles.DataAccess/Profiles.DataAccess.csproj", "Profiles.DataAccess/"]
+COPY ["Shared.ServiceDiscovery/Shared.ServiceDiscovery.csproj", "Shared.ServiceDiscovery/"]
 RUN dotnet restore "./ProfilesApi/Profiles.Api.csproj"
 COPY . .
 WORKDIR "/src/ProfilesApi"

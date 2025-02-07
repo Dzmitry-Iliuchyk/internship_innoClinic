@@ -1,6 +1,6 @@
-﻿using Authorization.Api.Middleware;
+﻿using Authorization.Api.Dto;
+using Authorization.Api.Middleware;
 using Authorization.Application.Abstractions.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Authorization.Api.Controllers {
@@ -10,7 +10,7 @@ namespace Authorization.Api.Controllers {
     public class AuthController: ControllerBase {
         private readonly IAuthService _auth;
 
-        public AuthController(IAuthService authService) {
+        public AuthController( IAuthService authService ) {
             _auth = authService;
         }
         /// <summary>
@@ -23,9 +23,9 @@ namespace Authorization.Api.Controllers {
         /// <response code="400">If the item already exists</response>
         [HttpPost( "[action]" )]
         [ProducesResponseType( StatusCodes.Status201Created )]
-        [ProducesResponseType( StatusCodes.Status400BadRequest,Type = typeof(ErrorResponse) )]
-        public async Task<IResult> SignUp(string email, string password) {
-            await _auth.SignUpAsync(new Application.Dtos.SignUpModel { Email = email, Password = password } );
+        [ProducesResponseType( StatusCodes.Status400BadRequest, Type = typeof( ErrorResponse ) )]
+        public async Task<IResult> SignUp( string email, string password ) {
+            await _auth.SignUpAsync( new Application.Dtos.SignUpModel { Email = email, Password = password } );
             return Results.Created();
         }
         /// <summary>
@@ -43,7 +43,37 @@ namespace Authorization.Api.Controllers {
         [ProducesResponseType( StatusCodes.Status404NotFound, Type = typeof( ErrorResponse ) )]
         public async Task<IResult> SignIn( string email, string password ) {
             var token = await _auth.SignInAsync( new Application.Dtos.SignInModel { Email = email, Password = password } );
-            return Results.Ok(token);
+            return Results.Ok( token );
+        }
+        /// <summary>
+        /// Used to update password by user email.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Nothing</returns>
+        /// <response code="204">Returns if updated successfully</response
+        /// <response code="404">If user doesn't exist </response>
+        [HttpPut( "[action]" )]
+        [ProducesResponseType( StatusCodes.Status204NoContent )]
+        [ProducesResponseType( StatusCodes.Status400BadRequest, Type = typeof( ErrorResponse ) )]
+        [ProducesResponseType( StatusCodes.Status404NotFound, Type = typeof( ErrorResponse ) )]
+        public async Task<IResult> UpdatePassword( UpdatePasswordRequest request ) {
+            await _auth.UpdatePasswordAsync( new Application.Dtos.UpdatePasswordModel { Email = request.Email, Password = request.Password } );
+            return Results.NoContent();
+        }
+        /// <summary>
+        /// Used to update user email.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Nothing</returns>
+        /// <response code="204">Returns if updated successfully</response
+        /// <response code="404">If user doesn't exist </response>
+        [HttpPut( "[action]" )]
+        [ProducesResponseType( StatusCodes.Status204NoContent )]
+        [ProducesResponseType( StatusCodes.Status400BadRequest, Type = typeof( ErrorResponse ) )]
+        [ProducesResponseType( StatusCodes.Status404NotFound, Type = typeof( ErrorResponse ) )]
+        public async Task<IResult> UpdateEmail( UpdateEmailRequest request ) {
+            await _auth.UpdateEmailAsync( new Application.Dtos.UpdateEmailModel { Id = request.Id, Email = request.NewEmail } );
+            return Results.NoContent();
         }
         /// <summary>
         /// Used to assign the role to the user.
@@ -58,8 +88,8 @@ namespace Authorization.Api.Controllers {
         [ProducesResponseType( StatusCodes.Status200OK )]
         [ProducesResponseType( StatusCodes.Status400BadRequest, Type = typeof( ErrorResponse ) )]
         [ProducesResponseType( StatusCodes.Status404NotFound, Type = typeof( ErrorResponse ) )]
-        public async Task<IResult> AddRoleToUser(Guid userId, int roleId) {
-            await _auth.AddRoleToUserAsync(userId, roleId);
+        public async Task<IResult> AddRoleToUser( Guid userId, int roleId ) {
+            await _auth.AddRoleToUserAsync( userId, roleId );
             return Results.Ok();
         }
         /// <summary>
@@ -90,7 +120,7 @@ namespace Authorization.Api.Controllers {
         [ProducesResponseType( StatusCodes.Status404NotFound, Type = typeof( ErrorResponse ) )]
         public async Task<IResult> GetRoles( Guid userId ) {
             var roles = await _auth.GetRoles( userId );
-            return Results.Ok(roles);
+            return Results.Ok( roles );
         }
         /// <summary>
         /// Used to obtain array of users.
@@ -100,9 +130,9 @@ namespace Authorization.Api.Controllers {
 
         [HttpGet( "[action]" )]
         [ProducesResponseType( StatusCodes.Status200OK )]
-        public async Task<IResult> GetUsers( ) {
-            var users = await _auth.GetUsers( );
-            return Results.Ok(users);
+        public async Task<IResult> GetUsers() {
+            var users = await _auth.GetUsers();
+            return Results.Ok( users );
         }
         /// <summary>
         /// Used to obtain user with his roles.
@@ -114,9 +144,9 @@ namespace Authorization.Api.Controllers {
         [ProducesResponseType( StatusCodes.Status200OK )]
         public async Task<IResult> GetUserWithRoles( Guid userId ) {
             var user = await _auth.GetUserWithRoles( userId );
-            return Results.Ok(user);
+            return Results.Ok( user );
         }
-        [HttpGet("[action]")]
+        [HttpGet( "[action]" )]
         public async Task<IResult> ThrowException() {
             throw new NotImplementedException();
         }

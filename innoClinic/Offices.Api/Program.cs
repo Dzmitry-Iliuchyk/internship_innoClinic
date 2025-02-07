@@ -9,6 +9,7 @@ using Serilog;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using Shared.ServiceDiscovery;
 
 var builder = WebApplication.CreateBuilder( args );
 var config = builder.Configuration;
@@ -34,7 +35,7 @@ builder.Services.AddAuthentication( options => {
 builder.Services.AddSingleton<ExceptionHandlingMiddleware>();
 builder.Services.Configure<OfficesDatabaseSettings>( config.GetRequiredSection( "OfficesDatabaseSettings" ) );
 builder.Services.AddOfficesDataAccess( config );
-builder.Services.AddOfficesApplication();
+builder.Services.AddOfficesApplication(config);
 builder.Services.AddLogging( opt => {
     opt.ClearProviders();
 
@@ -44,7 +45,7 @@ builder.Services.AddLogging( opt => {
 
     opt.AddSerilog( logger );
 } );
-
+ConfigureConsul( builder.Services );
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -76,19 +77,24 @@ builder.Services.AddSwaggerGen( c => {
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment()) {
+//if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.Use( async ( cont, next ) => await next( cont ) );
+
 app.Run();
+void ConfigureConsul( IServiceCollection services ) {
+    var serviceConfig = config.GetServiceConfig();
+
+    services.RegisterConsulServices( serviceConfig );
+}
 static RsaSecurityKey GetKey( string pathToKey ) {
     byte[] key = File.ReadAllBytes( pathToKey );
     var rsa = RSA.Create();

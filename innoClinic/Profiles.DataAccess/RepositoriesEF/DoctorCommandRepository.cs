@@ -12,5 +12,5 @@ namespace Profiles.DataAccess.Repositories {
     public class DoctorCommandRepository: BaseRepository<Doctor>, IDoctorCommandRepository {
         public DoctorCommandRepository( ProfilesDbContext context ) : base( context ) {
         }
-    }
+    } 
 }

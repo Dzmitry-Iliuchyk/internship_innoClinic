@@ -1,12 +1,11 @@
 using Appointments.Application;
 using Appointments.DataAccess;
 using Appointments.Middleware;
-using FastEndpoints;
 using FastEndpoints.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Net;
+using Shared.ServiceDiscovery;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -35,8 +34,9 @@ builder.Services.AddAuthentication( options => {
     };
 } );
 builder.Services.AddAuthorization();
-builder.Services.AddApplicationLayer();
-builder.Services.AddDataAccess(config);
+builder.Services.AddApplicationLayer( config );
+builder.Services.AddDataAccess( config );
+ConfigureConsul( builder.Services );
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services
@@ -46,17 +46,19 @@ builder.Services
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
 app
-   .UseFastEndpoints( c => { 
-       c.Serializer.Options.PropertyNamingPolicy = null; } )
+   .UseFastEndpoints( c => {
+       c.Serializer.Options.PropertyNamingPolicy = null;
+   } )
    .UseSwaggerGen();
 
 using (var scope = app.Services.CreateScope()) {
     var context = scope.ServiceProvider.GetRequiredService<AppointmentsDbContext>();
+    
     if (context.Database.GetPendingMigrations().Any()) {
         context.Database.Migrate();
     }
@@ -69,4 +71,9 @@ static RsaSecurityKey GetKey( string pathToKey ) {
     var rsa = RSA.Create();
     rsa.ImportFromPem( Encoding.UTF8.GetChars( key ) );
     return new RsaSecurityKey( rsa );
+}
+void ConfigureConsul( IServiceCollection services ) {
+    var serviceConfig = config.GetServiceConfig();
+
+    services.RegisterConsulServices( serviceConfig );
 }

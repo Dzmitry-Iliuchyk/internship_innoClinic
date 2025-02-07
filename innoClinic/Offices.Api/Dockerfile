@@ -16,6 +16,7 @@ COPY ["Offices.Api/Offices.Api.csproj", "Offices.Api/"]
 COPY ["Offices.Application/Offices.Application.csproj", "Offices.Application/"]
 COPY ["Offices.Domain/Offices.Domain.csproj", "Offices.Domain/"]
 COPY ["Offices.DataAccess/Offices.DataAccess.csproj", "Offices.DataAccess/"]
+COPY ["Shared.ServiceDiscovery/Shared.ServiceDiscovery.csproj", "Shared.ServiceDiscovery/"]
 RUN dotnet restore "./Offices.Api/Offices.Api.csproj"
 COPY . .
 WORKDIR "/src/Offices.Api"

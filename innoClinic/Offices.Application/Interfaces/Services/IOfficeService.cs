@@ -7,5 +7,6 @@ namespace Offices.Application.Interfaces.Services {
         Task UpdateAsync(string id, UpdateOfficeDto officeDto );
         Task DeleteAsync( string id );
         Task<string> CreateAsync( CreateOfficeDto officeDto );
+        Task SetPathToOffice( string id, string path );
     }
 }

@@ -4,10 +4,11 @@ using Authorization.Application.Implementations;
 using Authorization.DataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using Shared.ServiceDiscovery;
 
 
 var builder = WebApplication.CreateBuilder( args );
@@ -39,7 +40,7 @@ builder.Services.AddAuthentication( options => {
 builder.Services.AddScoped<ExceptionHandlingMiddleware>();
 builder.Services.AddAuthorization();
 builder.Services.ConfigureAuthDataAccess( cfg.GetConnectionString( "Auth" ) );
-builder.Services.ConfigureAuthApplicationDependncies();
+builder.Services.ConfigureAuthApplicationDependncies(cfg);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -68,6 +69,8 @@ builder.Services.AddSwaggerGen( c => {
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     c.IncludeXmlComments( Path.Combine( AppContext.BaseDirectory, xmlFilename ) );
 } );
+
+ConfigureConsul( builder.Services );
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -83,12 +86,16 @@ app.UseAuthorization();
 app.MapControllers();
 using (var serviceScope = app.Services.CreateScope()) {
     var context = serviceScope.ServiceProvider.GetRequiredService<AuthDbContext>();
+    
     if (context.Database.GetPendingMigrations().Any()) {
         context.Database.Migrate();
     }
-    if (!context.Users.Any()) {
-        context.SeedUsers();
-    }
+    if(!context.Users.Any()) context.SeedUsers();
 }
 
 app.Run();
+void ConfigureConsul( IServiceCollection services ) {
+    var serviceConfig = builder.Configuration.GetServiceConfig();
+
+    services.RegisterConsulServices( serviceConfig );
+}

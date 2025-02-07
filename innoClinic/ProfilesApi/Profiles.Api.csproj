@@ -28,6 +28,7 @@
     <ProjectReference Include="..\Profiles.Application\Profiles.Application.csproj" />
     <ProjectReference Include="..\Profiles.DataAccess\Profiles.DataAccess.csproj" />
     <ProjectReference Include="..\Profiles.Domain\Profiles.Domain.csproj" />
+    <ProjectReference Include="..\Shared.ServiceDiscovery\Shared.ServiceDiscovery.csproj" />
   </ItemGroup>
 
 </Project>

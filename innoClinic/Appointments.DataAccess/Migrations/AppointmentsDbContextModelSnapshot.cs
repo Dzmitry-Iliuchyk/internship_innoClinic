@@ -28,13 +28,48 @@ namespace Appointments.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<TimeSpan>("Duration")
+                        .HasColumnType("interval");
+
+                    b.Property<string>("OfficeId")
+                        .IsRequired()
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<Guid>("PatientId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ServiceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("OfficeId");
+
+                    b.HasIndex("PatientId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("Appointments");
+                });
+
+            modelBuilder.Entity("Appointments.Domain.Doctor", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
                     b.Property<string>("DoctorFirstName")
                         .IsRequired()
                         .HasMaxLength(80)
                         .HasColumnType("character varying(80)");
-
-                    b.Property<Guid>("DoctorId")
-                        .HasColumnType("uuid");
 
                     b.Property<string>("DoctorSecondName")
                         .IsRequired()
@@ -46,48 +81,55 @@ namespace Appointments.DataAccess.Migrations
                         .HasMaxLength(120)
                         .HasColumnType("character varying(120)");
 
-                    b.Property<TimeSpan>("Duration")
-                        .HasColumnType("interval");
+                    b.HasKey("Id");
+
+                    b.ToTable("Doctors");
+                });
+
+            modelBuilder.Entity("Appointments.Domain.Office", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
 
                     b.Property<string>("OfficeAddress")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
 
-                    b.Property<string>("OfficeId")
+                    b.Property<string>("RegistryPhoneNumber")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Offices");
+                });
+
+            modelBuilder.Entity("Appointments.Domain.Patient", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("PatientEmail")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
 
                     b.Property<string>("PatientFirstName")
                         .IsRequired()
                         .HasMaxLength(80)
                         .HasColumnType("character varying(80)");
 
-                    b.Property<Guid>("PatientId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("PatientSecondName")
                         .IsRequired()
                         .HasMaxLength(80)
                         .HasColumnType("character varying(80)");
 
-                    b.Property<int>("ServiceId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ServiceName")
-                        .IsRequired()
-                        .HasMaxLength(120)
-                        .HasColumnType("character varying(120)");
-
-                    b.Property<decimal>("ServicePrice")
-                        .HasColumnType("numeric");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("timestamp with time zone");
-
                     b.HasKey("Id");
 
-                    b.ToTable("Appointments");
+                    b.ToTable("Patients");
                 });
 
             modelBuilder.Entity("Appointments.Domain.Result", b =>
@@ -109,6 +151,9 @@ namespace Appointments.DataAccess.Migrations
                         .HasMaxLength(3000)
                         .HasColumnType("character varying(3000)");
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("DocumentUrl")
                         .IsRequired()
                         .HasMaxLength(300)
@@ -124,6 +169,60 @@ namespace Appointments.DataAccess.Migrations
                     b.HasIndex("AppointmentId");
 
                     b.ToTable("Results");
+                });
+
+            modelBuilder.Entity("Appointments.Domain.Service", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ServiceName")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)");
+
+                    b.Property<decimal>("ServicePrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Services");
+                });
+
+            modelBuilder.Entity("Appointments.Domain.Appointment", b =>
+                {
+                    b.HasOne("Appointments.Domain.Doctor", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Appointments.Domain.Office", "Office")
+                        .WithMany()
+                        .HasForeignKey("OfficeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Appointments.Domain.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Appointments.Domain.Service", "Service")
+                        .WithMany()
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Office");
+
+                    b.Navigation("Patient");
+
+                    b.Navigation("Service");
                 });
 
             modelBuilder.Entity("Appointments.Domain.Result", b =>

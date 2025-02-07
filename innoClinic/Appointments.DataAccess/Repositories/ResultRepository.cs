@@ -8,8 +8,9 @@ namespace Appointments.DataAccess.Repositories {
         public ResultRepository( AppointmentsDbContext context ) : base( context ) {
         }
 
+
         public async Task<Result?> GetAsync( Guid id ) {
-            return await entities.AsNoTracking().SingleOrDefaultAsync( x => x.Id == id );
+            return await entities.AsNoTracking().OrderByDescending(x=>x.CreatedDate).FirstAsync(x=>x.Id== id);
         }
     }
 }

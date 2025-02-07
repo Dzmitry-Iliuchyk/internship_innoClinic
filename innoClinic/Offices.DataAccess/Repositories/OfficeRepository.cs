@@ -32,6 +32,11 @@ namespace Offices.DataAccess.Repositories {
                 .Find( x => x.Id == id )
                 .AnyAsync();
         }
+        public async Task<bool> AnyByNumberAsync( string phone ) {
+            return await _offices
+                .Find( x => x.RegistryPhoneNumber == phone )
+                .AnyAsync();
+        }
 
         public async Task<Office> GetAsync( string id ) {
             var office = await _offices
@@ -52,6 +57,12 @@ namespace Offices.DataAccess.Repositories {
         public async Task UpdateAsync( Office office ) {
             var entity = _mapper.Map<OfficeEntity>( office );
             await _offices.ReplaceOneAsync( x => x.Id == entity.Id, entity );
+        }
+
+        public async Task SetPathToOffice(string id, string path ) {
+            await _offices.FindOneAndUpdateAsync( x => x.Id == id,
+                new UpdateDefinitionBuilder<OfficeEntity>()
+                .Set(nameof(OfficeEntity.PhotoUrl),path));
         }
     }
 }

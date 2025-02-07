@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MassTransit" Version="8.3.4" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Documents.Domain\Documents.Domain.csproj" />
+    <ProjectReference Include="..\Shared.Events.Contracts\Shared.Events.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

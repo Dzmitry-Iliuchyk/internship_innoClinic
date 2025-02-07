@@ -19,9 +19,9 @@
                        string email,
                        string phoneNumber,
                        bool isEmailVerified,
-                       Guid createdBy,
+                       Guid? createdBy,
                        DateTime createdAt,
-                       Guid updatedBy, 
+                       Guid? updatedBy, 
                        DateTime updatedAt,
                        string? photoUrl,
                        string? middleName) 

@@ -11,5 +11,9 @@ namespace Authorization.Application.Abstractions.Services {
         Task<IEnumerable<User>> GetUsers();
         Task<User> GetUserWithRoles( Guid userId );
         Task<User> GetUserWithRoles( string email );
+        Task UpdateEmailAsync( UpdateEmailModel updateModel );
+        Task UpdatePasswordAsync( UpdatePasswordModel updateModel );
+        Task CreateAccountAsync( CreateAccountModel createAccountModel );
+        Task DeleteAccountAsync( Guid id );
     }
 }

@@ -16,6 +16,7 @@ COPY ["Notifications.GrpcApi/Notifications.GrpcApi.csproj", "Notifications.GrpcA
 COPY ["Notifications.Application/Notifications.Application.csproj", "Notifications.Application/"]
 COPY ["Notifications.Domain/Notifications.Domain.csproj", "Notifications.Domain/"]
 COPY ["Shared.Events.Contracts/Shared.Events.Contracts.csproj", "Shared.Events.Contracts/"]
+COPY ["Shared.ServiceDiscovery/Shared.ServiceDiscovery.csproj", "Shared.ServiceDiscovery/"]
 RUN dotnet restore "./Notifications.GrpcApi/Notifications.GrpcApi.csproj"
 COPY . .
 WORKDIR "/src/Notifications.GrpcApi"

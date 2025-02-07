@@ -31,7 +31,7 @@ namespace Profiles.DataAccess.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CreatedBy")
+                    b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
@@ -74,7 +74,7 @@ namespace Profiles.DataAccess.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UpdatedBy")
+                    b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -146,7 +146,6 @@ namespace Profiles.DataAccess.Migrations
                     b.HasBaseType("Profiles.Domain.Account");
 
                     b.Property<string>("OfficeId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.ToTable("Receptionists");

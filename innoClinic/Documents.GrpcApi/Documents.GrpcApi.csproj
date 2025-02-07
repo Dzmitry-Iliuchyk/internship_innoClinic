@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <Protobuf Include="Protos\document.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\HealthCheck.proto" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,6 +26,7 @@
     <ProjectReference Include="..\Documents.Application\Documents.Application.csproj" />
     <ProjectReference Include="..\Documents.DataAccess\Documents.DataAccess.csproj" />
     <ProjectReference Include="..\Documents.Domain\Documents.Domain.csproj" />
+    <ProjectReference Include="..\Shared.ServiceDiscovery\Shared.ServiceDiscovery.csproj" />
   </ItemGroup>
 
 </Project>

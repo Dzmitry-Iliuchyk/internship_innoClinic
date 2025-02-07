@@ -4,16 +4,13 @@ using Appointments.Application.Interfaces.Repositories;
 using Appointments.Application.Interfaces.Services;
 using Appointments.Domain;
 using Mapster;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MassTransit;
+//using Shared.Events.Contracts;
 
 namespace Appointments.Application.Implementations {
     public class AppointmentsService: IAppointmentService {
         private readonly IAppointmentRepository _repository;
-
+        private readonly IPublishEndpoint _publisher;
         public AppointmentsService( IAppointmentRepository repository ) {
             this._repository = repository;
         }
@@ -23,7 +20,7 @@ namespace Appointments.Application.Implementations {
             appointment.Id = Guid.NewGuid();
 
             await _repository.CreateAsync( appointment );
-
+           // await _publisher.Publish( new AppointmentCreatedEvent() );
             return appointment.Id;
         }
 
@@ -45,6 +42,15 @@ namespace Appointments.Application.Implementations {
                 throw new AppointmentNotFoundException(id);
             }
             return appointment.Adapt<AppointmentDto>( );
+        }
+        public async Task<List<string>> GetEmailsAsync( Guid id ) {
+            var appointment = await _repository.GetAsync(id);
+            if (appointment == null) {
+                throw new AppointmentNotFoundException(id);
+            }
+            return new List<string> {
+                appointment.Patient.PatientEmail
+            };
         }
 
         public async Task UpdateAsync( AppointmentUpdateDto entity ) {

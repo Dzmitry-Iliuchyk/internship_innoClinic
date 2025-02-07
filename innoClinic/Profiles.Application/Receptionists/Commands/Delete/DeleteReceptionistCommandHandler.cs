@@ -1,32 +1,34 @@
-﻿using MediatR;
+﻿using MassTransit;
+using MediatR;
 using Profiles.Application.Common.Exceptions;
 using Profiles.Application.Interfaces.Repositories;
-using Profiles.Domain;
-using System;
-using System.Collections.Generic;
+using Shared.Events.Contracts.ProfilesMessages;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Profiles.Application.Receptionists.Commands.Delete {
-    public record DeleteReceptionistCommand( [Required] Guid receptionistId ): IRequest;
+    public record DeleteReceptionistCommand( [Required] Guid receptionistId ): IRequest<Unit>;
 
-    public class DeleteReceptionistCommandHandler: IRequestHandler<DeleteReceptionistCommand> {
+    public class DeleteReceptionistCommandHandler: IRequestHandler<DeleteReceptionistCommand, Unit> {
         private readonly IReceptionistCommandRepository _repository;
         private readonly IReceptionistReadRepository _repoRead;
+        private readonly IPublishEndpoint _publisher;
         public DeleteReceptionistCommandHandler( IReceptionistCommandRepository repository, IReceptionistReadRepository repoRead ) {
             this._repository = repository;
             this._repoRead = repoRead;
         }
 
-        public async Task Handle( DeleteReceptionistCommand request, CancellationToken cancellationToken = default ) {
-            var doc = await _repoRead.GetAsync( request.receptionistId );
-            if (doc != null)
-                await _repository.DeleteAsync( doc );
-            else 
+        public async Task<Unit> Handle( DeleteReceptionistCommand request, CancellationToken cancellationToken = default ) {
+            var receptionist = await _repoRead.GetAsync( request.receptionistId );
+            if (receptionist != null) {
+                await _repository.DeleteAsync( receptionist );
+                
+            } else
                 throw new ReceptionistNotFoundException( request.receptionistId.ToString() );
-            
+
+            await _publisher.Publish<ReceptionistDeleted>( new ReceptionistDeleted {
+                Id = receptionist.Id,
+            } );
+            return Unit.Value;
         }
     }
 }

@@ -9,9 +9,9 @@ namespace Profiles.Domain {
         public string PhoneNumber { get; set; }
         public bool IsEmailVerified { get; set; }
         public string? PhotoUrl { get; set; }
-        public Guid CreatedBy { get; set; }
+        public Guid? CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
-        public Guid UpdatedBy { get; set; }
+        public Guid? UpdatedBy { get; set; }
         public DateTime UpdatedAt { get; set; }
         private protected Account() { }
         public Account( Guid id,
@@ -20,9 +20,9 @@ namespace Profiles.Domain {
                         string email,
                         string phoneNumber,
                         bool isEmailVerified,
-                        Guid createdBy,
+                        Guid? createdBy,
                         DateTime createdAt,
-                        Guid updatedBy,
+                        Guid? updatedBy,
                         DateTime updatedAt,
                         string? photoUrl,
                         string? middleName ) {
