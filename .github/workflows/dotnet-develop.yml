@@ -30,7 +30,7 @@ jobs:
       run: dotnet --version
     - name: Test
       working-directory: ./innoClinic
-      run: dotnet test Services.UnitTests\Services.UnitTests.csproj --no-build --verbosity normal --results-directory "TestResults"
+      run: dotnet test Services.UnitTests/Services.UnitTests.csproj --no-build --verbosity normal --results-directory "TestResults"
     - name: Upload dotnet test results
       uses: actions/upload-artifact@v4
       with:
