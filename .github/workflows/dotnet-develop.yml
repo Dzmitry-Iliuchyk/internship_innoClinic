@@ -28,13 +28,16 @@ jobs:
       run: dotnet build --no-restore innoClinic.sln
     - name: Display dotnet version
       run: dotnet --version
-    - name: Test
+    - name: UnitTests
       working-directory: ./innoClinic
-      run: dotnet test Services.UnitTests/Services.UnitTests.csproj --no-build --verbosity normal --results-directory "TestResults"
-    - name: Upload dotnet test results
-      uses: actions/upload-artifact@v4
-      with:
-        name: dotnet-results
-        path: ./innoClinic/TestResults
+      run: dotnet test Services.UnitTests/Services.UnitTests.csproj --no-build --verbosity normal --results-directory "TestResults-unit"
+    - name: IntegrationTests
+      working-directory: ./innoClinic
+      run: dotnet test Offices.IntegrationTests/Offices.IntegrationTests.csproj --no-build --verbosity normal --results-directory "TestResults-integration"
+    # - name: Upload dotnet test results
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: dotnet-results
+    #     path: ./innoClinic/TestResults-unit
           # Use always() to always run this step to publish test results when there are test failures
           # if: ${{ always() }}
