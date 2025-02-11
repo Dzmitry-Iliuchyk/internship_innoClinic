@@ -29,7 +29,8 @@ jobs:
     - name: Display dotnet version
       run: dotnet --version
     - name: Test
-      run: dotnet test --no-build --verbosity normal --results-directory "TestResults"
+      working-directory: ./innoClinic
+      run: dotnet test Services.UnitTests\Services.UnitTests.csproj --no-build --verbosity normal --results-directory "TestResults"
     - name: Upload dotnet test results
       uses: actions/upload-artifact@v4
       with:
