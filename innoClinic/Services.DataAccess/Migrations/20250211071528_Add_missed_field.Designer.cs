@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Services.DataAccess;
 
@@ -11,9 +12,11 @@ using Services.DataAccess;
 namespace Services.DataAccess.Migrations
 {
     [DbContext(typeof(ServiceContext))]
-    partial class ServiceContextModelSnapshot : ModelSnapshot
+    [Migration("20250211071528_Add_missed_field")]
+    partial class Add_missed_field
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

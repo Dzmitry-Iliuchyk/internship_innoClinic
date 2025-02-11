@@ -1,5 +1,5 @@
-﻿namespace Services.Application.Abstractions.Services {
-    public class UpdateServiceDto {
+﻿namespace Services.Application.Abstractions.Services.Dtos {
+    public class ServiceDto {
         public Guid Id { get; set; }
         public string Name { get; set; }
         public decimal Price { get; set; }
