@@ -48,10 +48,10 @@ namespace Offices.IntegrationTests {
                     HouseNumber = "123",
                     OfficeNumber = "45"
                 },
-                RegistryPhoneNumber = "+375997695656",
+                RegistryPhoneNumber = "+372997695656",
                 Status = true
             };
-            await _client.PostAsJsonAsync( "/api/offices/CreateOffice", newOffice );
+            var res = await _client.PostAsJsonAsync( "/api/offices/CreateOffice", newOffice );
 
             // Assert
             Assert.True( await harness.Published.Any<OfficeCreated>() );
