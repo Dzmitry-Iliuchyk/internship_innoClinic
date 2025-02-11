@@ -41,12 +41,26 @@ namespace Offices.IntegrationTests {
                 if (descriptor != null) {
                     services.Remove( descriptor );
                 }
+                // Удаляем реальную регистрацию MassTransit
+                var masstransitDescriptor = services.SingleOrDefault( d => d.ServiceType == typeof( IBusControl ) );
+                if (masstransitDescriptor != null) {
+                    services.Remove( masstransitDescriptor );
+                }
 
-                // Создаём mock-объект для IPublishEndpoint
-                var mockPublishEndpoint = new Mock<IPublishEndpoint>();
+                // Регистрируем MassTransit с InMemory транспортом
+                services.AddMassTransitTestHarness( cfg =>
+                {
+                    cfg.SetKebabCaseEndpointNameFormatter();
 
-                // Подменяем IPublishEndpoint на мок
-                services.AddSingleton<IPublishEndpoint>( mockPublishEndpoint.Object );
+                    // Если у вас есть консумеры, добавьте их
+                    // cfg.AddConsumer<YourConsumer>();
+
+                    cfg.UsingInMemory( ( context, cfg ) =>
+                    {
+                        cfg.ConfigureEndpoints( context );
+                    } );
+                } );
+ 
                 // Удаляем регистрацию IOfficeService
                 var serviceDescriptor = services.FirstOrDefault( d => d.ServiceType == typeof( IOfficeService ) );
                 if (serviceDescriptor != null) {
@@ -72,7 +86,8 @@ namespace Offices.IntegrationTests {
                     var validator = sp.GetRequiredService<IValidator<Office>>();
                     var repo = sp.GetRequiredService<IOfficeRepository>();
                     var gen = sp.GetRequiredService<IIdGenerator>();
-                    return new OfficeService( repo, validator, mapper, gen, mockPublishEndpoint.Object );
+                    var publisher = sp.GetRequiredService<IPublishEndpoint>();
+                    return new OfficeService( repo, validator, mapper, gen, publisher );
                 } );
 
                 // Удаляем реальный IConsulClient
@@ -85,6 +100,8 @@ namespace Offices.IntegrationTests {
                 if (serviceDiscoveryDescriptor != null) {
                     services.Remove( serviceDiscoveryDescriptor );
                 }
+
+
                 //    // Создаём Mock для IConsulClient
                 //    var mockConsulClient = new Mock<IConsulClient>();
 

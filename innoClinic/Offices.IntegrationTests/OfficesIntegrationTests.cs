@@ -1,7 +1,9 @@
 ﻿using MassTransit;
+using MassTransit.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Offices.Application.Dtos;
+using Offices.Application.Interfaces.Services;
 using Offices.Domain.Models;
 using Shared.Events.Contracts.OfficesMessages;
 using System.Net.Http.Json;
@@ -10,10 +12,11 @@ using System.Text.Json;
 namespace Offices.IntegrationTests {
     public class OfficesIntegrationTests: IClassFixture<CustomWebApplicationFactory> {
         private readonly HttpClient _client;
+        private readonly CustomWebApplicationFactory _factory;
 
         public OfficesIntegrationTests( CustomWebApplicationFactory factory ) {
             _client = factory.CreateClient();
-
+            _factory = factory;
             Directory.CreateDirectory( Path.Combine( Directory.GetCurrentDirectory(), "Auth" ) );
             using var sw = new StreamWriter( File.Create(Path.Combine("Auth", "public_key.pem")));
             sw.WriteAsync( 
@@ -30,7 +33,29 @@ namespace Offices.IntegrationTests {
             sw.Flush();
         }
 
+        [Fact]
+        public async Task Should_Publish_OfficeCreated_Event() {
+            // Arrange
 
+            var harness = _factory.Services.GetRequiredService<ITestHarness>();
+            await harness.Start();
+
+            // Act
+            var newOffice = new {
+                Address = new {
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    HouseNumber = "123",
+                    OfficeNumber = "45"
+                },
+                RegistryPhoneNumber = "+375997695656",
+                Status = true
+            };
+            await _client.PostAsJsonAsync( "/api/offices/CreateOffice", newOffice );
+
+            // Assert
+            Assert.True( await harness.Published.Any<OfficeCreated>() );
+        }
         [Fact]
         public async Task CreateOffice_ReturnsOfficeId() {
             // Arrange
