@@ -15,6 +15,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Install OpenSSL 1.1 (for Mongo2Go)
+      run: |
+        sudo apt update
+        sudo apt install -y libssl1.1 || sudo apt install -y libssl1.1=1.1.1f-1ubuntu2.19
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
