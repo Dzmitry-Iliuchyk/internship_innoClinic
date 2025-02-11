@@ -25,7 +25,7 @@ namespace Services.DataAccess.Repositories {
                 .AsNoTracking()
                 .Include(s=>s.Specialization)
                 .Include(s=>s.Category)
-                .SingleOrDefaultAsync( filter );
+                .FirstOrDefaultAsync( filter );
         }
         public async Task<Service?> GetLightAsync( Expression<Func<Service, bool>> filter ) {
             return await entities

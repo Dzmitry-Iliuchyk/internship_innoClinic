@@ -1,4 +1,4 @@
-﻿namespace Services.Application.Abstractions.Services {
+﻿namespace Services.Application.Abstractions.Services.Dtos {
     public class CreateServiceDto {
         public string Name { get; set; }
         public decimal Price { get; set; }

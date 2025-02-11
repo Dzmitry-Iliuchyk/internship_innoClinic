@@ -1,4 +1,6 @@
-﻿namespace Services.Application.Abstractions.Services {
+﻿using Services.Application.Abstractions.Services.Dtos;
+
+namespace Services.Application.Abstractions.Services {
     public interface IServiceCategoryService {
         Task<ServiceCategoryDto?> GetAsync( int id );
         Task<IList<ServiceCategoryDto>> GetAllAsync();
