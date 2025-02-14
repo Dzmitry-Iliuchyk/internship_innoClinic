@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Services.Application.Abstractions.Services;
+using Services.Application.Abstractions.Services.Dtos;
 
 namespace Services.Api.Controllers {
     [ApiController]

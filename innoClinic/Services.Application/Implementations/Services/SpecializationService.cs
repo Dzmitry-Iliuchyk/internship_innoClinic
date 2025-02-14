@@ -2,6 +2,7 @@
 using MassTransit;
 using Services.Application.Abstractions.Repositories;
 using Services.Application.Abstractions.Services;
+using Services.Application.Abstractions.Services.Dtos;
 using Services.Domain;
 using Shared.Events.Contracts.ServiceMessages;
 
@@ -10,9 +11,9 @@ namespace Services.Application.Implementations.Services {
         private readonly ISpecializationRepository _specializationRepository;
         private readonly IPublishEndpoint _publisher;
 
-        public SpecializationService( ISpecializationRepository specializationRepository ) {
+        public SpecializationService( ISpecializationRepository specializationRepository, IPublishEndpoint publisher ) {
             this._specializationRepository = specializationRepository;
-
+            this._publisher = publisher;
         }
 
         public async Task<int> CreateAsync( CreateSpecializationDto specialization ) {
@@ -41,7 +42,7 @@ namespace Services.Application.Implementations.Services {
                 } );
         }
 
-        public async Task<IList<string>> GetAllAsync() {
+        public async Task<IList<string>> GetAllNamesAsync() {
             var specs = await _specializationRepository.GetAllAsync();
             return specs.Select( x => x.Name ).ToList();
         }

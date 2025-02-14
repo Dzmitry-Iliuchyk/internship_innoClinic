@@ -1,5 +1,5 @@
 ﻿using Mapster;
-using Services.Application.Abstractions.Services;
+using Services.Application.Abstractions.Services.Dtos;
 using Services.Domain;
 
 namespace Services.Application {
