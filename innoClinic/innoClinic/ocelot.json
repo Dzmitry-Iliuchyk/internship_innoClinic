@@ -189,6 +189,18 @@
     },
     // Offices
     {
+      "DownstreamPathTemplate": "/api/Offices/GetPage?{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "offices.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/offices/getPage?{everything}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/Offices/GetOfficesWithPhoto",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

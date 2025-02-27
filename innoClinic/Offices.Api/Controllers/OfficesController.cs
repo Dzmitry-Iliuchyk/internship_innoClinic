@@ -24,6 +24,17 @@ namespace Offices.Api.Controllers {
             return Results.Ok( result );
         }
         /// <summary>
+        /// Used to retrieve all offices 
+        /// </summary>
+        /// <returns>List of offices or empty list if there is not offices</returns>
+        /// <response code="200">Returns if successfully performed</response>
+        [ProducesResponseType( StatusCodes.Status200OK )]
+        [HttpGet( "[action]" )]
+        public async Task<IResult> GetPage(int skip, int take) {
+            var result = await _officeService.GetPageAsync(skip, take);
+            return Results.Ok( result );
+        }
+        /// <summary>
         /// Used to retrieve certain office by id
         /// </summary>
         /// <param name="id">This parameter is identifier of office, represented as objectId as string</param>

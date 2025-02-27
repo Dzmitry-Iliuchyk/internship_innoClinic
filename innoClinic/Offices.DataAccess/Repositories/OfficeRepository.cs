@@ -59,10 +59,20 @@ namespace Offices.DataAccess.Repositories {
             await _offices.ReplaceOneAsync( x => x.Id == entity.Id, entity );
         }
 
-        public async Task SetPathToOffice(string id, string path ) {
+        public async Task SetPathToOffice( string id, string path ) {
             await _offices.FindOneAndUpdateAsync( x => x.Id == id,
                 new UpdateDefinitionBuilder<OfficeEntity>()
-                .Set(nameof(OfficeEntity.PhotoUrl),path));
+                .Set( nameof( OfficeEntity.PhotoUrl ), path ) );
+        }
+
+        public async Task<List<Office>> GetPageAsync( int skip, int take ) {
+            var offices = await _offices
+                .Find( _ => true )
+                .Skip( skip )
+                .Limit( take )
+                .ToListAsync();
+
+            return _mapper.Map<List<Office>>( offices );
         }
     }
 }

@@ -100,7 +100,7 @@ namespace Offices.IntegrationTests {
 
             // Assert
             response.EnsureSuccessStatusCode();
-            var office = await response.Content.ReadFromJsonAsync<Office>();
+            var office = await response.Content.ReadFromJsonAsync<OfficeDto>();
             Assert.NotNull( office );
             Assert.Equal( officeId, office.Id );
         }
@@ -159,10 +159,55 @@ namespace Offices.IntegrationTests {
 
             // Assert
             response.EnsureSuccessStatusCode();
-            var offices = await response.Content.ReadFromJsonAsync<Office[]>();
+            var offices = await response.Content.ReadFromJsonAsync<OfficeDto[]>();
             Assert.NotNull( offices );
             Assert.NotEmpty( offices );
             Assert.Equal( "TestCity", offices[ 0 ].Address.City );
+        }
+        [Fact]
+        public async Task GetPage_skip1_take2_ReturnsListOfOffices() {
+            // Arrange: Создаем тестовый офис
+            var newOffice1 = new {
+                Address = new {
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    HouseNumber = "123",
+                    OfficeNumber = "45"
+                },
+                RegistryPhoneNumber = "+375999924656",
+                Status = true
+            };var newOffice2 = new {
+                Address = new {
+                    City = "Test2City",
+                    Street = "Test23treet",
+                    HouseNumber = "123",
+                    OfficeNumber = "45"
+                },
+                RegistryPhoneNumber = "+375499924656",
+                Status = true
+            };var newOffice3 = new {
+                Address = new {
+                    City = "Test3City",
+                    Street = "TestS43eet",
+                    HouseNumber = "1233",
+                    OfficeNumber = "435"
+                },
+                RegistryPhoneNumber = "+375993924656",
+                Status = true
+            };
+            await _client.PostAsJsonAsync( "/api/offices/CreateOffice", newOffice1 );
+            await _client.PostAsJsonAsync( "/api/offices/CreateOffice", newOffice2 );
+            await _client.PostAsJsonAsync( "/api/offices/CreateOffice", newOffice3 );
+
+            // Act
+            var response = await _client.GetAsync( "/api/offices/GetPage?skip=1&take=2" );
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+            var offices = await response.Content.ReadFromJsonAsync<OfficeDto[]>();
+            Assert.NotNull( offices );
+            Assert.NotEmpty( offices );
+            Assert.Equal( 2, offices.Count() );
         }
 
         [Fact]

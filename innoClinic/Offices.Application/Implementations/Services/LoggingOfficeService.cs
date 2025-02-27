@@ -34,7 +34,9 @@ namespace Offices.Application.Implementations.Services {
         public async Task<OfficeDto> GetAsync( string id ) {
             return await RunAndLogAsync( async () => await _officeService.GetAsync(id), nameof( GetAsync ) );
         }
-
+        public async Task<List<OfficeDto>> GetPageAsync( int skip, int take ) {
+            return await RunAndLogAsync( async () => await _officeService.GetPageAsync(skip, take), nameof( GetPageAsync ) );
+        }
         public async Task UpdateAsync( string id, UpdateOfficeDto officeDto ) {
             await ExecuteAndLogAsync(_officeService.UpdateAsync(id, officeDto), nameof(UpdateAsync));
         }
