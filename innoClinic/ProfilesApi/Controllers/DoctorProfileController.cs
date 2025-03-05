@@ -5,6 +5,7 @@ using Profiles.Application.Doctors.Commands.Delete;
 using Profiles.Application.Doctors.Commands.Update;
 using Profiles.Application.Doctors.Queries.Get;
 using Profiles.Application.Doctors.Queries.GetFiltered;
+using Profiles.Application.Doctors.Queries.GetPage;
 
 namespace ProfilesApi.Controllers {
     [ApiController]
@@ -24,6 +25,11 @@ namespace ProfilesApi.Controllers {
         [HttpGet( "[action]" )]
         public async Task<IResult> Get( ) {
             var res = await _sender.Send( new GetDoctorsQuery() );
+            return Results.Ok( res );
+        }
+        [HttpGet( "[action]" )]
+        public async Task<IResult> GetPaged(int skip, int take ) {
+            var res = await _sender.Send( new GetPagedDoctorsQuery(skip, take) );
             return Results.Ok( res );
         }
         [HttpPost( "[action]" )]

@@ -1,5 +1,6 @@
 ﻿using Services.Application.Abstractions.Services.Dtos;
 using Services.Domain;
+using Shared.Abstractions.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,6 @@ namespace Services.Application.Abstractions.Services {
         Task DeleteAsync( Guid serviceId );
         Task UpdateAsync( UpdateServiceDto updatedService );
         Task<Guid> CreateAsync( CreateServiceDto service );
+        Task<PagedResult<ServiceDto>> GetPageAsync( int skip, int take );
     }
 }

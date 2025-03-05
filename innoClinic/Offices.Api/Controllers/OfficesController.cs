@@ -7,7 +7,7 @@ namespace Offices.Api.Controllers {
     [Produces( "application/json" )]
     [Route( "api/[controller]" )]
     [ApiController]
-    public class OfficesController: ControllerBase {
+    public partial class OfficesController: ControllerBase {
         private readonly IOfficeService _officeService;
         public OfficesController( IOfficeService officeService ) {
             this._officeService = officeService;
@@ -24,7 +24,7 @@ namespace Offices.Api.Controllers {
             return Results.Ok( result );
         }
         /// <summary>
-        /// Used to retrieve all offices 
+        /// Used to retrieve paged offices 
         /// </summary>
         /// <returns>List of offices or empty list if there is not offices</returns>
         /// <response code="200">Returns if successfully performed</response>
@@ -34,6 +34,7 @@ namespace Offices.Api.Controllers {
             var result = await _officeService.GetPageAsync(skip, take);
             return Results.Ok( result );
         }
+
         /// <summary>
         /// Used to retrieve certain office by id
         /// </summary>

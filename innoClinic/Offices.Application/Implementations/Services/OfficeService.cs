@@ -99,10 +99,10 @@ namespace Offices.Application.Implementations.Services {
             await _repository.SetPathToOffice( id, path );
         }
 
-        public async Task<List<OfficeDto>> GetPageAsync( int skip, int take ) {
-            var offices = await _repository.GetPageAsync(skip, take);
+        public async Task<PagedOfficesDto> GetPageAsync( int skip, int take ) {
+            var (offices, total) = await _repository.GetPageAsync(skip, take);
 
-            return _mapper.Map<List<OfficeDto>>( offices ) ?? [];
+            return new (offices: _mapper.Map<List<OfficeDto>>( offices ) ?? [], total: total);
         }
     }
 }

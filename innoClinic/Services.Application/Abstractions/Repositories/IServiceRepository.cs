@@ -1,4 +1,5 @@
 ﻿using Services.Domain;
+using Shared.Abstractions.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,6 @@ namespace Services.Application.Abstractions.Repositories {
         Task UpdateAsync(Service updatedService);
         Task CreateAsync(Service service);
         Task<Service?> GetLightAsync( Expression<Func<Service, bool>> filter );
+        Task<PagedResult<Service>> GetPageAsync( int skip, int take );
     }
 }

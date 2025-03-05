@@ -16,5 +16,6 @@ namespace Profiles.Application.Interfaces.Repositories {
     public interface IDoctorReadRepository {
         Task<Doctor?> GetAsync( Guid id);
         Task<IList<Doctor>?> GetAllAsync();
+        Task<PagedResult<Doctor>?> GetPageAsync( int skip, int take );
     }
 }

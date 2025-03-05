@@ -125,6 +125,19 @@
       "UpstreamPathTemplate": "/api/services/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "PATCH" ]
     },
+    // Specializations
+    {
+      "DownstreamPathTemplate": "/api/Specialization/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "services.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/specializations/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "PATCH" ]
+    },
     // Appointments
     {
       "DownstreamPathTemplate": "/appointments/{everything}",
@@ -198,7 +211,11 @@
         }
       ],
       "UpstreamPathTemplate": "/api/offices/getPage?{everything}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": [ "GET" ],
+      "FileCacheOptions": {
+        "TtlSeconds": 60,
+        "EnableContentHashing": false // my route has GET verb only, assigning 'true' for requests with body: POST, PUT etc.
+      }
     },
     {
       "DownstreamPathTemplate": "/api/Offices/GetOfficesWithPhoto",
@@ -225,7 +242,7 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Offices/GetOfficeWithPhoto",
+      "DownstreamPathTemplate": "/api/Offices/{id}/GetOfficeWithPhoto",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -233,8 +250,28 @@
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/api/offices/getOffice",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamPathTemplate": "/api/offices/{id}/getOffice",
+      "UpstreamHttpMethod": [ "GET" ],
+      "FileCacheOptions": {
+        "TtlSeconds": 60,
+        "EnableContentHashing": false // my route has GET verb only, assigning 'true' for requests with body: POST, PUT etc.
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/Offices/{id}/GetOfficePhoto",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "facadeapi",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/offices/{id}/getPhoto",
+      "UpstreamHttpMethod": [ "GET" ],
+      "FileCacheOptions": {
+        "TtlSeconds": 60,
+        "EnableContentHashing": false // my route has GET verb only, assigning 'true' for requests with body: POST, PUT etc.
+      }
     },
     {
       "DownstreamPathTemplate": "/api/Offices/UpdateOffice",
@@ -356,6 +393,18 @@
         }
       ],
       "UpstreamPathTemplate": "/api/doctors/getAll",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/DoctorProfile/GetPaged?{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "profiles.api",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/doctors/GetPaged?{everything}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {

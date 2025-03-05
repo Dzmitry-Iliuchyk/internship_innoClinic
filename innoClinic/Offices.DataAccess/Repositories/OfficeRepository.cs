@@ -65,14 +65,16 @@ namespace Offices.DataAccess.Repositories {
                 .Set( nameof( OfficeEntity.PhotoUrl ), path ) );
         }
 
-        public async Task<List<Office>> GetPageAsync( int skip, int take ) {
+        public async Task<(List<Office> offices,int total)> GetPageAsync( int skip, int take ) {
             var offices = await _offices
                 .Find( _ => true )
                 .Skip( skip )
                 .Limit( take )
                 .ToListAsync();
 
-            return _mapper.Map<List<Office>>( offices );
+            var total = await _offices.CountDocumentsAsync( _ => true );
+
+            return (offices:_mapper.Map<List<Office>>( offices ), total: (int)total);
         }
     }
 }

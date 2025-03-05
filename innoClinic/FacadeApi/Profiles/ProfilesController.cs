@@ -42,7 +42,7 @@ namespace FacadeApi.Profiles {
             if (!result.IsSuccessStatusCode) {
                 await _documents.DeleteBlobAsync( new DeleteBlobRequest { PathToBlob = photoUrl } );
             }
-            return Microsoft.AspNetCore.Http.Results.Content(await result.Content.ReadAsStringAsync(), statusCode: (int?)result.StatusCode );
+            return Microsoft.AspNetCore.Http.Results.Ok(await result.Content.ReadAsStringAsync());
         }
         [HttpGet( "{id:guid}/[action]" )]
         public async Task<IResult> GetPhoto( Guid id ) {

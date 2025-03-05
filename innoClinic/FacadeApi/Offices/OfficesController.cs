@@ -74,7 +74,7 @@ namespace FacadeApi.Offices {
                 );
 
             Photo photo = null;
-            if (string.IsNullOrEmpty( office.PhotoUrl )) {
+            if (!string.IsNullOrEmpty( office.PhotoUrl )) {
                 var docResult = await _documents.GetBlobAsync( new GetBlobRequest() {
                     PathToBlob = office.PhotoUrl,
                 } );
@@ -91,6 +91,31 @@ namespace FacadeApi.Offices {
                 Status = office.Status,
                 Photo = photo
             } );
+        }
+        [HttpGet( "{id}/[action]" )]
+        public async Task<IResult> GetOfficePhoto( string id ) {
+            using var officeClient = GetClientWithHeaders();
+            var httpResult = await officeClient.GetAsync( $"api/Offices/{id}/GetOffice" );
+            if (!httpResult.IsSuccessStatusCode) {
+                throw new NotSuccessHttpRequest( httpResult );
+            }
+            var office = JsonSerializer.Deserialize<OfficeDtoFromApi>(
+                    httpResult.Content.ReadAsStream(),
+                    _jsonSerializerOptions
+                );
+
+            Photo photo = null;
+            if (!string.IsNullOrEmpty( office.PhotoUrl )) {
+                var docResult = await _documents.GetBlobAsync( new GetBlobRequest() {
+                    PathToBlob = office.PhotoUrl,
+                } );
+                photo = new() {
+                    Content = docResult.Content.ToBase64(),
+                    Name = docResult.Details.Name,
+                };
+            }
+
+            return Microsoft.AspNetCore.Http.Results.Ok( photo );
         }
 
         [HttpPut( "[action]" )]

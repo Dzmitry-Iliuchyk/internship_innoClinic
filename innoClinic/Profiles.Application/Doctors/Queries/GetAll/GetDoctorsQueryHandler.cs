@@ -5,7 +5,8 @@ using Profiles.Application.Interfaces.Repositories;
 using System.ComponentModel.DataAnnotations;
 
 namespace Profiles.Application.Doctors.Queries.GetFiltered {
-    [Authorize( Roles = "Doctor" )]
+    //[Authorize( Roles = "Doctor" )]
+
     public record GetDoctorsQuery( ): IRequest<IList<DoctorDto>>;
 
     public class GetDoctorsQueryHandler: IRequestHandler<GetDoctorsQuery, IList<DoctorDto>> {

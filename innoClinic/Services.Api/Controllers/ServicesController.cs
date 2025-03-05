@@ -22,6 +22,12 @@ namespace Services.Api.Controllers {
             var res = await _service.GetAllAsync();
             return Results.Ok( res );
         }
+
+        [HttpGet( "[action]" )]
+        public async Task<IResult> GetPage(int skip, int take) {
+            var res = await _service.GetPageAsync(skip, take);
+            return Results.Ok( res );
+        }
         [HttpPost( "[action]" )]
         public async Task<IResult> Create( CreateServiceDto command ) {
             var res = await _service.CreateAsync( command );

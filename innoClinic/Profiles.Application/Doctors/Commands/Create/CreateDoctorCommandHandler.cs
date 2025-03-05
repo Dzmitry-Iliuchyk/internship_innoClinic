@@ -19,16 +19,17 @@ namespace Profiles.Application.Doctors.Commands.Create {
         [Required] string LastName,
         [Required] string Email,
         [Required] string PhoneNumber,
-        Guid? CreatedBy,
-        string? PhotoUrl,
-        string? MiddleName ): CreatePersonCommandBase( FirstName, LastName, Email, PhoneNumber, CreatedBy, PhotoUrl, MiddleName );
+        Guid? CreatedBy =null,
+        string? PhotoUrl = "",
+        string? MiddleName = ""): CreatePersonCommandBase( FirstName, LastName, Email, PhoneNumber, CreatedBy, PhotoUrl, MiddleName );
     public class CreateDoctorCommandHandler: IRequestHandler<CreateDoctorCommand, Guid> {
         private readonly IDoctorCommandRepository _repository;
         private readonly IDoctorReadRepository _readRepository;
         private readonly IPublishEndpoint _publisher;
-        public CreateDoctorCommandHandler( IDoctorCommandRepository repository, IPublishEndpoint publisher ) {
+        public CreateDoctorCommandHandler( IDoctorCommandRepository repository, IPublishEndpoint publisher, IDoctorReadRepository readRepository ) {
             this._repository = repository;
             this._publisher = publisher;
+            _readRepository = readRepository;
         }
 
         public async Task<Guid> Handle( CreateDoctorCommand request, CancellationToken cancellationToken = default ) {
